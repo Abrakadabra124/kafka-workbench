@@ -8,15 +8,24 @@ test('same keys route consistently and offsets are local to each partition', () 
   state = produce(state, 'customer-42', 'paid');
   const records = state.partitions.flat();
   assert.equal(records[0].partition, records[1].partition);
-  assert.deepEqual(records.map(r => r.offset), [0, 1]);
+  assert.deepEqual(
+    records.map((r) => r.offset),
+    [0, 1],
+  );
 });
 test('reading is independent from commit; crash redelivers uncommitted records', () => {
   let state = produce(initialState(), 'order-1', 'created');
   state = readBatch(state, 'billing');
   assert.equal(lag(state, 'billing'), 1);
-  assert.equal(state.groups.billing.position.reduce((a,b)=>a+b), 1);
+  assert.equal(
+    state.groups.billing.position.reduce((a, b) => a + b),
+    1,
+  );
   state = restart(state, 'billing');
-  assert.equal(state.groups.billing.position.reduce((a,b)=>a+b), 0);
+  assert.equal(
+    state.groups.billing.position.reduce((a, b) => a + b),
+    0,
+  );
   state = readBatch(state, 'billing');
   state = commit(state, 'billing');
   assert.equal(lag(state, 'billing'), 0);
@@ -26,9 +35,15 @@ test('reading is independent from commit; crash redelivers uncommitted records',
 test('commit is the next offset and survives restart', () => {
   let state = produce(initialState(), 'x', 'one');
   state = commit(readBatch(state, 'billing'), 'billing');
-  assert.equal(state.groups.billing.committed.reduce((a,b)=>a+b), 1);
+  assert.equal(
+    state.groups.billing.committed.reduce((a, b) => a + b),
+    1,
+  );
   state = restart(state, 'billing');
-  assert.equal(state.groups.billing.position.reduce((a,b)=>a+b), 1);
+  assert.equal(
+    state.groups.billing.position.reduce((a, b) => a + b),
+    1,
+  );
   assert.equal(readBatch(state, 'billing').lastRead.length, 0);
 });
 test('classic group has one owner per partition and surplus consumers idle', () => {
