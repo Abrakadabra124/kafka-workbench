@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import type { Module, Progress } from './types';
 import { api } from './api';
-import { FlowDiagram } from './Sandbox';
+import { SpatialFlow } from './SpatialFlow';
 
 export function Dashboard({ modules, progress }: { modules: Module[]; progress: Progress }) {
   const lessons = modules.flatMap((m) => m.lessons);
@@ -39,7 +39,7 @@ export function Dashboard({ modules, progress }: { modules: Module[]; progress: 
             </a>
           </div>
         </div>
-        <FlowDiagram />
+        <SpatialFlow mode="overview" />
       </section>
       <div className="facts">
         <div>

@@ -225,17 +225,27 @@ test('all six incidents require diagnosis, correction and verification, and pers
   await page.getByRole('button', { name: 'К текущему состоянию' }).click();
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.getByRole('button', { name: 'Воспроизвести', exact: true }).click();
-  await expect(page.locator('.inc-flow')).toHaveClass(/inc-playing/);
+  const flow = page.locator('.spatial-flow[data-mode="incident"]');
+  await flow.scrollIntoViewIfNeeded();
+  await expect(flow).toHaveAttribute('data-motion-state', 'running');
   await expect
     .poll(() =>
-      page
-        .locator('.inc-pulse')
-        .first()
-        .evaluate((el) => getComputedStyle(el).animationName),
+      flow
+        .locator('.sf-lane[data-flow="active"] .sf-packet')
+        .evaluateAll((elements) =>
+          elements.some((element) =>
+            element
+              .getAnimations()
+              .some(
+                (animation) =>
+                  animation.playState === 'running' && Number(animation.currentTime) > 0,
+              ),
+          ),
+        ),
     )
-    .not.toBe('none');
-  await page.getByRole('button', { name: 'Пауза', exact: true }).click();
-  await expect(page.locator('.inc-flow')).not.toHaveClass(/inc-playing/);
+    .toBeTruthy();
+  await flow.getByRole('button', { name: 'Приостановить движение', exact: true }).click();
+  await expect(flow).toHaveAttribute('data-motion-state', 'paused');
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('.inc-motion-note')).toBeVisible();
   await page.getByRole('button', { name: 'К текущему состоянию' }).click();
