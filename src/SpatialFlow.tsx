@@ -160,6 +160,11 @@ export function SpatialFlow({
     if (onPlayingChange) onPlayingChange(!requestedPlaying);
     else setLocalPlaying(!requestedPlaying);
   }
+  function durationFor(edge: 'in' | 'out') {
+    if (mode !== 'incident') return 2.2;
+    const rate = edge === 'in' ? inRate : outRate;
+    return Math.min(8, Math.max(1.4, 440 / Math.max(1, rate)));
+  }
   function edgeFlow(edge: 'in' | 'out', p: number) {
     const blocked =
       edge === 'in'
@@ -272,6 +277,7 @@ export function SpatialFlow({
                       data-edge={edge}
                       data-partition={p}
                       data-flow={edgeFlow(edge, p)}
+                      style={{ '--sf-duration': `${durationFor(edge)}s` } as CSSProperties}
                     >
                       <div className="sf-rail" />
                       <div className="sf-rail-glow" />
@@ -282,7 +288,9 @@ export function SpatialFlow({
                           style={
                             {
                               '--sf-delay':
-                                mode === 'sandbox' ? '0s' : `${packet * -1.1 - p * 0.35}s`,
+                                mode === 'sandbox'
+                                  ? '0s'
+                                  : `${packet * durationFor(edge) * -0.5 - p * 0.35}s`,
                             } as CSSProperties
                           }
                         >
@@ -366,7 +374,7 @@ export function SpatialFlow({
             ? 'События остаются в журнале после чтения.'
             : mode === 'sandbox'
               ? 'Сцена отражает ваши действия. Точные записи и offsets показаны в журнале ниже.'
-              : 'Состояние выбранного кадра. Заблокированные участки не передают события.'}
+              : 'Состояние выбранного кадра. Заблокированные участки не передают события. Скорость движения условная.'}
       </p>
     </section>
   );

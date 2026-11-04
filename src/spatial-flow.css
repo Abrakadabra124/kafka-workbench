@@ -427,7 +427,7 @@
   left: 0;
   top: -9px;
   transform-style: preserve-3d;
-  animation: sf-travel 2.2s linear infinite;
+  animation: sf-travel var(--sf-duration, 2.2s) linear infinite;
   animation-delay: var(--sf-delay, 0s);
   animation-play-state: var(--sf-play-state);
 }

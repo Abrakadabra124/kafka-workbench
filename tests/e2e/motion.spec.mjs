@@ -180,6 +180,17 @@ test('incident history stops offscreen, resumes without a catch-up jump, and pau
   await flow.scrollIntoViewIfNeeded();
   await expect(flow).toHaveAttribute('data-motion-state', 'running');
   await expect(page.locator('.inc-frame-count')).toHaveText('Кадр 1 из 4');
+  // This case receives 200 events/s and processes only 80 events/s. Compare the
+  // rendered animation timing so the slower downstream is actually visible.
+  const inputDuration = await flow
+    .locator('.sf-lane[data-edge="in"] .sf-packet')
+    .first()
+    .evaluate((element) => Number.parseFloat(getComputedStyle(element).animationDuration));
+  const outputDuration = await flow
+    .locator('.sf-lane[data-edge="out"] .sf-packet')
+    .first()
+    .evaluate((element) => Number.parseFloat(getComputedStyle(element).animationDuration));
+  expect(outputDuration).toBeGreaterThan(inputDuration);
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await expect(flow).toHaveAttribute('data-motion-state', 'offscreen');
   await expectFrozen(packets(flow));
