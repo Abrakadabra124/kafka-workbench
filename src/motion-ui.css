@@ -1,0 +1,96 @@
+/* Shared surface and interaction rhythm for the spatial visualizations. */
+:root {
+  --motion-quick: 180ms;
+  --motion-settle: 420ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero {
+  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+  min-height: 340px;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+.hero h1 {
+  font-size: clamp(31px, 3.05vw, 48px);
+  letter-spacing: -1.8px;
+}
+.hero-copy > p {
+  max-width: 485px;
+}
+.hero-actions {
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.sandbox-controls {
+  margin-bottom: 18px;
+}
+.consumer-actions {
+  margin-bottom: 18px;
+}
+.spatial-flow + .log-canvas {
+  margin-top: 24px;
+}
+.inc-playback > .spatial-flow {
+  margin: 0 20px 20px;
+}
+.button,
+button,
+.module-row,
+.inc-card {
+  transition:
+    background-color var(--motion-quick) ease,
+    border-color var(--motion-quick) ease,
+    box-shadow var(--motion-quick) ease,
+    transform var(--motion-quick) var(--motion-ease);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .button.primary:hover,
+  button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px #ae301c20;
+  }
+  .module-row:hover > .accent {
+    transform: translateX(4px);
+  }
+  .module-row > .accent {
+    transition: transform var(--motion-quick) var(--motion-ease);
+  }
+}
+button:active:not(:disabled),
+.button:active {
+  transform: translateY(1px);
+}
+@media (max-width: 1250px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .hero > .spatial-flow {
+    width: 100%;
+    max-width: 760px;
+    justify-self: center;
+  }
+  .hero-copy > p {
+    max-width: 650px;
+  }
+}
+@media (max-width: 800px) {
+  .hero {
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: clamp(30px, 6.3vw, 42px);
+    letter-spacing: -1.3px;
+  }
+  .inc-playback > .spatial-flow {
+    margin-inline: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  button:active:not(:disabled),
+  .button:active {
+    transform: none;
+  }
+}

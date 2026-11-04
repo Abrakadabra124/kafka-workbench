@@ -6,14 +6,12 @@ import {
   ArrowUpRight,
   Check,
   CheckCircle2,
-  Database,
   Eye,
   Info,
   Pause,
   Play,
   RotateCcw,
   Search,
-  Send,
   ShieldCheck,
   SkipBack,
   SkipForward,
@@ -22,6 +20,7 @@ import {
 } from 'lucide-react';
 import { api } from './api';
 import './incidents.css';
+import { SpatialFlow } from './SpatialFlow';
 
 type NodeStatus = 'healthy' | 'degraded' | 'blocked';
 type Nodes = Record<'producer' | 'broker' | 'consumer' | 'external', NodeStatus>;
@@ -75,22 +74,6 @@ const phaseLabels = {
   verify: 'Проверьте результат',
   complete: 'Восстановление подтверждено',
 };
-const statusLabels: Record<NodeStatus, string> = {
-  healthy: 'Работает',
-  degraded: 'Есть проблема',
-  blocked: 'Заблокирован',
-};
-const flowNodes = [
-  { id: 'producer', title: 'Producer', subtitle: 'Запись событий', Icon: Send },
-  { id: 'broker', title: 'Kafka broker', subtitle: 'Журнал и реплики', Icon: Database },
-  { id: 'consumer', title: 'Consumer', subtitle: 'Обработка событий', Icon: Activity },
-  {
-    id: 'external',
-    title: 'Внешняя система',
-    subtitle: 'Результат для бизнеса',
-    Icon: CheckCircle2,
-  },
-] as const;
 const metricLabels: { id: keyof Metrics; label: string; unit: string }[] = [
   { id: 'inRate', label: 'Входящий поток', unit: 'событий/с' },
   { id: 'outRate', label: 'Обработка', unit: 'событий/с' },
@@ -104,6 +87,7 @@ const number = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
 function FlowPlayback({ incident, state }: Detail) {
   const [frameIndex, setFrameIndex] = useState(state.history.length - 1);
   const [playing, setPlaying] = useState(false);
+  const [sceneActive, setSceneActive] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(
     () => matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
@@ -139,20 +123,20 @@ function FlowPlayback({ incident, state }: Detail) {
     return () => media.removeEventListener('change', update);
   }, []);
   useEffect(() => {
-    if (!playing || history.length < 2) return;
+    if (!playing || !sceneActive || reducedMotion || history.length < 2) return;
     const timer = window.setTimeout(() => {
       if (index >= history.length - 1) setPlaying(false);
       else setFrameIndex(index + 1);
     }, 2600);
     return () => window.clearTimeout(timer);
-  }, [playing, history.length, index]);
+  }, [playing, sceneActive, reducedMotion, history.length, index]);
 
   function showFrame(next: number) {
     setPlaying(false);
     setFrameIndex(next);
   }
-  function togglePlayback() {
-    if (playing) {
+  function setPlayback(next: boolean) {
+    if (!next || reducedMotion || history.length < 2) {
       setPlaying(false);
       return;
     }
@@ -171,66 +155,19 @@ function FlowPlayback({ incident, state }: Detail) {
           Учебная модель
         </span>
       </div>
-      <div
-        className={`inc-flow ${playing && !reducedMotion ? 'inc-playing' : ''}`}
-        aria-label="Состояние компонентов в выбранном кадре"
-      >
-        {flowNodes.map((node, nodeIndex) => {
-          const status = frame.nodes[node.id];
-          const nextStatus = nodeIndex < 3 ? frame.nodes[flowNodes[nodeIndex + 1].id] : status;
-          const edgeStatus =
-            status === 'blocked' || nextStatus === 'blocked'
-              ? 'blocked'
-              : status === 'degraded' || nextStatus === 'degraded'
-                ? 'degraded'
-                : 'healthy';
-          return (
-            <div className="inc-flow-part" key={node.id}>
-              <div className={`inc-node inc-node-${status}`}>
-                <node.Icon size={23} strokeWidth={1.7} />
-                <strong>{node.title}</strong>
-                <span>{node.subtitle}</span>
-                <small className="inc-node-status">
-                  {status === 'healthy' ? <Check size={12} /> : <TriangleAlert size={12} />}
-                  {statusLabels[status]}
-                </small>
-                {node.id === 'broker' && (
-                  <div
-                    className="inc-replicas"
-                    aria-label={`${frame.metrics.isr} из 3 реплик в ISR`}
-                  >
-                    {[1, 2, 3].map((replica) => (
-                      <i
-                        key={replica}
-                        className={replica <= frame.metrics.isr ? 'is-in-sync' : ''}
-                      />
-                    ))}
-                    <span>ISR {frame.metrics.isr}/3</span>
-                  </div>
-                )}
-              </div>
-              {nodeIndex < 3 && (
-                <div
-                  className={`inc-link inc-link-${edgeStatus} ${node.id === 'consumer' && frame.metrics.duplicates > 0 ? 'inc-link-duplicates' : ''}`}
-                  aria-hidden="true"
-                >
-                  <span className="inc-link-track" />
-                  <i className="inc-pulse" />
-                  <i className="inc-pulse inc-pulse-second" />
-                  <ArrowRight size={16} />
-                  <span className="inc-link-caption">
-                    {edgeStatus === 'blocked'
-                      ? 'сбой'
-                      : edgeStatus === 'degraded'
-                        ? 'задержка'
-                        : 'поток'}
-                  </span>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      <SpatialFlow
+        mode="incident"
+        nodes={frame.nodes}
+        lag={frame.metrics.lag}
+        duplicates={frame.metrics.duplicates}
+        isr={frame.metrics.isr}
+        inRate={frame.metrics.inRate}
+        outRate={frame.metrics.outRate}
+        playing={playing}
+        onPlayingChange={setPlayback}
+        playbackDisabled={history.length < 2}
+        onActiveChange={setSceneActive}
+      />
       <dl className="inc-metrics">
         {metricLabels.map((metric) => (
           <div key={metric.id}>
@@ -259,8 +196,9 @@ function FlowPlayback({ incident, state }: Detail) {
           </button>
           <button
             className="outline inc-play-button"
-            onClick={togglePlayback}
+            onClick={() => setPlayback(!playing)}
             aria-pressed={playing}
+            disabled={reducedMotion || history.length < 2}
           >
             {playing ? <Pause size={16} /> : <Play size={16} />}
             {playing ? 'Пауза' : 'Воспроизвести'}

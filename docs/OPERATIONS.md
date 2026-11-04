@@ -37,6 +37,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start.ps1 -NoBrowser
 
 Для другого свободного порта передайте `-Port 4186`. Один checkout запускается скриптом в одном экземпляре; перед сменой порта остановите предыдущий процесс. Повторный запуск уже работающего экземпляра открывает его, не запускает вторую копию и не изменяет данные.
 
+Если зависимости уже установлены и интерфейс собран, можно явно запустить последнюю сборку без npm:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start.ps1 -UseExistingBuild
+```
+
+Этот режим полезен при наличии совместимого Node.js без npm, например в bundled runtime Codex. Скрипт проверяет `dist/index.html` и возможность загрузки Express и Helmet через выбранный Node.js. Затем выполняются те же проверки принадлежности процесса, порта и HTTP health. Режим не устанавливает зависимости и не собирает изменённые исходники. После обновления кода сначала выполните `npm ci` и `npm run build` в среде с npm; отсутствие сборки или runtime-зависимостей приводит к отказу запуска. `-NoBrowser` и `-Port` можно сочетать с `-UseExistingBuild`. Обычный запуск и `Start-Kafka-Workbench.cmd` по-прежнему требуют npm.
+
 Остановка:
 
 ```powershell

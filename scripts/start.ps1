@@ -1,6 +1,7 @@
 param(
     [ValidateRange(1024, 65535)][int]$Port = 4184,
-    [switch]$NoBrowser
+    [switch]$NoBrowser,
+    [switch]$UseExistingBuild
 )
 $ErrorActionPreference = 'Stop'
 $kafkaRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
@@ -45,17 +46,26 @@ if (Test-Path -LiteralPath $kafkaRecordPath) {
     }
 }
 if (Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue) { throw "Port $Port is occupied. Choose another port with -Port." }
-$kafkaNpm = Get-Command npm.cmd -ErrorAction SilentlyContinue
-if (!$kafkaNpm) { throw 'npm is required. Install Node.js 24 LTS with npm.' }
-$kafkaNpmCli = Join-Path (Split-Path -Parent $kafkaNpm.Source) 'node_modules/npm/bin/npm-cli.js'
-if (!(Test-Path -LiteralPath $kafkaNpmCli)) { throw 'Cannot locate npm CLI. Install Node.js 24 LTS with npm.' }
 $env:PATH = (Split-Path -Parent $kafkaNode) + ';' + $env:PATH
 Push-Location $kafkaRoot
 try {
-    & $kafkaNode $kafkaNpmCli ci
-    if ($LASTEXITCODE -ne 0) { throw 'npm ci failed. The server was not started.' }
-    & $kafkaNode $kafkaNpmCli run build
-    if ($LASTEXITCODE -ne 0) { throw 'The production build failed. The server was not started.' }
+    if ($UseExistingBuild) {
+        if (!(Test-Path -LiteralPath (Join-Path $kafkaRoot 'dist/index.html') -PathType Leaf)) {
+            throw 'No existing production build. Run npm ci and npm run build before using -UseExistingBuild.'
+        }
+        & $kafkaNode --input-type=module -e "await import('express'); await import('helmet');"
+        if ($LASTEXITCODE -ne 0) { throw 'Runtime dependencies cannot be loaded. Run npm ci before using -UseExistingBuild.' }
+        Write-Output 'Using the existing production build. Dependencies and source files are not rebuilt.'
+    } else {
+        $kafkaNpm = Get-Command npm.cmd -ErrorAction SilentlyContinue
+        if (!$kafkaNpm) { throw 'npm is required. Install Node.js 24 LTS with npm.' }
+        $kafkaNpmCli = Join-Path (Split-Path -Parent $kafkaNpm.Source) 'node_modules/npm/bin/npm-cli.js'
+        if (!(Test-Path -LiteralPath $kafkaNpmCli)) { throw 'Cannot locate npm CLI. Install Node.js 24 LTS with npm.' }
+        & $kafkaNode $kafkaNpmCli ci
+        if ($LASTEXITCODE -ne 0) { throw 'npm ci failed. The server was not started.' }
+        & $kafkaNode $kafkaNpmCli run build
+        if ($LASTEXITCODE -ne 0) { throw 'The production build failed. The server was not started.' }
+    }
 } finally {
     Pop-Location
 }
