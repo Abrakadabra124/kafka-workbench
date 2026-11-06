@@ -30,3 +30,8 @@ services:
       start_period: 20s
     # No published ports, host mounts, Docker socket or privileged mode.
     # Lab data belongs to this disposable container and is removed by Stop.
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${KAFKA_BASIC_SUBNET:-10.254.244.32/28}
