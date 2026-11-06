@@ -39,7 +39,7 @@ jobs:
   browser-and-kafka:
     name: Browser and real Kafka lab
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -64,6 +64,26 @@ jobs:
         run: node --test tests/labs.test.mjs
         env:
           RUN_LIVE_LABS: '1'
+      - name: Run real three-broker exercises
+        run: node scripts/with-hardware-lock.mjs --test tests/workspace-live.test.mjs
+        env:
+          RUN_WORKSPACE_LIVE: '1'
+      - name: Run real browser workspace journey
+        run: node scripts/with-hardware-lock.mjs node_modules/@playwright/test/cli.js test tests/e2e/workspace-real.spec.mjs
+        env:
+          RUN_WORKSPACE_BROWSER: '1'
+          KAFKA_QA_DIR: test-results/workspace-real
+      - name: Preserve real workspace evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: real-workspace-evidence
+          path: |
+            data/workspace-live-evidence.json
+            data/workspace-browser-evidence.json
+            test-results/workspace-real/
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Preserve browser failure diagnostics
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

@@ -1,0 +1,1128 @@
+{
+  "testedAt": "2026-11-06T23:53:27.889Z",
+  "viewports": [
+    320,
+    390,
+    768,
+    1440
+  ],
+  "consoleErrors": [],
+  "state": {
+    "draft": "{\n  \"records\": [\n    {\n      \"partition\": 0,\n      \"key\": \"customer-42\",\n      \"value\": \"Изменённый заказ из браузера\"\n    },\n    {\n      \"partition\": 1,\n      \"key\": \"customer-7\",\n      \"value\": \"Заказ ORD-202\"\n    },\n    {\n      \"partition\": 2,\n      \"key\": \"customer-42\",\n      \"value\": \"Заказ ORD-203\"\n    }\n  ],\n  \"consumer\": {\n    \"group\": \"orders\",\n    \"maxRecords\": 3,\n    \"commit\": true\n  }\n}",
+    "attempt": 1,
+    "prepared": true,
+    "snapshot": {
+      "partitions": [
+        {
+          "partition": 0,
+          "leader": 1,
+          "replicas": [
+            1,
+            2,
+            3
+          ],
+          "isr": [
+            1,
+            2,
+            3
+          ],
+          "end": 1,
+          "committed": 1,
+          "lag": 0
+        },
+        {
+          "partition": 1,
+          "leader": 2,
+          "replicas": [
+            2,
+            3,
+            1
+          ],
+          "isr": [
+            1,
+            2,
+            3
+          ],
+          "end": 1,
+          "committed": 1,
+          "lag": 0
+        },
+        {
+          "partition": 2,
+          "leader": 1,
+          "replicas": [
+            3,
+            1,
+            2
+          ],
+          "isr": [
+            1,
+            2,
+            3
+          ],
+          "end": 1,
+          "committed": 1,
+          "lag": 0
+        }
+      ],
+      "group": "wb-recovery-orders",
+      "topic": "wb-recovery",
+      "capturedAt": "2026-11-06T23:53:25.673Z",
+      "brokers": [
+        {
+          "id": 1,
+          "running": true
+        },
+        {
+          "id": 2,
+          "running": true
+        },
+        {
+          "id": 3,
+          "running": true
+        }
+      ]
+    },
+    "history": [
+      {
+        "id": "54d26590-e4a2-4f77-8c4b-e22fbf24c1be",
+        "action": "prepare",
+        "startedAt": "2026-11-06T23:51:30.847Z",
+        "finishedAt": "2026-11-06T23:51:46.023Z",
+        "ok": true,
+        "message": "Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.",
+        "result": {},
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:51:46.023Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "f5147ce9-8209-496c-a3fa-c3fbf83f1b68",
+        "action": "fault",
+        "startedAt": "2026-11-06T23:51:46.107Z",
+        "finishedAt": "2026-11-06T23:51:57.136Z",
+        "ok": true,
+        "message": "Сбой воспроизведён: broker 3 остановлен, ISR уменьшился. Запишите события, затем восстановите брокер.",
+        "result": {},
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:51:57.136Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      },
+      {
+        "id": "c3b5fd67-4535-4183-bb10-0b14504577e0",
+        "action": "produce",
+        "startedAt": "2026-11-06T23:51:57.236Z",
+        "finishedAt": "2026-11-06T23:52:21.435Z",
+        "ok": true,
+        "message": "Запись подтверждена Kafka: 3 событий. Это ещё не зачёт задания.",
+        "result": {
+          "records": [
+            {
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Изменённый заказ из браузера",
+              "partition": 0
+            },
+            {
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202",
+              "partition": 1
+            },
+            {
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203",
+              "partition": 2
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:52:21.435Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      },
+      {
+        "id": "06b18c46-58c7-4d58-bee1-f9f7e2befc57",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:52:21.483Z",
+        "finishedAt": "2026-11-06T23:52:34.943Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: выключен. Группа: orders.",
+        "result": {
+          "committed": false,
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Изменённый заказ из браузера"
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:52:34.943Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      },
+      {
+        "id": "a7fc388e-ac5d-4aca-b235-000ca6a16bb5",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:52:35.002Z",
+        "finishedAt": "2026-11-06T23:52:48.199Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": false
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": false
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:52:42.053Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      },
+      {
+        "id": "79954791-1c4b-4ab0-a3b9-ac74801aaf4a",
+        "action": "recover",
+        "startedAt": "2026-11-06T23:52:48.267Z",
+        "finishedAt": "2026-11-06T23:52:55.631Z",
+        "ok": true,
+        "message": "Восстановление подтверждено: все три реплики снова в ISR.",
+        "result": {},
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:52:55.631Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "4718a831-b716-4371-aed2-482f8ca9ceba",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:52:55.715Z",
+        "finishedAt": "2026-11-06T23:53:00.424Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: включён. Группа: orders.",
+        "result": {
+          "committed": true,
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Изменённый заказ из браузера"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:53:00.424Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "b99b828f-e9fa-4745-8e00-b1fb75f9a586",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:53:00.481Z",
+        "finishedAt": "2026-11-06T23:53:05.132Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:53:02.951Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "7b9f980a-6f51-482c-a21e-e91126f3afdb",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:53:06.861Z",
+        "finishedAt": "2026-11-06T23:53:23.115Z",
+        "ok": true,
+        "message": "Прочитано 0. Commit: включён. Группа: orders.",
+        "result": {
+          "committed": true,
+          "records": []
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:53:23.115Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "40ec40da-8dcc-4191-8a79-2164a08ed12c",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:53:23.164Z",
+        "finishedAt": "2026-11-06T23:53:27.875Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:53:25.673Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    ],
+    "ledger": [
+      {
+        "offset": 0,
+        "key": "customer-42",
+        "value": "Изменённый заказ из браузера",
+        "partition": 0
+      },
+      {
+        "offset": 0,
+        "key": "customer-7",
+        "value": "Заказ ORD-202",
+        "partition": 1
+      },
+      {
+        "offset": 0,
+        "key": "customer-42",
+        "value": "Заказ ORD-203",
+        "partition": 2
+      }
+    ],
+    "reads": [
+      {
+        "committed": false,
+        "records": [
+          {
+            "partition": 2,
+            "offset": 0,
+            "key": "customer-42",
+            "value": "Заказ ORD-203"
+          },
+          {
+            "partition": 1,
+            "offset": 0,
+            "key": "customer-7",
+            "value": "Заказ ORD-202"
+          },
+          {
+            "partition": 0,
+            "offset": 0,
+            "key": "customer-42",
+            "value": "Изменённый заказ из браузера"
+          }
+        ],
+        "group": "orders"
+      },
+      {
+        "committed": true,
+        "records": [
+          {
+            "partition": 2,
+            "offset": 0,
+            "key": "customer-42",
+            "value": "Заказ ORD-203"
+          },
+          {
+            "partition": 0,
+            "offset": 0,
+            "key": "customer-42",
+            "value": "Изменённый заказ из браузера"
+          },
+          {
+            "partition": 1,
+            "offset": 0,
+            "key": "customer-7",
+            "value": "Заказ ORD-202"
+          }
+        ],
+        "group": "orders"
+      },
+      {
+        "committed": true,
+        "records": [],
+        "group": "orders"
+      }
+    ],
+    "faultObserved": true,
+    "wroteDuringFault": true,
+    "verified": true,
+    "readEvidence": [
+      "[2,0,\"customer-42\",\"Заказ ORD-203\"]",
+      "[1,0,\"customer-7\",\"Заказ ORD-202\"]",
+      "[0,0,\"customer-42\",\"Изменённый заказ из браузера\"]"
+    ],
+    "replayObserved": false,
+    "uncommittedEvidence": [
+      "[2,0,\"customer-42\",\"Заказ ORD-203\"]",
+      "[1,0,\"customer-7\",\"Заказ ORD-202\"]",
+      "[0,0,\"customer-42\",\"Изменённый заказ из браузера\"]"
+    ]
+  }
+}

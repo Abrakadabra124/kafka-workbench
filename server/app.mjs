@@ -6,6 +6,7 @@ import { existsSync } from 'node:fs';
 import { modules } from '../content/curriculum.mjs';
 import { createStore } from './store.mjs';
 import { createLabRunner } from './lab.mjs';
+import { createWorkspaceRunner, workspaceActions, workspaceTasks } from './workspace.mjs';
 import { incidents } from '../content/incidents.mjs';
 import { publicIncident, createIncidentState, actIncident } from './incident-engine.mjs';
 
@@ -44,11 +45,13 @@ function validBody(body, keys) {
 export function createApp({
   dataDir = resolve(projectDir, 'data'),
   labRunner = createLabRunner(),
+  workspaceRunner,
   distDir = resolve(projectDir, 'dist'),
   devOrigin,
 } = {}) {
   const app = express();
   const store = createStore(dataDir);
+  const workspace = workspaceRunner ?? createWorkspaceRunner({ store });
   app.disable('x-powered-by');
   app.locals.close = () => store.close();
   app.use(
@@ -136,11 +139,12 @@ export function createApp({
   app.get('/api/export', (_req, res) => {
     res.set('Content-Disposition', 'attachment; filename="kafka-workbench-progress.json"');
     res.json({
-      schemaVersion: 2,
+      schemaVersion: 3,
       exportedAt: new Date().toISOString(),
       progress: store.progress(),
       mastery: store.mastery(),
       incidents: store.incidents(),
+      workspaces: store.workspaces(),
     });
   });
   app.post('/api/progress/reset', (req, res) => {
@@ -192,6 +196,22 @@ export function createApp({
       if (error.code !== 'INVALID_INCIDENT_INPUT') throw error;
       res.status(400).json({ error: error.message });
     }
+  });
+  app.get('/api/workspace', async (_req, res) => res.json(await workspace.status()));
+  app.post('/api/workspace', async (req, res) => {
+    const { task, action, draft, confirm } = req.body ?? {};
+    if (
+      !validBody(req.body, ['task', 'action', 'draft', 'confirm']) ||
+      !workspaceTasks.some((t) => t.id === task) ||
+      !workspaceActions.includes(action) ||
+      (draft !== undefined && typeof draft !== 'string') ||
+      (['prepare', 'stop'].includes(action) && confirm !== 'RESET')
+    )
+      return res.status(400).json({
+        error: 'Укажите допустимое задание/действие; подготовка и удаление требуют confirm: RESET.',
+      });
+    const result = await workspace.execute(task, action, draft);
+    res.status(result.httpStatus ?? 200).json(result);
   });
   app.get('/api/lab', async (_req, res) => res.json(await labRunner.status()));
   app.post('/api/lab', async (req, res) => {

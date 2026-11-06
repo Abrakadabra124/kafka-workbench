@@ -1,0 +1,61 @@
+name: kafka-workbench-workspace
+x-environment: &environment
+  KAFKA_PROCESS_ROLES: broker,controller
+  KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+  KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+  KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker1:9093,2@broker2:9093,3@broker3:9093
+  CLUSTER_ID: V1NwYWNlS2Fma2FMQUIxMQ
+  KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+  KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 3
+  KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+  KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+  KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+  KAFKA_LOG_DIRS: /tmp/workspace-kraft
+  KAFKA_HEAP_OPTS: -Xms256m -Xmx512m
+  KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+  KAFKA_REPLICA_LAG_TIME_MAX_MS: 5000
+  KAFKA_CONTROLLED_SHUTDOWN_ENABLE: 'true'
+x-broker: &broker
+  image: apache/kafka:4.2.2@sha256:1213eb3943d551e5ed1fca7a4e109001cee35770b66a02a0c37a8964efe09b69
+  mem_limit: 1536m
+  cpus: 2
+  healthcheck:
+    test: [CMD, /opt/kafka/bin/kafka-topics.sh, --bootstrap-server, localhost:9092, --list]
+    interval: 10s
+    timeout: 10s
+    retries: 12
+    start_period: 20s
+services:
+  broker1:
+    <<: *broker
+    image: ${COMPOSE_PROJECT_NAME}-adapter:1.1.0
+    build:
+      context: .
+      dockerfile: workspace.Dockerfile
+    hostname: broker1
+    environment:
+      <<: *environment
+      KAFKA_NODE_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker1:9092
+  broker2:
+    <<: *broker
+    hostname: broker2
+    environment:
+      <<: *environment
+      KAFKA_NODE_ID: 2
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker2:9092
+  broker3:
+    <<: *broker
+    hostname: broker3
+    environment:
+      <<: *environment
+      KAFKA_NODE_ID: 3
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker3:9092
+# No published ports, host mounts, privileged containers or Docker socket mounts.
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${KAFKA_WORKSPACE_SUBNET:-10.254.244.0/28}

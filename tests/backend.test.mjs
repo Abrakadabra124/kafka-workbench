@@ -10,6 +10,31 @@ import { createApp } from '../server/app.mjs';
 import { createStore } from '../server/store.mjs';
 import { modules } from '../content/curriculum.mjs';
 import { incidents } from '../content/incidents.mjs';
+import { defaultRecipe } from '../server/workspace.mjs';
+
+test('workspace HTTP contract rejects forged state, requires reset confirmation and exports offline drafts', async (t) => {
+  const { request } = await fixture(t);
+  for (const body of [
+    { task: 'delivery', action: 'save', draft: '{}' },
+    { task: 'delivery', action: 'save', draft: defaultRecipe(), verified: true },
+    { task: '../other', action: 'prepare', confirm: 'RESET' },
+    { task: 'delivery', action: 'stop' },
+    { task: 'delivery', action: 'prepare', confirm: true },
+    { task: 'delivery', action: 'shell', command: 'pwd' },
+  ])
+    assert.equal((await request('/api/workspace', body)).response.status, 400);
+  const saved = await request('/api/workspace', {
+    task: 'delivery',
+    action: 'save',
+    draft: defaultRecipe(),
+  });
+  assert.equal(saved.response.status, 200);
+  assert.equal(saved.body.state.verified, false);
+  const exported = await request('/api/export');
+  assert.equal(exported.body.workspaces.delivery.draft, defaultRecipe());
+  await request('/api/progress/reset', { confirm: 'RESET' });
+  assert.equal((await request('/api/export')).body.workspaces.delivery.draft, defaultRecipe());
+});
 
 function temporaryDirectory() {
   const directory = mkdtempSync(join(tmpdir(), 'kafka-workbench-test-'));
@@ -164,7 +189,7 @@ test('notes and progress persist in SQLite; export and explicit reset include th
   persisted.close();
   persisted.close();
   const exported = await request('/api/export');
-  assert.equal(exported.body.schemaVersion, 2);
+  assert.equal(exported.body.schemaVersion, 3);
   assert.equal(exported.body.progress.notes[lesson.id], text);
   assert.equal(exported.body.progress.answers[lesson.id].question.attempts, 1);
   assert.match(exported.response.headers.get('content-disposition'), /attachment/u);

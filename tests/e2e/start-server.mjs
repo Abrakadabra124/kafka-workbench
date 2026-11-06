@@ -2,9 +2,23 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { createApp } from '../../server/app.mjs';
+import { createWorkspaceRunner } from '../../server/workspace.mjs';
+const workspaceStates = new Map();
 const dataDir = mkdtempSync(join(tmpdir(), 'kafka-workbench-e2e-'));
 const app = createApp({
   dataDir,
+  workspaceRunner: createWorkspaceRunner({
+    store: {
+      workspace: (id) => workspaceStates.get(id),
+      saveWorkspace: (id, state) => workspaceStates.set(id, state),
+    },
+    hardwareLock: false,
+    runCommand: async () => ({
+      code: 1,
+      stdout: '',
+      stderr: 'Docker отключён в браузерной проверке.',
+    }),
+  }),
   labRunner: {
     actions: ['start', 'topic', 'produce', 'consume', 'inspect', 'stop'],
     status: async () => ({

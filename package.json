@@ -1,6 +1,6 @@
 {
   "name": "kafka-workbench",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "description": "Практический тренажёр Apache Kafka: события, группы, надёжность и настоящая лаборатория",
@@ -16,6 +16,8 @@
     "test": "node --test tests/*.test.mjs",
     "test:e2e": "playwright test",
     "test:labs": "node scripts/test-labs.mjs",
+    "test:workspace": "node scripts/test-workspace.mjs",
+    "test:workspace:browser": "node scripts/test-workspace.mjs --browser",
     "check": "npm run typecheck && npm test && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
