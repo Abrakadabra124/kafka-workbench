@@ -188,6 +188,7 @@ export function Workspace() {
                 snapshot={snapshot}
                 replaying={historical}
                 playing={playing}
+                eventId={event?.id}
                 action={
                   event?.ok && (event.result.records?.length ?? 0) > 0 ? event.action : undefined
                 }

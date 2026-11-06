@@ -143,7 +143,14 @@ test('workspace playback freezes on pause, offscreen and document hidden, reduce
   await fixture(page);
   await prepare(page);
   await page.getByRole('button', { name: '2. Записать из рецепта' }).click();
+  await page.getByRole('button', { name: '2. Записать из рецепта' }).click();
   await page.getByRole('button', { name: '3. Прочитать группой' }).click();
+  await page.locator('.workspace-timeline button').nth(1).click();
+  const firstPacket = await page.locator('.cluster-packet').elementHandle();
+  expect(firstPacket).not.toBeNull();
+  await page.locator('.workspace-timeline button').nth(2).click();
+  expect(await firstPacket.evaluate((node) => node.isConnected)).toBe(false);
+  await expect(page.locator('.cluster-packet')).toHaveCount(1);
   await page.getByRole('button', { name: 'История по шагам' }).click();
   await page.locator('.cluster-scene').scrollIntoViewIfNeeded();
   const play = page.getByRole('button', { name: 'Воспроизвести запись', exact: true });

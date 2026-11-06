@@ -8,6 +8,7 @@ export function WorkspaceScene({
   replaying,
   playing,
   action,
+  eventId,
   onPlaying,
   onEligible,
 }: {
@@ -15,6 +16,7 @@ export function WorkspaceScene({
   replaying: boolean;
   playing: boolean;
   action?: string;
+  eventId?: string;
   onPlaying: (value: boolean) => void;
   onEligible: (value: boolean) => void;
 }) {
@@ -152,7 +154,7 @@ export function WorkspaceScene({
             <small>{lag === undefined ? 'lag ?' : `lag ${lag}`}</small>
           </div>
           {replaying && ['produce', 'consume'].includes(action ?? '') && (
-            <div className={`cluster-packet packet-${action}`} key={action}>
+            <div className={`cluster-packet packet-${action}`} key={eventId}>
               <ArrowRight size={12} />
             </div>
           )}
