@@ -85,6 +85,8 @@ test('workspace renders real failure evidence and restores all replicas without 
   await page.getByRole('button', { name: 'Отключить broker 3' }).click();
   await expect(page.locator('.cluster-rack.is-down')).toHaveCount(1);
   await page.getByRole('button', { name: '2. Записать из рецепта' }).click();
+  await expect(page.locator('.cluster-rack.is-down .replica-cells i')).toHaveCount(0);
+  await expect(page.locator('.cluster-rack.is-down .replica-unmeasured')).toHaveCount(3);
   await page.getByRole('button', { name: 'Проверить результат', exact: true }).click();
   await expect(page.locator('.workspace-notice')).toContainText('не зачтено');
   await page.getByRole('button', { name: 'Восстановить broker 3' }).click();

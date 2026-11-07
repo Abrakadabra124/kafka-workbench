@@ -55,6 +55,8 @@ test('real browser to API to Kafka: edit, failed verification, commit, recovery 
     recipe.records[0].value = 'Изменённый заказ из браузера';
     await editor.fill(JSON.stringify(recipe, null, 2));
     await click('2. Записать из рецепта', 'produce');
+    await expect(page.locator('.cluster-rack.is-down .replica-cells i')).toHaveCount(0);
+    await expect(page.locator('.cluster-rack.is-down .replica-unmeasured')).toHaveCount(3);
     await click('3. Прочитать группой', 'consume');
     const rejected = await click('Проверить результат', 'verify');
     expect(rejected.state.verified).toBe(false);

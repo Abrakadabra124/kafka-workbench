@@ -130,9 +130,13 @@ export function WorkspaceScene({
                       >
                         <span>p{p}</span>
                         <div className="replica-cells">
-                          {Array.from({ length: Math.min(row?.end ?? 0, 5) }, (_, n) => (
-                            <i key={n} />
-                          ))}
+                          {row && !synced ? (
+                            <em className="replica-unmeasured">?</em>
+                          ) : (
+                            Array.from({ length: Math.min(row?.end ?? 0, 5) }, (_, n) => (
+                              <i key={n} />
+                            ))
+                          )}
                         </div>
                         <b>{row ? (leader ? 'L' : synced ? 'R' : '!') : '?'}</b>
                       </div>
@@ -171,10 +175,12 @@ export function WorkspaceScene({
           <b>!</b> Вне ISR
         </span>
         <span>Движение воспроизводит сохранённый шаг</span>
+        <span>? Заполнение реплики вне ISR не измерено</span>
       </div>
       <p className="cluster-access-note">
         Producer (acks=all) → broker 1 / 2 / 3 → группа orders. Таблица показывает состояние orders,
-        даже если в рецепте выбрана audit.
+        даже если в рецепте выбрана audit. Ячейки иллюстрируют общий журнал партиции; отдельные
+        позиции реплик не измеряются.
       </p>
       {motion.reduced && (
         <p className="cluster-access-note">
