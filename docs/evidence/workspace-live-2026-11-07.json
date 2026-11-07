@@ -1,0 +1,6243 @@
+{
+  "finishedAt": "2026-11-06T23:51:26.634Z",
+  "evidence": [
+    {
+      "task": "delivery",
+      "action": "prepare",
+      "ok": true,
+      "event": {
+        "id": "d0777bd7-b41d-49d0-b6e5-01e8584bed0a",
+        "action": "prepare",
+        "startedAt": "2026-11-06T23:42:24.501Z",
+        "finishedAt": "2026-11-06T23:42:39.776Z",
+        "ok": true,
+        "message": "Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.",
+        "result": {},
+        "snapshot": {
+          "topic": "wb-delivery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "group": "wb-delivery-orders",
+          "capturedAt": "2026-11-06T23:42:39.776Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "8b1da022-db36-4d2d-a98f-fc5e4fc64e82",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:42:39.778Z",
+        "finishedAt": "2026-11-06T23:42:56.050Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": false
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": false
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": false
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-delivery",
+          "group": "wb-delivery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:42:42.318Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "produce",
+      "ok": true,
+      "event": {
+        "id": "3de60d67-907b-49c4-8e49-5e1167df6b04",
+        "action": "produce",
+        "startedAt": "2026-11-06T23:42:56.057Z",
+        "finishedAt": "2026-11-06T23:43:01.656Z",
+        "ok": true,
+        "message": "Запись подтверждена Kafka: 3 событий. Это ещё не зачёт задания.",
+        "result": {
+          "records": [
+            {
+              "value": "Заказ ORD-201",
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42"
+            },
+            {
+              "value": "Заказ ORD-202",
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7"
+            },
+            {
+              "value": "Заказ ORD-203",
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42"
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-delivery",
+          "group": "wb-delivery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:43:01.656Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "e4ea4fc4-c25f-40d8-bbec-99462c9fafb5",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:43:01.657Z",
+        "finishedAt": "2026-11-06T23:43:06.705Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: выключен. Группа: orders.",
+        "result": {
+          "committed": false,
+          "records": [
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            },
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-delivery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-delivery-orders",
+          "capturedAt": "2026-11-06T23:43:06.705Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "da84c658-6b50-490c-846c-66777ff1e8db",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:43:06.707Z",
+        "finishedAt": "2026-11-06T23:43:12.330Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": false
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-delivery-orders",
+          "topic": "wb-delivery",
+          "capturedAt": "2026-11-06T23:43:09.198Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "0d9336d6-f014-4ad5-b396-83e1e573f50f",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:43:12.331Z",
+        "finishedAt": "2026-11-06T23:43:17.336Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: включён. Группа: orders.",
+        "result": {
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            }
+          ],
+          "committed": true
+        },
+        "snapshot": {
+          "group": "wb-delivery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-delivery",
+          "capturedAt": "2026-11-06T23:43:17.336Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "9857aa4c-0fdf-4792-9d0e-d17847e4eaa7",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:43:17.337Z",
+        "finishedAt": "2026-11-06T23:43:22.258Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-delivery",
+          "group": "wb-delivery-orders",
+          "capturedAt": "2026-11-06T23:43:19.967Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "1442190d-65c4-41e1-85e6-956cb284f4e6",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:43:22.259Z",
+        "finishedAt": "2026-11-06T23:43:40.007Z",
+        "ok": true,
+        "message": "Прочитано 0. Commit: включён. Группа: orders.",
+        "result": {
+          "records": [],
+          "committed": true
+        },
+        "snapshot": {
+          "topic": "wb-delivery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-delivery-orders",
+          "capturedAt": "2026-11-06T23:43:40.007Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "dc466cf4-e01b-4d66-9a8b-1c518c203543",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:43:40.009Z",
+        "finishedAt": "2026-11-06T23:43:45.027Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-delivery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-delivery-orders",
+          "capturedAt": "2026-11-06T23:43:42.658Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "prepare",
+      "ok": true,
+      "event": {
+        "id": "954e3c6e-b8d9-4fc2-97f1-fa44c9ddce0d",
+        "action": "prepare",
+        "startedAt": "2026-11-06T23:43:45.029Z",
+        "finishedAt": "2026-11-06T23:43:53.518Z",
+        "ok": true,
+        "message": "Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.",
+        "result": {},
+        "snapshot": {
+          "topic": "wb-delivery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "group": "wb-delivery-orders",
+          "capturedAt": "2026-11-06T23:43:53.518Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "e999bacc-97ba-489f-b8ca-aad15ba9a5e7",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:43:53.519Z",
+        "finishedAt": "2026-11-06T23:44:10.220Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": false
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": false
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": false
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-delivery",
+          "group": "wb-delivery-orders",
+          "capturedAt": "2026-11-06T23:43:56.396Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "produce",
+      "ok": true,
+      "event": {
+        "id": "5c778248-b67b-494e-bc6b-adb740da2d0d",
+        "action": "produce",
+        "startedAt": "2026-11-06T23:44:10.221Z",
+        "finishedAt": "2026-11-06T23:44:14.604Z",
+        "ok": true,
+        "message": "Запись подтверждена Kafka: 3 событий. Это ещё не зачёт задания.",
+        "result": {
+          "records": [
+            {
+              "key": "customer-42",
+              "value": "Заказ ORD-201",
+              "partition": 0,
+              "offset": 0
+            },
+            {
+              "key": "customer-7",
+              "value": "Заказ ORD-202",
+              "partition": 1,
+              "offset": 0
+            },
+            {
+              "key": "customer-42",
+              "value": "Заказ ORD-203",
+              "partition": 2,
+              "offset": 0
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-delivery-orders",
+          "topic": "wb-delivery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:44:14.604Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "5729c334-e9b9-4a72-a414-44a96eead9a7",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:44:14.606Z",
+        "finishedAt": "2026-11-06T23:44:20.595Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: выключен. Группа: orders.",
+        "result": {
+          "committed": false,
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-delivery-orders",
+          "topic": "wb-delivery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:44:20.595Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "b5add12b-8bc4-4fe9-9627-4e07f003ace2",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:44:20.596Z",
+        "finishedAt": "2026-11-06T23:44:25.473Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": false
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-delivery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-delivery-orders",
+          "capturedAt": "2026-11-06T23:44:23.192Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "9f394202-5fdb-4300-8823-fd9b710a70b5",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:44:25.476Z",
+        "finishedAt": "2026-11-06T23:44:31.499Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: включён. Группа: orders.",
+        "result": {
+          "records": [
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            },
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            }
+          ],
+          "committed": true
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-delivery-orders",
+          "topic": "wb-delivery",
+          "capturedAt": "2026-11-06T23:44:31.499Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "75497961-29d5-4a6f-8731-b41b22f74367",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:44:31.500Z",
+        "finishedAt": "2026-11-06T23:44:36.574Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-delivery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-delivery",
+          "capturedAt": "2026-11-06T23:44:34.171Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "4c991ce7-dec3-4b08-b64d-2fa5c8deeb7c",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:44:36.577Z",
+        "finishedAt": "2026-11-06T23:44:53.225Z",
+        "ok": true,
+        "message": "Прочитано 0. Commit: включён. Группа: orders.",
+        "result": {
+          "records": [],
+          "committed": true
+        },
+        "snapshot": {
+          "topic": "wb-delivery",
+          "group": "wb-delivery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:44:53.225Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "delivery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "c2278510-0d0a-458d-9204-8648e72b0dac",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:44:53.228Z",
+        "finishedAt": "2026-11-06T23:44:57.939Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-delivery-orders",
+          "topic": "wb-delivery",
+          "capturedAt": "2026-11-06T23:44:55.764Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "prepare",
+      "ok": true,
+      "event": {
+        "id": "0416d9ef-a97d-434c-b062-8772c9a6ee75",
+        "action": "prepare",
+        "startedAt": "2026-11-06T23:44:57.942Z",
+        "finishedAt": "2026-11-06T23:45:05.036Z",
+        "ok": true,
+        "message": "Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.",
+        "result": {},
+        "snapshot": {
+          "group": "wb-replay-orders",
+          "topic": "wb-replay",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:45:05.036Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "6f1a7c0b-a497-4d81-98c9-6b2c594f59b3",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:45:05.038Z",
+        "finishedAt": "2026-11-06T23:45:21.992Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": false
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": false
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": false
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Повтор одного offset без commit наблюдался в двух чтениях",
+              "ok": false
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-replay-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-replay",
+          "capturedAt": "2026-11-06T23:45:08.155Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "produce",
+      "ok": true,
+      "event": {
+        "id": "c42a1ddc-aace-4f94-8211-d20e32ca946a",
+        "action": "produce",
+        "startedAt": "2026-11-06T23:45:21.994Z",
+        "finishedAt": "2026-11-06T23:45:26.906Z",
+        "ok": true,
+        "message": "Запись подтверждена Kafka: 3 событий. Это ещё не зачёт задания.",
+        "result": {
+          "records": [
+            {
+              "key": "customer-42",
+              "value": "Заказ ORD-201",
+              "partition": 0,
+              "offset": 0
+            },
+            {
+              "key": "customer-7",
+              "value": "Заказ ORD-202",
+              "partition": 1,
+              "offset": 0
+            },
+            {
+              "key": "customer-42",
+              "value": "Заказ ORD-203",
+              "partition": 2,
+              "offset": 0
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-replay",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-replay-orders",
+          "capturedAt": "2026-11-06T23:45:26.906Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "082efee6-015c-4316-b0bb-e5be3837dd55",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:45:26.908Z",
+        "finishedAt": "2026-11-06T23:45:32.384Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: выключен. Группа: orders.",
+        "result": {
+          "committed": false,
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-replay-orders",
+          "topic": "wb-replay",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:45:32.384Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "263893ce-25be-45b7-880f-7a478066bb0e",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:45:32.385Z",
+        "finishedAt": "2026-11-06T23:45:37.306Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: выключен. Группа: orders.",
+        "result": {
+          "records": [
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            },
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            }
+          ],
+          "committed": false
+        },
+        "snapshot": {
+          "group": "wb-replay-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "topic": "wb-replay",
+          "capturedAt": "2026-11-06T23:45:37.306Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "bba65eeb-c7fa-486c-9e35-60d21898263e",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:45:37.308Z",
+        "finishedAt": "2026-11-06T23:45:41.954Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": false
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Повтор одного offset без commit наблюдался в двух чтениях",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-replay-orders",
+          "topic": "wb-replay",
+          "capturedAt": "2026-11-06T23:45:39.798Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "8ababd6d-7e24-44a5-9642-e98cdb0fc663",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:45:41.955Z",
+        "finishedAt": "2026-11-06T23:45:47.379Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: включён. Группа: orders.",
+        "result": {
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            }
+          ],
+          "committed": true
+        },
+        "snapshot": {
+          "group": "wb-replay-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-replay",
+          "capturedAt": "2026-11-06T23:45:47.379Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "b714f247-0396-4b36-9aee-2593eb6a6edd",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:45:47.380Z",
+        "finishedAt": "2026-11-06T23:45:52.172Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Повтор одного offset без commit наблюдался в двух чтениях",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-replay",
+          "group": "wb-replay-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:45:49.977Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "95e5ce70-12c4-47d5-b251-87897ab56028",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:45:52.174Z",
+        "finishedAt": "2026-11-06T23:46:09.383Z",
+        "ok": true,
+        "message": "Прочитано 0. Commit: включён. Группа: orders.",
+        "result": {
+          "committed": true,
+          "records": []
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-replay",
+          "group": "wb-replay-orders",
+          "capturedAt": "2026-11-06T23:46:09.382Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "931acb21-660c-4d67-bfa3-f8648ca25d01",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:46:09.384Z",
+        "finishedAt": "2026-11-06T23:46:14.109Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Повтор одного offset без commit наблюдался в двух чтениях",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-replay",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-replay-orders",
+          "capturedAt": "2026-11-06T23:46:11.934Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "prepare",
+      "ok": true,
+      "event": {
+        "id": "4e933c86-b3bb-4a1f-8c96-8a222360201a",
+        "action": "prepare",
+        "startedAt": "2026-11-06T23:46:14.111Z",
+        "finishedAt": "2026-11-06T23:46:21.481Z",
+        "ok": true,
+        "message": "Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.",
+        "result": {},
+        "snapshot": {
+          "topic": "wb-replay",
+          "group": "wb-replay-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:46:21.481Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "35028510-8735-4772-a123-3739b6978307",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:46:21.483Z",
+        "finishedAt": "2026-11-06T23:46:37.685Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": false
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": false
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": false
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Повтор одного offset без commit наблюдался в двух чтениях",
+              "ok": false
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-replay-orders",
+          "topic": "wb-replay",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:46:23.989Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "produce",
+      "ok": true,
+      "event": {
+        "id": "630be050-aef1-4a21-9b3b-ea23a351b1da",
+        "action": "produce",
+        "startedAt": "2026-11-06T23:46:37.694Z",
+        "finishedAt": "2026-11-06T23:46:41.838Z",
+        "ok": true,
+        "message": "Запись подтверждена Kafka: 3 событий. Это ещё не зачёт задания.",
+        "result": {
+          "records": [
+            {
+              "offset": 0,
+              "partition": 0,
+              "value": "Заказ ORD-201",
+              "key": "customer-42"
+            },
+            {
+              "offset": 0,
+              "partition": 1,
+              "value": "Заказ ORD-202",
+              "key": "customer-7"
+            },
+            {
+              "offset": 0,
+              "partition": 2,
+              "value": "Заказ ORD-203",
+              "key": "customer-42"
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-replay",
+          "group": "wb-replay-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:46:41.838Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "4ba508d2-ccae-49d5-a8b5-b9a0b3abccfe",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:46:41.840Z",
+        "finishedAt": "2026-11-06T23:46:47.696Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: выключен. Группа: orders.",
+        "result": {
+          "records": [
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            },
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            }
+          ],
+          "committed": false
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-replay-orders",
+          "topic": "wb-replay",
+          "capturedAt": "2026-11-06T23:46:47.696Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "abbc4ede-21b3-4239-b21f-ebbf38df8ff1",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:46:47.698Z",
+        "finishedAt": "2026-11-06T23:46:52.966Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: выключен. Группа: orders.",
+        "result": {
+          "committed": false,
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-replay-orders",
+          "topic": "wb-replay",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:46:52.966Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "a3111beb-4240-4229-b646-da7f08e9683d",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:46:52.967Z",
+        "finishedAt": "2026-11-06T23:46:58.591Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": false
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Повтор одного offset без commit наблюдался в двух чтениях",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-replay",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-replay-orders",
+          "capturedAt": "2026-11-06T23:46:55.687Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "3373d073-5dfa-4edc-92ef-05b9d0ac2bae",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:46:58.593Z",
+        "finishedAt": "2026-11-06T23:47:03.775Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: включён. Группа: orders.",
+        "result": {
+          "committed": true,
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-replay-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-replay",
+          "capturedAt": "2026-11-06T23:47:03.775Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "338cf873-7e63-43b1-a59c-453e2c248626",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:47:03.776Z",
+        "finishedAt": "2026-11-06T23:47:08.723Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Повтор одного offset без commit наблюдался в двух чтениях",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-replay-orders",
+          "topic": "wb-replay",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:47:06.527Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "d3a6fde1-043a-4dea-bf5a-6d378e4480a5",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:47:08.724Z",
+        "finishedAt": "2026-11-06T23:47:26.280Z",
+        "ok": true,
+        "message": "Прочитано 0. Commit: включён. Группа: orders.",
+        "result": {
+          "records": [],
+          "committed": true
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-replay",
+          "group": "wb-replay-orders",
+          "capturedAt": "2026-11-06T23:47:26.280Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "replay",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "b444b752-53d3-4981-b708-d97c47d6eb33",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:47:26.281Z",
+        "finishedAt": "2026-11-06T23:47:30.957Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Повтор одного offset без commit наблюдался в двух чтениях",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-replay",
+          "group": "wb-replay-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:47:28.745Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "prepare",
+      "ok": true,
+      "event": {
+        "id": "47956185-f489-46c1-ace1-d577d72d5965",
+        "action": "prepare",
+        "startedAt": "2026-11-06T23:47:30.959Z",
+        "finishedAt": "2026-11-06T23:47:38.958Z",
+        "ok": true,
+        "message": "Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.",
+        "result": {},
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:47:38.958Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "3d0f00d0-485e-4834-8b15-de54cabf8a2c",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:47:38.959Z",
+        "finishedAt": "2026-11-06T23:47:55.146Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": false
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": false
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": false
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": false
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:47:41.442Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "fault",
+      "ok": true,
+      "event": {
+        "id": "0fc56ff3-e31c-4a8c-baec-c6e13320d30c",
+        "action": "fault",
+        "startedAt": "2026-11-06T23:47:55.151Z",
+        "finishedAt": "2026-11-06T23:48:06.131Z",
+        "ok": true,
+        "message": "Сбой воспроизведён: broker 3 остановлен, ISR уменьшился. Запишите события, затем восстановите брокер.",
+        "result": {},
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:48:06.131Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "produce",
+      "ok": true,
+      "event": {
+        "id": "40ec6f80-7c50-4d90-9a11-932ad9f98e1c",
+        "action": "produce",
+        "startedAt": "2026-11-06T23:48:06.132Z",
+        "finishedAt": "2026-11-06T23:48:18.323Z",
+        "ok": true,
+        "message": "Запись подтверждена Kafka: 3 событий. Это ещё не зачёт задания.",
+        "result": {
+          "records": [
+            {
+              "offset": 0,
+              "partition": 0,
+              "value": "Заказ ORD-201",
+              "key": "customer-42"
+            },
+            {
+              "offset": 0,
+              "partition": 1,
+              "value": "Заказ ORD-202",
+              "key": "customer-7"
+            },
+            {
+              "offset": 0,
+              "partition": 2,
+              "value": "Заказ ORD-203",
+              "key": "customer-42"
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:48:18.323Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "18986a38-7afa-42b8-a5f1-e9bb2bff337c",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:48:18.324Z",
+        "finishedAt": "2026-11-06T23:48:32.024Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: выключен. Группа: orders.",
+        "result": {
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            }
+          ],
+          "committed": false
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:48:32.024Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "737fc361-fba2-48fd-ba79-297c81e37d77",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:48:32.025Z",
+        "finishedAt": "2026-11-06T23:48:45.477Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": false
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": false
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:48:38.636Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "recover",
+      "ok": true,
+      "event": {
+        "id": "a8df3e26-2456-4b4a-85a3-b96835001f3f",
+        "action": "recover",
+        "startedAt": "2026-11-06T23:48:45.478Z",
+        "finishedAt": "2026-11-06T23:48:52.671Z",
+        "ok": true,
+        "message": "Восстановление подтверждено: все три реплики снова в ISR.",
+        "result": {},
+        "snapshot": {
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:48:52.671Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "50ca0dab-f050-409b-a8b7-06ce17fb71ab",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:48:52.673Z",
+        "finishedAt": "2026-11-06T23:48:57.423Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: включён. Группа: orders.",
+        "result": {
+          "committed": true,
+          "records": [
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            },
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:48:57.423Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "933eb773-f133-41a6-aaf0-f80f2ce71877",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:48:57.424Z",
+        "finishedAt": "2026-11-06T23:49:02.199Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "capturedAt": "2026-11-06T23:48:59.998Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "b64595ac-55b2-4dde-b346-5f905e01032d",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:49:02.200Z",
+        "finishedAt": "2026-11-06T23:49:19.699Z",
+        "ok": true,
+        "message": "Прочитано 0. Commit: включён. Группа: orders.",
+        "result": {
+          "records": [],
+          "committed": true
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:49:19.699Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "053caab7-77fe-4596-a32d-6eafdc539843",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:49:19.701Z",
+        "finishedAt": "2026-11-06T23:49:24.374Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:49:22.209Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "prepare",
+      "ok": true,
+      "event": {
+        "id": "5d4588f2-e733-463e-b8ce-5d6c23faa37b",
+        "action": "prepare",
+        "startedAt": "2026-11-06T23:49:24.376Z",
+        "finishedAt": "2026-11-06T23:49:33.843Z",
+        "ok": true,
+        "message": "Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.",
+        "result": {},
+        "snapshot": {
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:49:33.843Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "d413911d-dee2-4f58-8a1f-42c8085b7baf",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:49:33.844Z",
+        "finishedAt": "2026-11-06T23:49:50.162Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": false
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": false
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": false
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": false
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "capturedAt": "2026-11-06T23:49:36.376Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "fault",
+      "ok": true,
+      "event": {
+        "id": "b69b99b2-6d84-49cb-b45c-3267723546bb",
+        "action": "fault",
+        "startedAt": "2026-11-06T23:49:50.163Z",
+        "finishedAt": "2026-11-06T23:50:01.783Z",
+        "ok": true,
+        "message": "Сбой воспроизведён: broker 3 остановлен, ISR уменьшился. Запишите события, затем восстановите брокер.",
+        "result": {},
+        "snapshot": {
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "capturedAt": "2026-11-06T23:50:01.783Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "produce",
+      "ok": true,
+      "event": {
+        "id": "4fc6256e-21c9-46d2-8037-7d18f63807f5",
+        "action": "produce",
+        "startedAt": "2026-11-06T23:50:01.784Z",
+        "finishedAt": "2026-11-06T23:50:14.444Z",
+        "ok": true,
+        "message": "Запись подтверждена Kafka: 3 событий. Это ещё не зачёт задания.",
+        "result": {
+          "records": [
+            {
+              "key": "customer-42",
+              "value": "Заказ ORD-201",
+              "partition": 0,
+              "offset": 0
+            },
+            {
+              "key": "customer-7",
+              "value": "Заказ ORD-202",
+              "partition": 1,
+              "offset": 0
+            },
+            {
+              "key": "customer-42",
+              "value": "Заказ ORD-203",
+              "partition": 2,
+              "offset": 0
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "capturedAt": "2026-11-06T23:50:14.444Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "c069f651-0ed3-4c54-9bad-b8e8db76e01b",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:50:14.446Z",
+        "finishedAt": "2026-11-06T23:50:27.763Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: выключен. Группа: orders.",
+        "result": {
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            }
+          ],
+          "committed": false
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:50:27.763Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "49b640f2-ae7c-4a89-bd52-cf8f40714bf2",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:50:27.765Z",
+        "finishedAt": "2026-11-06T23:50:40.540Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": false
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": false
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-06T23:50:34.453Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "recover",
+      "ok": true,
+      "event": {
+        "id": "2369bbcc-fe4f-42d6-bc4b-239f8b270623",
+        "action": "recover",
+        "startedAt": "2026-11-06T23:50:40.541Z",
+        "finishedAt": "2026-11-06T23:50:47.095Z",
+        "ok": true,
+        "message": "Восстановление подтверждено: все три реплики снова в ISR.",
+        "result": {},
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-06T23:50:47.095Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "b03afb9a-7e70-4998-b53c-9e467498b3b3",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:50:47.097Z",
+        "finishedAt": "2026-11-06T23:50:51.810Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: включён. Группа: orders.",
+        "result": {
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-201"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            }
+          ],
+          "committed": true
+        },
+        "snapshot": {
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "capturedAt": "2026-11-06T23:50:51.810Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "b9c42d18-3d65-46b6-bac7-67241d499e02",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:50:51.816Z",
+        "finishedAt": "2026-11-06T23:50:56.503Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "capturedAt": "2026-11-06T23:50:54.373Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "consume",
+      "ok": true,
+      "event": {
+        "id": "e3d831a0-2b85-4322-952c-3754dd2d6e1c",
+        "action": "consume",
+        "startedAt": "2026-11-06T23:50:56.505Z",
+        "finishedAt": "2026-11-06T23:51:13.098Z",
+        "ok": true,
+        "message": "Прочитано 0. Commit: включён. Группа: orders.",
+        "result": {
+          "records": [],
+          "committed": true
+        },
+        "snapshot": {
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-06T23:51:13.098Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "task": "recovery",
+      "action": "verify",
+      "ok": true,
+      "event": {
+        "id": "e4444ed8-78d7-498d-b532-848d2ba75a53",
+        "action": "verify",
+        "startedAt": "2026-11-06T23:51:13.100Z",
+        "finishedAt": "2026-11-06T23:51:17.910Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "capturedAt": "2026-11-06T23:51:15.695Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "stop",
+      "ok": true
+    },
+    {
+      "action": "resource-cleanup",
+      "containers": 0,
+      "networks": 0,
+      "removedVolumes": 9
+    }
+  ]
+}

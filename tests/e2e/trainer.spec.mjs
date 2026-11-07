@@ -105,6 +105,7 @@ test('course search, empty result, keyboard navigation and unavailable Docker st
   await page.getByRole('textbox', { name: 'Найти урок' }).fill('KRaft');
   await expect(page.getByRole('link', { name: /Брокеры и KRaft/ })).toBeVisible();
   await page.getByRole('link', { name: 'Лаборатория', exact: true }).click();
+  await page.getByRole('button', { name: 'Базовая лаборатория', exact: true }).click();
   await expect(page.getByText('Для практики нужен Docker Engine')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Запустить брокер', exact: true })).toBeDisabled();
   await page.goto('/');

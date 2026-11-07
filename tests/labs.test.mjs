@@ -132,6 +132,26 @@ test('zero exit code alone cannot validate produced offsets or consumed records'
   assert.match(badRecords.output, /не совпадают/u);
 });
 
+test('Docker Desktop labels with slash do not corrupt the compose ownership path', async () => {
+  const fake = fakeDocker();
+  const runner = createLabRunner({
+    runCommand: async (args, options) => {
+      const result = await fake.runCommand(args, options);
+      if (args.includes('ps'))
+        result.stdout = JSON.stringify(
+          JSON.parse(result.stdout).map((c) => ({
+            ...c,
+            Labels: `com.docker.compose.project.config_files=${args[4]},desktop.docker.io/ports.scheme=v2,com.docker.compose.service=broker`,
+          })),
+        );
+      return result;
+    },
+  });
+  assert.equal((await runner.execute('start')).ok, true);
+  assert.equal((await runner.execute('topic')).ok, true);
+  assert.equal((await runner.execute('stop')).ok, true);
+});
+
 test('consumer exceptions and unverified zero-record reads are not reported as success', async () => {
   const fake = fakeDocker();
   const runner = createLabRunner({

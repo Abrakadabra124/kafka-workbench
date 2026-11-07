@@ -15,7 +15,13 @@ export const sampleRecords = Object.freeze([
 // The executable and every argument come from this module, never from an HTTP request.
 export function runDockerCommand(
   args,
-  { input, timeoutMs = 30000, maxOutputBytes = 65536, spawnProcess = spawn } = {},
+  {
+    input,
+    timeoutMs = 30000,
+    maxOutputBytes = 65536,
+    spawnProcess = spawn,
+    env = process.env,
+  } = {},
 ) {
   return new Promise((resolve) => {
     let stdout = '';
@@ -27,6 +33,7 @@ export function runDockerCommand(
     const decoders = { stdout: new StringDecoder('utf8'), stderr: new StringDecoder('utf8') };
     const child = spawnProcess('docker', args, {
       shell: false,
+      env,
       windowsHide: true,
       stdio: ['pipe', 'pipe', 'pipe'],
     });
@@ -118,7 +125,16 @@ export function createLabRunner({ runCommand = runDockerCommand, testMode = fals
   let lastCheckedAt = 0;
   let statusPending;
   const command = (args, options) => runCommand(args, options);
-  const compose = (args, options) => command([...composeArgs, ...args], options);
+  const compose = (args, options) =>
+    command([...composeArgs, ...args], {
+      ...options,
+      env: {
+        ...process.env,
+        KAFKA_BASIC_SUBNET: testMode
+          ? (process.env.KAFKA_BASIC_TEST_SUBNET ?? '10.254.244.48/28')
+          : (process.env.KAFKA_BASIC_SUBNET ?? '10.254.244.32/28'),
+      },
+    });
   const kafka = (script, args = [], options) =>
     compose(
       ['exec', '-T', 'broker', `/opt/kafka/bin/${script}.sh`, ...bootstrap, ...args],
@@ -163,7 +179,7 @@ export function createLabRunner({ runCommand = runDockerCommand, testMode = fals
           ? container.Labels
           : Object.fromEntries(
               String(container.Labels ?? '')
-                .split(/,(?=[\w.-]+=)/u)
+                .split(/,(?=[\w./-]+=)/u)
                 .map((label) => {
                   const separator = label.indexOf('=');
                   return [label.slice(0, separator), label.slice(separator + 1)];

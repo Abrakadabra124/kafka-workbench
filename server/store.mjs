@@ -18,7 +18,8 @@ export function createStore(dataDir) {
     );
     CREATE TABLE IF NOT EXISTS notes (lesson_id TEXT PRIMARY KEY, text TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS incident_states (incident_id TEXT PRIMARY KEY, state TEXT NOT NULL);
-    PRAGMA user_version = 2;
+    CREATE TABLE IF NOT EXISTS workspace_states (task_id TEXT PRIMARY KEY, state TEXT NOT NULL);
+    PRAGMA user_version = 3;
   `);
   const saveAnswer = db.prepare(`
     INSERT INTO answers (lesson_id, kind, correct, mastered, attempts) VALUES (?, ?, ?, ?, 1)
@@ -92,6 +93,23 @@ export function createStore(dataDir) {
       db.exec(
         'BEGIN IMMEDIATE; DELETE FROM answers; DELETE FROM notes; DELETE FROM incident_states; COMMIT;',
       );
+    },
+    workspace(id) {
+      const row = db.prepare('SELECT state FROM workspace_states WHERE task_id = ?').get(id);
+      return row ? JSON.parse(row.state) : null;
+    },
+    workspaces() {
+      return Object.fromEntries(
+        db
+          .prepare('SELECT task_id, state FROM workspace_states ORDER BY task_id')
+          .all()
+          .map((row) => [row.task_id, JSON.parse(row.state)]),
+      );
+    },
+    saveWorkspace(id, state) {
+      db.prepare(
+        'INSERT INTO workspace_states (task_id, state) VALUES (?, ?) ON CONFLICT(task_id) DO UPDATE SET state = excluded.state',
+      ).run(id, JSON.stringify(state));
     },
     close() {
       if (!closed) {
