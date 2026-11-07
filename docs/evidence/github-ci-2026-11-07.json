@@ -1,0 +1,97 @@
+{
+  "conclusion": "success",
+  "headSha": "fcf2ffe4b20f68b4d4eca6006524ff5d1cbf1967",
+  "jobs": [
+    {
+      "conclusion": "success",
+      "name": "Browser and real Kafka lab",
+      "steps": [
+        { "conclusion": "success", "name": "Set up job" },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38"
+        },
+        { "conclusion": "success", "name": "Install locked dependencies" },
+        { "conclusion": "success", "name": "Build application" },
+        { "conclusion": "success", "name": "Install browser" },
+        { "conclusion": "success", "name": "Check learning journey and accessibility" },
+        { "conclusion": "success", "name": "Check Docker availability" },
+        { "conclusion": "success", "name": "Pull fixed Kafka version" },
+        { "conclusion": "success", "name": "Run real Kafka lab" },
+        { "conclusion": "success", "name": "Run real three-broker exercises" },
+        { "conclusion": "success", "name": "Run real browser workspace journey" },
+        { "conclusion": "success", "name": "Preserve real workspace evidence" },
+        { "conclusion": "skipped", "name": "Preserve browser failure diagnostics" },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09"
+        },
+        { "conclusion": "success", "name": "Complete job" }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "name": "Tests and build (windows-latest)",
+      "steps": [
+        { "conclusion": "success", "name": "Set up job" },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38"
+        },
+        { "conclusion": "success", "name": "Install locked dependencies" },
+        { "conclusion": "success", "name": "Check application" },
+        { "conclusion": "success", "name": "Audit dependencies" },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09"
+        },
+        { "conclusion": "success", "name": "Complete job" }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "name": "Tests and build (ubuntu-latest)",
+      "steps": [
+        { "conclusion": "success", "name": "Set up job" },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38"
+        },
+        { "conclusion": "success", "name": "Install locked dependencies" },
+        { "conclusion": "success", "name": "Check application" },
+        { "conclusion": "success", "name": "Audit dependencies" },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09"
+        },
+        { "conclusion": "success", "name": "Complete job" }
+      ]
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/Abrakadabra124/kafka-workbench/actions/runs/42315898359"
+}
