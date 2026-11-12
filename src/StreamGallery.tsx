@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { ArrowDownToLine, Check, Pause, Play, Plus, RotateCcw } from 'lucide-react';
 import { initialState, produce, readBatch, commit, restart, lag } from './model';
 import { useSceneMotion } from './useSceneMotion';
@@ -10,8 +10,13 @@ function seeded() {
 export function StreamGallery() {
   const [s, set] = useState(seeded);
   const [paused, pause] = useState(false);
+  const [selected, select] = useState(0);
+  const [arrival, setArrival] = useState<string | null>(null);
   const [message, messageSet] = useState('9 событий в трёх партициях. Чтение и commit независимы.');
   const { ref, eligible, reduced } = useSceneMotion();
+  useEffect(() => {
+    if (reduced) setArrival(null);
+  }, [reduced]);
   const group = s.groups.billing;
   const count = s.partitions.flat().length;
   function action(kind: string) {
@@ -19,6 +24,8 @@ export function StreamGallery() {
       const next = produce(s, 'order-' + count, 'created');
       set(next);
       const p = next.partitions.findIndex((r, i) => r.length > s.partitions[i].length);
+      select(p);
+      setArrival(eligible && !paused ? 'order-' + count : null);
       messageSet('Записано order-' + count + ' в P' + p + '. Lag вырос.');
     }
     if (kind === 'read') {
@@ -59,11 +66,26 @@ export function StreamGallery() {
           <span>{paused || reduced ? 'Статика' : 'Движение'}</span>
         </button>
       </div>
+      <div className="partition-switch" aria-label="Выбор партиции">
+        {[0, 1, 2].map((p) => (
+          <button
+            key={p}
+            aria-pressed={selected === p}
+            onClick={() => {
+              select(p);
+              setArrival(null);
+            }}
+          >
+            P{p} · {s.partitions[p].length} записей
+          </button>
+        ))}
+      </div>
       <div className="partition-gallery">
         {s.partitions.map((rows, p) => (
           <article
             key={p}
             className="gallery-partition"
+            data-selected={selected === p}
             style={{ '--p': p } as CSSProperties}
             aria-label={'Партиция ' + p}
           >
@@ -78,6 +100,7 @@ export function StreamGallery() {
                   key={r.offset}
                   className={
                     'gallery-record ' +
+                    (arrival === r.key ? 'is-arriving ' : '') +
                     (r.offset < group.committed[p]
                       ? 'is-committed'
                       : r.offset < group.position[p]
@@ -85,6 +108,9 @@ export function StreamGallery() {
                         : '')
                   }
                   style={{ '--i': i } as CSSProperties}
+                  onAnimationEnd={() => {
+                    if (arrival === r.key) setArrival(null);
+                  }}
                 >
                   <span>{r.key}</span>
                   <b>{String(r.offset).padStart(2, '0')}</b>
@@ -144,6 +170,8 @@ export function StreamGallery() {
         <button
           onClick={() => {
             set(seeded());
+            setArrival(null);
+            select(0);
             messageSet('Модель сброшена. 9 событий, позиции и commits равны нулю.');
           }}
         >

@@ -351,3 +351,26 @@ test('320px and 375px spatial views retain controls and fit without horizontal s
   }
   expect(errors).toEqual([]);
 });
+
+test('arrivals belong to new records and never replay on viewport return', async ({ page }) => {
+  await page.goto('/');
+  const gallery = page.locator('.stream-gallery');
+  await expect(gallery).toHaveAttribute('data-motion', 'running');
+  expect(await gallery.evaluate((e) => e.getAnimations({ subtree: true }).length)).toBe(0);
+  await gallery.getByRole('button', { name: 'Записать', exact: true }).click();
+  await expect(gallery.locator('.is-arriving')).toHaveCount(0, { timeout: 3000 });
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(gallery).toHaveAttribute('data-motion', 'paused');
+  await gallery.scrollIntoViewIfNeeded();
+  await expect(gallery).toHaveAttribute('data-motion', 'running');
+  expect(await gallery.evaluate((e) => e.getAnimations({ subtree: true }).length)).toBe(0);
+  await page.setViewportSize({ width: 320, height: 900 });
+  const switcher = gallery.getByRole('button', { name: /^P1 ·/ });
+  await switcher.click();
+  await expect(gallery.locator('.gallery-partition:visible')).toHaveCount(1);
+  await expect(gallery.getByRole('article', { name: 'Партиция 1', exact: true })).toBeVisible();
+  await gallery.getByRole('button', { name: 'Записать', exact: true }).click();
+  await gallery.getByRole('button', { name: /^P0 ·/ }).click();
+  await gallery.getByRole('button', { name: /^P1 ·/ }).click();
+  expect(await gallery.evaluate((e) => e.getAnimations({ subtree: true }).length)).toBe(0);
+});

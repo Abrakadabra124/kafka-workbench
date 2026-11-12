@@ -28,9 +28,21 @@ const labels: Record<string, string> = {
   retry: 'Повтор без устранения причины',
   interrupt: 'Остановка перед commit',
 };
-export function Workspace() {
+export function Workspace({ initialTask }: { initialTask?: string }) {
   const [data, setData] = useState<WorkspaceData | null>(null);
-  const [selected, setSelected] = useState('delivery');
+  const [selected, setSelected] = useState(
+    initialTask &&
+      [
+        'delivery',
+        'replay',
+        'recovery',
+        'poison-quarantine',
+        'isr-write-gate',
+        'retention-gap',
+      ].includes(initialTask)
+      ? initialTask
+      : 'delivery',
+  );
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');

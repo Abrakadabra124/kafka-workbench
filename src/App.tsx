@@ -44,8 +44,9 @@ export default function App() {
   const lesson = route.startsWith('lesson/')
     ? lessons.find((l) => l.id === route.slice(7))
     : undefined;
-  const active = lesson ? 'curriculum' : route;
-  const title = lesson?.title ?? navigation.find((n) => n.id === route)?.title ?? 'Источники';
+  const labTask = route.startsWith('lab/') ? route.slice(4) : undefined;
+  const active = labTask ? 'lab' : lesson ? 'curriculum' : route;
+  const title = lesson?.title ?? navigation.find((n) => n.id === active)?.title ?? 'Источники';
   async function load() {
     setError('');
     try {
@@ -239,8 +240,8 @@ export default function App() {
             <Sandbox />
           ) : route === 'incidents' ? (
             <Incidents />
-          ) : route === 'lab' ? (
-            <Lab />
+          ) : route === 'lab' || labTask ? (
+            <Lab key={labTask} initialTask={labTask} />
           ) : route === 'progress' ? (
             <ProgressPage modules={modules} progress={progress} onProgress={setProgress} />
           ) : route === 'sources' ? (

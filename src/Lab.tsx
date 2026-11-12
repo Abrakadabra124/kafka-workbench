@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { BasicLab } from './BasicLab';
 import { Workspace } from './Workspace';
-export function Lab() {
+export function Lab({ initialTask }: { initialTask?: string }) {
   const [basic, setBasic] = useState(false);
   return (
     <>
@@ -21,7 +21,7 @@ export function Lab() {
           Базовая лаборатория
         </button>
       </div>
-      {basic ? <BasicLab /> : <Workspace />}
+      {basic ? <BasicLab /> : <Workspace initialTask={initialTask} />}
     </>
   );
 }

@@ -105,7 +105,7 @@ export function Dashboard({ modules, progress }: { modules: Module[]; progress: 
         </a>
       </div>
       <section className="field-notes" aria-label="От механизма к восстановлению">
-        <a href="#lab">
+        <a href="#lab/poison-quarantine">
           <span className="eyebrow">01 / ДАННЫЕ</span>
           <h2>
             Одно плохое событие.
@@ -118,13 +118,13 @@ export function Dashboard({ modules, progress }: { modules: Module[]; progress: 
           </span>
         </a>
         <div>
-          <a href="#lab">
+          <a href="#lab/isr-write-gate">
             <span className="eyebrow">02 / НАДЁЖНОСТЬ</span>
             <h3>Когда Kafka отказывает в записи</h3>
             <p>Восстановите ISR, сохранив исходную гарантию.</p>
             <ArrowUpRight size={22} />
           </a>
-          <a href="#lab">
+          <a href="#lab/retention-gap">
             <span className="eyebrow">03 / ВОССТАНОВЛЕНИЕ</span>
             <h3>Offset есть. Истории уже нет.</h3>
             <p>Верните события из архива и докажите полноту.</p>
