@@ -89,6 +89,7 @@ export function WorkspaceScene({
       <div className="cluster-viewport" ref={viewport} aria-hidden="true">
         <div className="cluster-world">
           <div className="cluster-plinth" />
+          <div className="cluster-architecture-grid" />
           <svg className="cluster-wires" viewBox="0 0 850 330">
             <path d="M80 165 H180 M180 165 H420 M420 165 H660 M660 165 H780" />
             <path d="M220 250 C340 302 510 302 630 250" />

@@ -209,6 +209,13 @@ export function SpatialFlow({
         <div className="sf-scale">
           <div className="sf-world">
             <div className="sf-floor-shadow" />
+            <div className="sf-architecture-grid" />
+            <div className="sf-backplane">
+              <span>PARTITIONED EVENT LOG</span>
+              <i />
+              <i />
+              <i />
+            </div>
             <Cuboid className="sf-platform" />
             <div className="sf-manifold sf-manifold-in" />
             <div className="sf-manifold sf-manifold-out" />

@@ -19,6 +19,9 @@ export function Dashboard({ modules, progress }: { modules: Module[]; progress: 
     <>
       <section className="hero">
         <div className="hero-copy">
+          <div className="studio-eyebrow">
+            <span /> KAFKA / EVENT ENGINEERING
+          </div>
           <h1>
             Понимать потоки.
             <br />
@@ -38,8 +41,25 @@ export function Dashboard({ modules, progress }: { modules: Module[]; progress: 
               <ArrowRight size={18} />
             </a>
           </div>
+          <div className="hero-principles" aria-label="Как устроено обучение">
+            <span>
+              <b>01</b> Понять механизм
+            </span>
+            <span>
+              <b>02</b> Проверить гипотезу
+            </span>
+            <span>
+              <b>03</b> Восстановить поток
+            </span>
+          </div>
         </div>
-        <SpatialFlow mode="overview" />
+        <div className="hero-observatory">
+          <div className="observatory-heading">
+            <span>АРХИТЕКТУРА ПОТОКА</span>
+            <span>Интерактивная модель</span>
+          </div>
+          <SpatialFlow mode="overview" />
+        </div>
       </section>
       <div className="facts">
         <div>
@@ -81,6 +101,7 @@ export function Dashboard({ modules, progress }: { modules: Module[]; progress: 
       </section>
       <div className="incident-prompt">
         <div>
+          <span className="studio-eyebrow">РАЗБОР И ВОССТАНОВЛЕНИЕ</span>
           <strong>Когда что-то пошло не так</strong>
           <p>Разберите рабочий инцидент: от первых симптомов до проверенного восстановления.</p>
         </div>

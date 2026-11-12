@@ -11,6 +11,7 @@ import '@fontsource/inter/latin-700.css';
 import App from './App';
 import './styles.css';
 import './motion-ui.css';
+import './studio.css';
 
 class Boundary extends React.Component<React.PropsWithChildren, { failed: boolean }> {
   state = { failed: false };
