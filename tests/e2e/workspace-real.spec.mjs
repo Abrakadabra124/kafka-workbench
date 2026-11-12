@@ -14,7 +14,7 @@ test('real browser to API to Kafka: edit, failed verification, commit, recovery 
     process.env.RUN_WORKSPACE_BROWSER !== '1',
     'Explicit live run under shared hardware lock only.',
   );
-  test.setTimeout(600000);
+  test.setTimeout(900000);
   const directory = mkdtempSync(join(tmpdir(), 'kafka-real-browser-'));
   const store = createStore(directory);
   const runner = createWorkspaceRunner({ store, testMode: true, hardwareLock: false });
@@ -27,7 +27,7 @@ test('real browser to API to Kafka: edit, failed verification, commit, recovery 
   page.on('console', (m) => {
     if (m.type() === 'error') errors.push(m.text());
   });
-  async function click(name, action) {
+  async function click(name, action, expectedTask = 'recovery') {
     const completed = page.waitForResponse(
       (r) =>
         r.url() === `${url}/api/workspace` &&
@@ -37,8 +37,10 @@ test('real browser to API to Kafka: edit, failed verification, commit, recovery 
     );
     await page.getByRole('button', { name, exact: true }).click();
     const response = await completed;
+    expect(response.request().postDataJSON().task).toBe(expectedTask);
     const result = await response.json();
     expect(result.ok, JSON.stringify(result)).toBe(true);
+    expect(result.state.snapshot.topic).toBe(`wb-${expectedTask}`);
     return result;
   }
   try {
@@ -93,6 +95,41 @@ test('real browser to API to Kafka: edit, failed verification, commit, recovery 
     const replay = await click('3. Прочитать группой', 'consume');
     expect(replay.event.result.records).toHaveLength(0);
     expect((await click('Проверить результат', 'verify')).state.verified).toBe(true);
+    const practices = [
+      ['poison-quarantine', 'Poison pill и карантин'],
+      ['isr-write-gate', 'ISR и отказ записи'],
+      ['retention-gap', 'Утраченная история'],
+    ];
+    for (const [id, title] of practices) {
+      const practiceClick = (name, action) => click(name, action, id);
+      await page.goto(`${url}/#lab/${id}`);
+      await expect(page.locator('.workspace-task[aria-pressed="true"]')).toContainText(title);
+      await expect(page.getByRole('region', { name: 'Разбор причины и решения' })).toBeVisible();
+      await page.getByRole('button', { name: '1. Подготовить новую попытку', exact: true }).click();
+      await practiceClick('Подтвердить сброс', 'prepare');
+      expect((await practiceClick('Проверить результат', 'verify')).state.verified).toBe(false);
+      expect(
+        (await practiceClick('2. Воспроизвести и диагностировать сбой', 'fault')).state
+          .faultObserved,
+      ).toBe(true);
+      await practiceClick(
+        id === 'isr-write-gate' ? 'Попробовать minISR=2' : 'Попробовать commit в конец',
+        'unsafe',
+      );
+      expect((await practiceClick('Проверить результат', 'verify')).state.verified).toBe(false);
+      await practiceClick('3. Применить обоснованное исправление', 'recover');
+      expect((await practiceClick('Проверить результат', 'verify')).state.verified).toBe(true);
+      await practiceClick('3. Применить обоснованное исправление', 'recover');
+      expect((await practiceClick('Проверить результат', 'verify')).state.verified).toBe(true);
+      await page.reload();
+      await expect(page.locator('.workspace-task[aria-pressed="true"]')).toContainText(title);
+      await expect(page.locator('.workspace-result')).toContainText('Результат проверен');
+      await page.screenshot({ path: join(screenshots, `${id}-verified.png`), fullPage: true });
+    }
+    for (const [id] of practices) {
+      expect(store.workspace(id)?.verified, id).toBe(true);
+      expect(store.workspace(id)?.snapshot.topic).toBe(`wb-${id}`);
+    }
     expect(errors).toEqual([]);
     mkdirSync('data', { recursive: true });
     writeFileSync(
@@ -103,6 +140,12 @@ test('real browser to API to Kafka: edit, failed verification, commit, recovery 
           viewports: [320, 390, 768, 1440],
           consoleErrors: errors,
           state: store.workspace('recovery'),
+          practices: Object.fromEntries(
+            ['poison-quarantine', 'isr-write-gate', 'retention-gap'].map((id) => [
+              id,
+              store.workspace(id),
+            ]),
+          ),
         },
         null,
         2,

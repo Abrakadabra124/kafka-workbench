@@ -33,18 +33,28 @@ export function PracticeWalkthrough({ task }: { task: string }) {
   const [title, repair, wrong1, wrong2] = titles[id];
   const act = (a: PracticeAction) => set((old) => practiceTransition(old, a));
   const blocked = s.fault && !s.repaired;
-  const lanes: [string, string[]][] = [
-    ['Source', s.source],
-    [
-      id === 'isr-write-gate' ? 'ISR ' + s.isr + ' / minISR ' + s.minIsr : 'Архив',
-      id === 'isr-write-gate' ? [] : ['E0', 'E1', 'E2'],
-    ],
-    [
-      id === 'poison-quarantine' ? 'Обработано' : 'Recovery',
-      id === 'poison-quarantine' ? s.processed : s.recovered,
-    ],
-    ['Карантин', s.quarantine],
-  ];
+  const lanes: [string, string[]][] =
+    id === 'isr-write-gate'
+      ? [
+          ['Source', s.source],
+          ['Синхронные реплики', Array.from({ length: s.isr }, (_, i) => 'B' + (i + 1))],
+          ['Гарантия записи', ['acks=all', 'minISR=' + s.minIsr]],
+          ['Контрольная запись', s.source.includes('proof') ? ['proof'] : []],
+        ]
+      : [
+          ['Source', s.source],
+          ['Архив', ['E0', 'E1', 'E2']],
+          [
+            id === 'poison-quarantine' ? 'Обработано' : 'Recovery',
+            id === 'poison-quarantine' ? s.processed : s.recovered,
+          ],
+          id === 'poison-quarantine'
+            ? ['Карантин', s.quarantine]
+            : [
+                'Ожидают восстановления',
+                s.fault ? ['E0', 'E1', 'E2'].filter((x) => !s.recovered.includes(x)) : [],
+              ],
+        ];
   return (
     <section className="practice-walkthrough" aria-label="Разбор причины и решения">
       <span className="eyebrow">01 / УЧЕБНАЯ МОДЕЛЬ</span>
