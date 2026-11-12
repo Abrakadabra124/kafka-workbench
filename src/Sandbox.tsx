@@ -107,187 +107,198 @@ export function Sandbox() {
         </span>
         <a href="#sources">Границы модели</a>
       </div>
-      <div className="sandbox-controls">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            send();
-          }}
-          className="producer-form"
-        >
-          <div className="section-index">Producer / Запись</div>
-          <div className="input-row">
-            <label>
-              Ключ события
-              <input value={key} maxLength={64} onChange={(e) => setKey(e.target.value)} required />
-            </label>
-            <label>
-              Значение
-              <input
-                value={value}
-                maxLength={500}
-                onChange={(e) => setValue(e.target.value)}
-                required
-              />
-            </label>
-            <button type="submit" className="primary">
-              <Send size={17} />
-              Отправить
-            </button>
-          </div>
-          <p>Одинаковый ключ попадает в одну партицию при неизменном их количестве.</p>
-        </form>
-        <div className="consumer-form">
-          <div className="section-index">Consumer group / Чтение</div>
-          <div className="input-row">
-            <label>
-              Группа
-              <select
-                aria-label="Группа"
-                value={group}
-                onChange={(e) => {
-                  setGroup(e.target.value as GroupId);
-                  setActivity(undefined);
-                  setState((s) => ({ ...s, lastRead: [] }));
-                }}
-              >
-                <option value="billing">billing</option>
-                <option value="analytics">analytics</option>
-              </select>
-            </label>
-            <label>
-              Потребителей
-              <select
-                aria-label="Потребителей"
-                value={consumers}
-                onChange={(e) => {
-                  setConsumers(Number(e.target.value));
-                  setActivity(undefined);
-                  log('Назначения изменены. В модели ребалансировка мгновенная.');
-                }}
-              >
-                {[1, 2, 3, 4, 5, 6].map((n) => (
-                  <option key={n}>{n}</option>
-                ))}
-              </select>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div className="consumer-actions">
-        <button className="primary" onClick={read}>
-          <Play size={16} />
-          Прочитать пакет
-        </button>
-        <button
-          className="outline"
-          onClick={() => {
-            setState((s) => commit(s, group));
-            animate(
-              'commit',
-              current.position.flatMap((offset, p) => (offset !== current.committed[p] ? [p] : [])),
-            );
-            log(
-              `${group}: сохранён следующий offset для каждой партиции. События остаются в журнале.`,
-            );
-          }}
-        >
-          <Check size={17} />
-          Подтвердить offset
-        </button>
-        <button
-          className="outline"
-          onClick={() => {
-            setState((s) => restart(s, group));
-            animate(
-              'restart',
-              current.position.flatMap((offset, p) => (offset !== current.committed[p] ? [p] : [])),
-            );
-            setRestarted(true);
-            log(`${group}: перезапуск. Чтение продолжится с сохранённого offset.`);
-          }}
-        >
-          <RotateCcw size={17} />
-          Перезапустить consumer
-        </button>
-      </div>
-      <SpatialFlow
-        mode="sandbox"
-        partitions={state.partitions.map((records, p) => ({
-          count: records.length,
-          position: current.position[p],
-          committed: current.committed[p],
-          owner: assignments[p],
-        }))}
-        activity={activity}
-        lag={lag(state, group)}
-      />
-      <section className="log-canvas">
-        <div className="canvas-heading">
-          <h2>
-            orders<span>3 партиции</span>
-          </h2>
-          <div className="lag">
-            <span>Committed lag</span>
-            <strong data-testid="lag">{lag(state, group)}</strong>
-            <span>событий</span>
+      <div className="sandbox-workstation">
+        <div className="sandbox-controls">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              send();
+            }}
+            className="producer-form"
+          >
+            <div className="section-index">Producer / Запись</div>
+            <div className="input-row">
+              <label>
+                Ключ события
+                <input
+                  value={key}
+                  maxLength={64}
+                  onChange={(e) => setKey(e.target.value)}
+                  required
+                />
+              </label>
+              <label>
+                Значение
+                <input
+                  value={value}
+                  maxLength={500}
+                  onChange={(e) => setValue(e.target.value)}
+                  required
+                />
+              </label>
+              <button type="submit" className="primary">
+                <Send size={17} />
+                Отправить
+              </button>
+            </div>
+            <p>Одинаковый ключ попадает в одну партицию при неизменном их количестве.</p>
+          </form>
+          <div className="consumer-form">
+            <div className="section-index">Consumer group / Чтение</div>
+            <div className="input-row">
+              <label>
+                Группа
+                <select
+                  aria-label="Группа"
+                  value={group}
+                  onChange={(e) => {
+                    setGroup(e.target.value as GroupId);
+                    setActivity(undefined);
+                    setState((s) => ({ ...s, lastRead: [] }));
+                  }}
+                >
+                  <option value="billing">billing</option>
+                  <option value="analytics">analytics</option>
+                </select>
+              </label>
+              <label>
+                Потребителей
+                <select
+                  aria-label="Потребителей"
+                  value={consumers}
+                  onChange={(e) => {
+                    setConsumers(Number(e.target.value));
+                    setActivity(undefined);
+                    log('Назначения изменены. В модели ребалансировка мгновенная.');
+                  }}
+                >
+                  {[1, 2, 3, 4, 5, 6].map((n) => (
+                    <option key={n}>{n}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
           </div>
         </div>
-        <div className="partition-header">
-          <span>Партиция / журнал событий</span>
-          <span>Позиция / commit</span>
-          <span>Владелец</span>
+        <div className="consumer-actions">
+          <button className="primary" onClick={read}>
+            <Play size={16} />
+            Прочитать пакет
+          </button>
+          <button
+            className="outline"
+            onClick={() => {
+              setState((s) => commit(s, group));
+              animate(
+                'commit',
+                current.position.flatMap((offset, p) =>
+                  offset !== current.committed[p] ? [p] : [],
+                ),
+              );
+              log(
+                `${group}: сохранён следующий offset для каждой партиции. События остаются в журнале.`,
+              );
+            }}
+          >
+            <Check size={17} />
+            Подтвердить offset
+          </button>
+          <button
+            className="outline"
+            onClick={() => {
+              setState((s) => restart(s, group));
+              animate(
+                'restart',
+                current.position.flatMap((offset, p) =>
+                  offset !== current.committed[p] ? [p] : [],
+                ),
+              );
+              setRestarted(true);
+              log(`${group}: перезапуск. Чтение продолжится с сохранённого offset.`);
+            }}
+          >
+            <RotateCcw size={17} />
+            Перезапустить consumer
+          </button>
         </div>
-        {state.partitions.map((records, p) => (
-          <div className="partition-row" key={p}>
-            <div className="partition-log">
-              <code>p{p}</code>
-              <div className="records">
-                {records.length ? (
-                  records.map((r) => (
-                    <button
-                      aria-label={`Партиция ${p}, offset ${r.offset}, ключ ${r.key}`}
-                      title={`${r.key}: ${r.value}`}
-                      key={r.offset}
-                      onClick={() => setSelected({ partition: p, offset: r.offset })}
-                      className={`record ${r.offset < current.committed[p] ? 'committed' : r.offset < current.position[p] ? 'read' : ''}`}
-                    >
-                      {r.offset}
-                    </button>
-                  ))
-                ) : (
-                  <span className="empty-log">Событий пока нет</span>
-                )}
+        <SpatialFlow
+          mode="sandbox"
+          partitions={state.partitions.map((records, p) => ({
+            count: records.length,
+            position: current.position[p],
+            committed: current.committed[p],
+            owner: assignments[p],
+          }))}
+          activity={activity}
+          lag={lag(state, group)}
+        />
+        <section className="log-canvas">
+          <div className="canvas-heading">
+            <h2>
+              orders<span>3 партиции</span>
+            </h2>
+            <div className="lag">
+              <span>Committed lag</span>
+              <strong data-testid="lag">{lag(state, group)}</strong>
+              <span>событий</span>
+            </div>
+          </div>
+          <div className="partition-header">
+            <span>Партиция / журнал событий</span>
+            <span>Позиция / commit</span>
+            <span>Владелец</span>
+          </div>
+          {state.partitions.map((records, p) => (
+            <div className="partition-row" key={p}>
+              <div className="partition-log">
+                <code>p{p}</code>
+                <div className="records">
+                  {records.length ? (
+                    records.map((r) => (
+                      <button
+                        aria-label={`Партиция ${p}, offset ${r.offset}, ключ ${r.key}`}
+                        title={`${r.key}: ${r.value}`}
+                        key={r.offset}
+                        onClick={() => setSelected({ partition: p, offset: r.offset })}
+                        className={`record ${r.offset < current.committed[p] ? 'committed' : r.offset < current.position[p] ? 'read' : ''}`}
+                      >
+                        {r.offset}
+                      </button>
+                    ))
+                  ) : (
+                    <span className="empty-log">Событий пока нет</span>
+                  )}
+                </div>
+                <ArrowRight size={17} />
               </div>
-              <ArrowRight size={17} />
+              <div className="offset-pair">
+                <span title="Следующий offset для чтения">{current.position[p]}</span>
+                <span>/</span>
+                <strong title="Сохранённый следующий offset">{current.committed[p]}</strong>
+              </div>
+              <span className="owner">consumer-{assignments[p] + 1}</span>
             </div>
-            <div className="offset-pair">
-              <span title="Следующий offset для чтения">{current.position[p]}</span>
-              <span>/</span>
-              <strong title="Сохранённый следующий offset">{current.committed[p]}</strong>
-            </div>
-            <span className="owner">consumer-{assignments[p] + 1}</span>
+          ))}
+          <div className="log-legend">
+            <span>
+              <i />
+              Не прочитано
+            </span>
+            <span>
+              <i className="read" />
+              Прочитано
+            </span>
+            <span>
+              <i className="committed" />
+              Подтверждено
+            </span>
+            {consumers > 3 && <strong>{consumers - 3} потребителя без партиций</strong>}
           </div>
-        ))}
-        <div className="log-legend">
-          <span>
-            <i />
-            Не прочитано
-          </span>
-          <span>
-            <i className="read" />
-            Прочитано
-          </span>
-          <span>
-            <i className="committed" />
-            Подтверждено
-          </span>
-          {consumers > 3 && <strong>{consumers - 3} потребителя без партиций</strong>}
-        </div>
-      </section>
-      <p className="sandbox-status" role="status">
-        {message}
-      </p>
+        </section>
+        <p className="sandbox-status" role="status">
+          {message}
+        </p>
+      </div>
       <div className="sandbox-bottom">
         <section className="experiment">
           <div className="section-index">Эксперимент / Повторная доставка</div>

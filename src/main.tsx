@@ -12,6 +12,7 @@ import App from './App';
 import './styles.css';
 import './motion-ui.css';
 import './studio.css';
+import './interiors.css';
 
 class Boundary extends React.Component<React.PropsWithChildren, { failed: boolean }> {
   state = { failed: false };

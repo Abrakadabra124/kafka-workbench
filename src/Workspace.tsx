@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Check,
   ChevronLeft,
@@ -47,6 +47,9 @@ export function Workspace({ initialTask }: { initialTask?: string }) {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [confirm, setConfirm] = useState('');
+  const confirmationRef = useRef<HTMLDivElement>(null);
+  const prepareRef = useRef<HTMLButtonElement>(null);
+  const stopRef = useRef<HTMLButtonElement>(null);
   const [frame, setFrame] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
   const [eligible, setEligible] = useState(false);
@@ -67,6 +70,42 @@ export function Workspace({ initialTask }: { initialTask?: string }) {
   useEffect(() => {
     void refresh();
   }, []);
+  useEffect(() => {
+    if (confirm) confirmationRef.current?.focus();
+  }, [confirm]);
+  function confirmation(kind: 'prepare' | 'stop') {
+    return (
+      <div
+        className="workspace-confirmation"
+        id={`workspace-${kind}-confirm`}
+        role="group"
+        aria-label="Подтверждение сброса"
+        ref={confirmationRef}
+        tabIndex={-1}
+      >
+        <p>
+          {kind === 'prepare'
+            ? 'Удалить данные и группы только выбранного задания и начать новую попытку?'
+            : 'Удалить все контейнеры и данные нового трёхброкерного стенда?'}{' '}
+          История, черновики и прогресс уроков сохранятся.
+        </p>
+        <div className="button-row">
+          <button className="danger" onClick={() => run(kind)}>
+            Подтвердить сброс
+          </button>
+          <button
+            className="outline"
+            onClick={() => {
+              setConfirm('');
+              (kind === 'prepare' ? prepareRef : stopRef).current?.focus();
+            }}
+          >
+            Отмена
+          </button>
+        </div>
+      </div>
+    );
+  }
   useEffect(() => {
     if (!playing || !eligible || frame === null) return;
     const timer = setTimeout(() => {
@@ -157,6 +196,7 @@ export function Workspace({ initialTask }: { initialTask?: string }) {
                 disabled={disabled}
                 onClick={() => {
                   setSelected(t.id);
+                  window.history.replaceState(null, '', `#lab/${t.id}`);
                   setFrame(null);
                   setPlaying(false);
                   setConfirm('');
@@ -200,273 +240,287 @@ export function Workspace({ initialTask }: { initialTask?: string }) {
                   )}
                 </span>
               </div>
-              <WorkspaceScene
-                snapshot={snapshot}
-                replaying={historical}
-                playing={playing}
-                eventId={event?.id}
-                action={
-                  event?.ok && (event.result.records?.length ?? 0) > 0 ? event.action : undefined
-                }
-                onPlaying={setPlaying}
-                onEligible={setEligible}
-              />
-              <div className="workspace-history-controls">
-                <div>
-                  <strong>{historical ? 'Просмотр записи' : 'Текущий стенд'}</strong>
-                  <span>
-                    {historical
-                      ? 'Действия недоступны до возврата к стенду.'
-                      : 'Метрики обновляются после действий и инспекции.'}
-                  </span>
-                </div>
-                <div className="button-row">
-                  <button
-                    className="outline"
-                    disabled={history.length < 1 || disabled}
-                    onClick={() => {
-                      setFrame(0);
-                      setPlaying(eligible);
-                    }}
-                  >
-                    <Play size={15} />
-                    История по шагам
-                  </button>
-                  {frame !== null && (
-                    <>
-                      <button
-                        className="outline"
-                        aria-label="Предыдущий шаг"
-                        disabled={frame === 0}
-                        onClick={() => {
-                          setPlaying(false);
-                          setFrame(Math.max(0, frame - 1));
-                        }}
-                      >
-                        <ChevronLeft size={16} />
-                      </button>
-                      <button
-                        className="outline"
-                        aria-label="Следующий шаг"
-                        disabled={frame >= history.length - 1}
-                        onClick={() => {
-                          setPlaying(false);
-                          setFrame(Math.min(history.length - 1, frame + 1));
-                        }}
-                      >
-                        <ChevronRight size={16} />
-                      </button>
-                      <button
-                        className="outline"
-                        onClick={() => {
-                          setFrame(null);
-                          setPlaying(false);
-                        }}
-                      >
-                        К текущему стенду
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="workspace-body">
-                <section className="workspace-editor">
-                  {task.practice ? (
-                    <PracticeWalkthrough task={selected} key={selected} />
-                  ) : (
-                    <>
-                      <div className="workspace-panel-title">
-                        <h2>Ваше решение</h2>
-                        <span>recipe.json</span>
-                      </div>
-                      <p>
-                        Измените записи, partition и настройки consumer. Это конфигурация реального
-                        запуска. Произвольный код не исполняется.
-                      </p>
-                      <label htmlFor="workspace-recipe">JSON-рецепт</label>
-                      <textarea
-                        id="workspace-recipe"
-                        spellCheck={false}
-                        value={state.draft}
-                        disabled={disabled || historical}
-                        onChange={(e) => update({ ...state, draft: e.target.value })}
-                      />
-                      <div className="button-row">
-                        <button
-                          className="outline"
+              <div className={`workspace-desk ${task.practice ? 'is-practice' : ''}`}>
+                <div className={`workspace-body ${task.practice ? 'workspace-practice' : ''}`}>
+                  <section className="workspace-editor">
+                    {task.practice ? (
+                      <PracticeWalkthrough task={selected} key={selected} />
+                    ) : (
+                      <>
+                        <div className="workspace-panel-title">
+                          <h2>Ваше решение</h2>
+                          <span>recipe.json</span>
+                        </div>
+                        <p>
+                          Измените записи, partition и настройки consumer. Это конфигурация
+                          реального запуска. Произвольный код не исполняется.
+                        </p>
+                        <label htmlFor="workspace-recipe">JSON-рецепт</label>
+                        <textarea
+                          id="workspace-recipe"
+                          spellCheck={false}
+                          value={state.draft}
                           disabled={disabled || historical}
-                          onClick={() => run('save')}
-                        >
-                          <Save size={16} />
-                          Сохранить рецепт
-                        </button>
-                        <details>
-                          <summary>Формат и подсказка</summary>
-                          <p>{task.hint}</p>
-                          <p>
-                            records: 1..12, partition: 0..2. group: orders или audit. maxRecords:
-                            1..36. commit: true или false. Изменение рецепта не отправляет данные до
-                            запуска.
-                          </p>
-                        </details>
-                      </div>
-                    </>
-                  )}
-                </section>
-                <section className="workspace-runner">
-                  <div className="workspace-panel-title">
-                    <h2>Исполнение</h2>
-                    <span>{busy ? (labels[busy] ?? 'Сохранение') : 'Явные действия'}</span>
-                  </div>
-                  <div className="workspace-run-actions">
-                    <button
-                      className="outline"
-                      disabled={disabled || !data.available || historical}
-                      onClick={() => setConfirm('prepare')}
-                    >
-                      1. Подготовить новую попытку
-                    </button>
-                    {!task.practice && (
-                      <>
-                        <button disabled={!canOperate} onClick={() => run('produce')}>
-                          2. Записать из рецепта
-                        </button>
+                          onChange={(e) => update({ ...state, draft: e.target.value })}
+                        />
+                        <div className="button-row">
+                          <button
+                            className="outline"
+                            disabled={disabled || historical}
+                            onClick={() => run('save')}
+                          >
+                            <Save size={16} />
+                            Сохранить рецепт
+                          </button>
+                          <details>
+                            <summary>Формат и подсказка</summary>
+                            <p>{task.hint}</p>
+                            <p>
+                              records: 1..12, partition: 0..2. group: orders или audit. maxRecords:
+                              1..36. commit: true или false. Изменение рецепта не отправляет данные
+                              до запуска.
+                            </p>
+                          </details>
+                        </div>
                       </>
                     )}
-                    <button disabled={!canOperate} onClick={() => run('consume')}>
-                      3. Прочитать группой
-                    </button>
-                    <button
-                      className="outline"
-                      disabled={!canOperate}
-                      onClick={() => run('inspect')}
-                    >
-                      Наблюдать состояние
-                    </button>
-                    {(selected === 'recovery' || task.practice) && (
-                      <>
-                        <button
-                          className="outline danger"
-                          disabled={!canOperate}
-                          onClick={() => run('fault')}
-                        >
-                          {task.practice
-                            ? '2. Воспроизвести и диагностировать сбой'
-                            : 'Отключить broker 3'}
+                  </section>
+                  <section className="workspace-runner">
+                    <div className="workspace-panel-title">
+                      <h2>Исполнение</h2>
+                      <span>{busy ? (labels[busy] ?? 'Сохранение') : 'Явные действия'}</span>
+                    </div>
+                    <div className="workspace-run-actions">
+                      <button
+                        className="outline"
+                        ref={prepareRef}
+                        aria-expanded={confirm === 'prepare'}
+                        aria-controls="workspace-prepare-confirm"
+                        disabled={disabled || !data.available || historical}
+                        onClick={() => setConfirm('prepare')}
+                      >
+                        1. Подготовить новую попытку
+                      </button>
+                      {confirm === 'prepare' && confirmation('prepare')}
+                      {!task.practice && (
+                        <>
+                          <button disabled={!canOperate} onClick={() => run('produce')}>
+                            2. Записать из рецепта
+                          </button>
+                        </>
+                      )}
+                      {!task.practice && (
+                        <button disabled={!canOperate} onClick={() => run('consume')}>
+                          3. Прочитать группой
                         </button>
-                        <button
-                          className="outline"
-                          disabled={!canOperate}
-                          onClick={() => run('recover')}
-                        >
-                          {task.practice
-                            ? '3. Применить обоснованное исправление'
-                            : 'Восстановить broker 3'}
-                        </button>
-                      </>
-                    )}
-                    {task.practice && (
-                      <>
-                        <button
-                          className="outline danger"
-                          disabled={!canOperate}
-                          onClick={() => run('unsafe')}
-                        >
-                          {selected === 'isr-write-gate'
-                            ? 'Попробовать minISR=2'
-                            : 'Попробовать commit в конец'}
-                        </button>
-                        <button
-                          className="outline"
-                          disabled={!canOperate}
-                          onClick={() => run('retry')}
-                        >
-                          {selected === 'retention-gap'
-                            ? 'Прочитать только доступный хвост'
-                            : 'Повторить без ремонта'}
-                        </button>
-                        {selected === 'poison-quarantine' && (
+                      )}
+                      <button
+                        className="outline"
+                        disabled={!canOperate}
+                        onClick={() => run('inspect')}
+                      >
+                        Наблюдать состояние
+                      </button>
+                      {(selected === 'recovery' || task.practice) && (
+                        <>
+                          <button
+                            className="outline danger"
+                            disabled={!canOperate}
+                            onClick={() => run('fault')}
+                          >
+                            {task.practice
+                              ? '2. Воспроизвести и диагностировать сбой'
+                              : 'Отключить broker 3'}
+                          </button>
                           <button
                             className="outline"
                             disabled={!canOperate}
-                            onClick={() => run('interrupt')}
+                            onClick={() => run('recover')}
                           >
-                            Прервать после карантина, до commit
+                            {task.practice
+                              ? '3. Применить обоснованное исправление'
+                              : 'Восстановить broker 3'}
                           </button>
-                        )}
-                      </>
-                    )}
-                    <button
-                      className="primary"
-                      disabled={!canOperate}
-                      onClick={() => run('verify')}
-                    >
-                      <ShieldCheck size={18} />
-                      Проверить результат
-                    </button>
-                  </div>
-                  {busy && (
-                    <p role="status">
-                      {labels[busy] ?? 'Сохранение'} выполняется. Ожидаем подтверждение от сервера…
-                    </p>
-                  )}
-                  {data.busy && (
-                    <p role="status">
-                      На сервере выполняется {labels[data.busy.action]}. Обновите состояние после
-                      завершения.
-                    </p>
-                  )}
-                  <div className="workspace-evidence">
-                    {task.practice &&
-                      event?.result &&
-                      (event.result.evidence !== undefined || event.result.code) && (
-                        <pre
-                          className="practice-evidence"
-                          aria-label="Фактическое доказательство Kafka"
-                        >
-                          {JSON.stringify(event.result.evidence ?? event.result, null, 2)}
-                        </pre>
+                        </>
                       )}
-                    <h3>
-                      <Terminal size={16} />
-                      Наблюдения и доказательства
-                    </h3>
-                    {event ? (
-                      <>
-                        <p>
-                          {labels[event.action]} ·{' '}
-                          {new Date(event.finishedAt).toLocaleTimeString('ru-RU')}
-                        </p>
-                        <p className={!event.ok ? 'evidence-error' : ''}>{event.message}</p>
-                        {event.result.checks && (
-                          <ul className="workspace-checks">
-                            {event.result.checks.map((c) => (
-                              <li key={c.label}>
-                                {c.ok ? <Check size={16} /> : <TriangleAlert size={16} />}
-                                <span>
-                                  {c.label}:{' '}
-                                  <strong>{c.ok ? 'подтверждено' : 'не подтверждено'}</strong>
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                        {event.result.records && (
-                          <pre>
-                            {event.result.records
-                              .map(
-                                (r) =>
-                                  `p${r.partition} / offset ${r.offset} | ${r.key} | ${r.value}`,
-                              )
-                              .join('\n') || 'Новых записей нет.'}
+                      {task.practice && (
+                        <>
+                          <button
+                            className="outline danger"
+                            disabled={!canOperate}
+                            onClick={() => run('unsafe')}
+                          >
+                            {selected === 'isr-write-gate'
+                              ? 'Попробовать minISR=2'
+                              : 'Попробовать commit в конец'}
+                          </button>
+                          <button
+                            className="outline"
+                            disabled={!canOperate}
+                            onClick={() => run('retry')}
+                          >
+                            {selected === 'retention-gap'
+                              ? 'Прочитать только доступный хвост'
+                              : 'Повторить без ремонта'}
+                          </button>
+                          {selected === 'poison-quarantine' && (
+                            <button
+                              className="outline"
+                              disabled={!canOperate}
+                              onClick={() => run('interrupt')}
+                            >
+                              Прервать после карантина, до commit
+                            </button>
+                          )}
+                        </>
+                      )}
+                      <button
+                        className="primary"
+                        disabled={!canOperate}
+                        onClick={() => run('verify')}
+                      >
+                        <ShieldCheck size={18} />
+                        Проверить результат
+                      </button>
+                    </div>
+                    {busy && (
+                      <p role="status">
+                        {labels[busy] ?? 'Сохранение'} выполняется. Ожидаем подтверждение от
+                        сервера…
+                      </p>
+                    )}
+                    {data.busy && (
+                      <p role="status">
+                        На сервере выполняется {labels[data.busy.action]}. Обновите состояние после
+                        завершения.
+                      </p>
+                    )}
+                    <div className="workspace-evidence">
+                      {task.practice &&
+                        event?.result &&
+                        (event.result.evidence !== undefined || event.result.code) && (
+                          <pre
+                            className="practice-json"
+                            tabIndex={0}
+                            aria-label="Фактическое доказательство Kafka"
+                          >
+                            {JSON.stringify(event.result.evidence ?? event.result, null, 2)}
                           </pre>
                         )}
-                      </>
-                    ) : (
-                      <p>Здесь появятся реальные ответы Kafka. Запуск не равен зачёту.</p>
-                    )}
+                      <h3>
+                        <Terminal size={16} />
+                        Наблюдения и доказательства
+                      </h3>
+                      {event ? (
+                        <>
+                          <p>
+                            {labels[event.action]} ·{' '}
+                            {new Date(event.finishedAt).toLocaleTimeString('ru-RU')}
+                          </p>
+                          <p className={!event.ok ? 'evidence-error' : ''}>{event.message}</p>
+                          {event.result.checks && (
+                            <ul className="workspace-checks">
+                              {event.result.checks.map((c) => (
+                                <li key={c.label}>
+                                  {c.ok ? <Check size={16} /> : <TriangleAlert size={16} />}
+                                  <span>
+                                    {c.label}:{' '}
+                                    <strong>{c.ok ? 'подтверждено' : 'не подтверждено'}</strong>
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          {event.result.records && (
+                            <pre>
+                              {event.result.records
+                                .map(
+                                  (r) =>
+                                    `p${r.partition} / offset ${r.offset} | ${r.key} | ${r.value}`,
+                                )
+                                .join('\n') || 'Новых записей нет.'}
+                            </pre>
+                          )}
+                        </>
+                      ) : (
+                        <p>Здесь появятся реальные ответы Kafka. Запуск не равен зачёту.</p>
+                      )}
+                    </div>
+                  </section>
+                </div>
+                <div className="workspace-monitor">
+                  <WorkspaceScene
+                    snapshot={snapshot}
+                    replaying={historical}
+                    playing={playing}
+                    eventId={event?.id}
+                    action={
+                      event?.ok && (event.result.records?.length ?? 0) > 0
+                        ? event.action
+                        : undefined
+                    }
+                    onPlaying={setPlaying}
+                    onEligible={setEligible}
+                  />
+                  <div className="workspace-history-controls">
+                    <div>
+                      <strong>{historical ? 'Просмотр записи' : 'Текущий стенд'}</strong>
+                      <span>
+                        {historical
+                          ? 'Действия недоступны до возврата к стенду.'
+                          : 'Метрики обновляются после действий и инспекции.'}
+                      </span>
+                    </div>
+                    <div className="button-row">
+                      <button
+                        className="outline"
+                        disabled={history.length < 1 || disabled}
+                        onClick={() => {
+                          setFrame(0);
+                          setPlaying(eligible);
+                        }}
+                      >
+                        <Play size={15} />
+                        История по шагам
+                      </button>
+                      {frame !== null && (
+                        <>
+                          <button
+                            className="outline"
+                            aria-label="Предыдущий шаг"
+                            disabled={frame === 0}
+                            onClick={() => {
+                              setPlaying(false);
+                              setFrame(Math.max(0, frame - 1));
+                            }}
+                          >
+                            <ChevronLeft size={16} />
+                          </button>
+                          <button
+                            className="outline"
+                            aria-label="Следующий шаг"
+                            disabled={frame >= history.length - 1}
+                            onClick={() => {
+                              setPlaying(false);
+                              setFrame(Math.min(history.length - 1, frame + 1));
+                            }}
+                          >
+                            <ChevronRight size={16} />
+                          </button>
+                          <button
+                            className="outline"
+                            onClick={() => {
+                              setFrame(null);
+                              setPlaying(false);
+                            }}
+                          >
+                            К текущему стенду
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </section>
+                </div>
               </div>
               <div className="workspace-timeline">
                 <h2>Журнал попыток</h2>
@@ -510,32 +564,17 @@ export function Workspace({ initialTask }: { initialTask?: string }) {
                 </p>
               </div>
               <div className="workspace-cleanup">
-                {confirm ? (
-                  <div role="group" aria-label="Подтверждение сброса">
-                    <p>
-                      {confirm === 'prepare'
-                        ? 'Удалить topic и группы только выбранного задания и начать новую попытку?'
-                        : 'Удалить все контейнеры и данные нового трёхброкерного стенда?'}{' '}
-                      История, черновики и прогресс уроков сохранятся.
-                    </p>
-                    <div className="button-row">
-                      <button className="danger" onClick={() => run(confirm)}>
-                        Подтвердить сброс
-                      </button>
-                      <button className="outline" onClick={() => setConfirm('')}>
-                        Отмена
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <button
-                    className="outline danger"
-                    disabled={disabled || !data.available || historical}
-                    onClick={() => setConfirm('stop')}
-                  >
-                    Остановить новый стенд
-                  </button>
-                )}
+                <button
+                  className="outline danger"
+                  ref={stopRef}
+                  aria-expanded={confirm === 'stop'}
+                  aria-controls="workspace-stop-confirm"
+                  disabled={disabled || !data.available || historical}
+                  onClick={() => setConfirm('stop')}
+                >
+                  Остановить новый стенд
+                </button>
+                {confirm === 'stop' && confirmation('stop')}
               </div>
             </>
           )}

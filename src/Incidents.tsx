@@ -644,8 +644,10 @@ export function Incidents() {
                   <span>{detail.incident.impact}</span>
                 </div>
               </header>
-              <FlowPlayback key={detail.incident.id} {...detail} />
-              <Investigation key={detail.incident.id} {...detail} busy={busy} act={act} />
+              <div className="incident-workstation">
+                <FlowPlayback key={detail.incident.id} {...detail} />
+                <Investigation key={detail.incident.id} {...detail} busy={busy} act={act} />
+              </div>
               <details className="inc-sources">
                 <summary>Документация для этого случая</summary>
                 {detail.incident.sources.map((source) => (

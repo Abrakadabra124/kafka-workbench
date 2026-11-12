@@ -141,6 +141,9 @@ export function Curriculum({ modules, progress }: { modules: Module[]; progress:
   const found = modules
     .map((m) => ({
       ...m,
+      lessonCount: m.lessons.length,
+      completedCount: m.lessons.filter((l) => progress.completed.includes(l.id)).length,
+      totalDuration: m.lessons.reduce((sum, l) => sum + l.duration, 0),
       lessons: m.lessons.filter((l) =>
         `${m.title} ${l.title} ${l.objective}`.toLocaleLowerCase('ru').includes(normalized),
       ),
@@ -175,6 +178,9 @@ export function Curriculum({ modules, progress }: { modules: Module[]; progress:
               <div>
                 <h2>{m.title}</h2>
                 <p>{m.description}</p>
+                <span className="chapter-meta">
+                  {m.completedCount} / {m.lessonCount} пройдено · {m.totalDuration} мин
+                </span>
               </div>
               <ChevronDown size={19} />
             </summary>
@@ -257,45 +263,50 @@ export function ProgressPage({
           Экспорт прогресса
         </a>
       </div>
-      <h2>По модулям</h2>
-      <div className="module-list">
-        {modules.map((m, i) => (
-          <a className="module-row" href={`#lesson/${m.lessons[0].id}`} key={m.id}>
-            <span className="ordinal">0{i + 1}</span>
-            <span className="module-copy">
-              <strong>{m.title}</strong>
-              <progress
-                value={m.lessons.filter((l) => progress.completed.includes(l.id)).length}
-                max={m.lessons.length}
-                aria-label={m.title}
-              />
-            </span>
-            <span>
-              {m.lessons.filter((l) => progress.completed.includes(l.id)).length}/{m.lessons.length}
-            </span>
-            <ArrowRight size={18} />
-          </a>
-        ))}
-      </div>
-      <section className="repeat-section">
-        <h2>Вернуться к сложному</h2>
-        {retry.length ? (
-          <div className="lesson-list">
-            {retry.map((l) => (
-              <a key={l.id} href={`#lesson/${l.id}`}>
-                <RotateCcw size={18} />
-                <span>{l.title}</span>
+      <div className="progress-workstation">
+        <section className="progress-modules">
+          <h2>По модулям</h2>
+          <div className="module-list">
+            {modules.map((m, i) => (
+              <a className="module-row" href={`#lesson/${m.lessons[0].id}`} key={m.id}>
+                <span className="ordinal">0{i + 1}</span>
+                <span className="module-copy">
+                  <strong>{m.title}</strong>
+                  <progress
+                    value={m.lessons.filter((l) => progress.completed.includes(l.id)).length}
+                    max={m.lessons.length}
+                    aria-label={m.title}
+                  />
+                </span>
+                <span>
+                  {m.lessons.filter((l) => progress.completed.includes(l.id)).length}/
+                  {m.lessons.length}
+                </span>
                 <ArrowRight size={18} />
               </a>
             ))}
           </div>
-        ) : (
-          <p>
-            Здесь появятся уроки с ошибками в последней попытке. Ошибаться и пробовать снова - часть
-            обучения.
-          </p>
-        )}
-      </section>
+        </section>
+        <section className="repeat-section">
+          <h2>Вернуться к сложному</h2>
+          {retry.length ? (
+            <div className="lesson-list">
+              {retry.map((l) => (
+                <a key={l.id} href={`#lesson/${l.id}`}>
+                  <RotateCcw size={18} />
+                  <span>{l.title}</span>
+                  <ArrowRight size={18} />
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p>
+              Здесь появятся уроки с ошибками в последней попытке. Ошибаться и пробовать снова -
+              часть обучения.
+            </p>
+          )}
+        </section>
+      </div>
       <details className="reset-section">
         <summary>Управление локальными данными</summary>
         <p>
@@ -338,30 +349,36 @@ export function Sources({ modules }: { modules: Module[] }) {
           Kafka 4.2.2.
         </p>
       </div>
-      <div className="note">
-        <strong>Что именно вы изучаете</strong>
-        <p>
-          Песочница показывает упрощённый журнал и обычные consumer groups. Хеширование ключа,
-          распределение партиций и пошаговое чтение учебные. Реальные таймеры, сеть, репликация,
-          retention и транзакции здесь не исполняются. Share groups отличаются и в модель не входят.
-        </p>
-        <p>
-          Базовая лаборатория использует один брокер для записи и чтения. Новый практикум запускает
-          три брокера и проверяет репликацию, offsets и восстановление после отключения узла. Все
-          контейнеры находятся на одном компьютере: отказ машины этим стендом не покрывается.
-        </p>
-      </div>
-      <h2>Первоисточники</h2>
-      <div className="source-list">
-        {sources.map((s) => (
-          <a href={s.url} key={s.url} target="_blank" rel="noreferrer">
-            <span>
-              {s.title}
-              <small>{new URL(s.url).hostname}</small>
-            </span>
-            <ArrowUpRight size={18} />
-          </a>
-        ))}
+      <div className="sources-workstation">
+        <div className="note">
+          <strong>Что именно вы изучаете</strong>
+          <p>
+            Песочница показывает упрощённый журнал и обычные consumer groups. Хеширование ключа,
+            распределение партиций и пошаговое чтение учебные. Реальные таймеры, сеть, репликация,
+            retention и транзакции здесь не исполняются. Share groups отличаются и в модель не
+            входят.
+          </p>
+          <p>
+            Базовая лаборатория использует один брокер для записи и чтения. Новый практикум
+            запускает три брокера и проверяет репликацию, offsets и восстановление после отключения
+            узла. Все контейнеры находятся на одном компьютере: отказ машины этим стендом не
+            покрывается.
+          </p>
+        </div>
+        <section>
+          <h2>Первоисточники</h2>
+          <div className="source-list">
+            {sources.map((s) => (
+              <a href={s.url} key={s.url} target="_blank" rel="noreferrer">
+                <span>
+                  {s.title}
+                  <small>{new URL(s.url).hostname}</small>
+                </span>
+                <ArrowUpRight size={18} />
+              </a>
+            ))}
+          </div>
+        </section>
       </div>
       <p className="muted">
         Сравнение учебных подходов и критерии качества находятся в{' '}

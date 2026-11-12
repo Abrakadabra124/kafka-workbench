@@ -6,6 +6,9 @@ test('three causal models reject shortcuts, preserve effects and require explici
   await page.goto('/#lab');
   for (const title of ['Poison pill и карантин', 'ISR и отказ записи', 'Утраченная история']) {
     await page.locator('.workspace-task').filter({ hasText: title }).click();
+    await expect(
+      page.getByRole('button', { name: '3. Прочитать группой', exact: true }),
+    ).toHaveCount(0);
     const model = page.getByRole('region', { name: 'Разбор причины и решения' });
     await model.getByRole('button', { name: 'Проверить модель', exact: true }).click();
     await expect(model.getByRole('status')).not.toContainText('Модель проверена');

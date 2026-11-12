@@ -47,6 +47,29 @@ async function editCommit(page, commit) {
   await editor.fill(JSON.stringify(recipe, null, 2));
 }
 
+test('task selection survives reload and reset confirmation stays beside its action with keyboard focus', async ({
+  page,
+}) => {
+  await fixture(page);
+  await page.setViewportSize({ width: 320, height: 900 });
+  await page.locator('.workspace-task').filter({ hasText: 'Брокер недоступен' }).click();
+  await expect(page).toHaveURL(/#lab\/recovery$/);
+  await page.reload();
+  await expect(page.locator('.workspace-task[aria-pressed="true"]')).toContainText(
+    'Брокер недоступен',
+  );
+  const trigger = page.getByRole('button', { name: '1. Подготовить новую попытку', exact: true });
+  await trigger.click();
+  const confirmation = page.getByRole('group', { name: 'Подтверждение сброса' });
+  await expect(confirmation).toBeFocused();
+  const triggerBox = await trigger.boundingBox();
+  const confirmBox = await confirmation.boundingBox();
+  expect(confirmBox.y - (triggerBox.y + triggerBox.height)).toBeLessThan(40);
+  await confirmation.getByRole('button', { name: 'Отмена', exact: true }).click();
+  await expect(trigger).toBeFocused();
+  await expect(confirmation).toHaveCount(0);
+});
+
 test('workspace edits recipe, refuses premature credit, recovers commits, persists history and resets only its attempt', async ({
   page,
 }) => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, ChevronRight, FlaskConical, LoaderCircle, RefreshCw, Terminal } from 'lucide-react';
 import { api } from './api';
 
@@ -40,6 +40,7 @@ const steps = [
   },
 ];
 export function BasicLab() {
+  const outputRef = useRef<HTMLElement>(null);
   const [status, setStatus] = useState<LabState | null>(null);
   const [busy, setBusy] = useState('');
   const [output, setOutput] = useState(
@@ -183,11 +184,19 @@ export function BasicLab() {
                   )}
                   {busy === step.action ? 'Выполняется…' : step.title}
                 </button>
+                <button className="text lab-output-jump" onClick={() => outputRef.current?.focus()}>
+                  Посмотреть вывод
+                </button>
               </div>
             </section>
           ))}
         </div>
-        <aside className="lab-terminal">
+        <aside
+          className="lab-terminal"
+          ref={outputRef}
+          tabIndex={-1}
+          aria-label="Вывод и доказательства"
+        >
           <div>
             <Terminal size={18} />
             <strong>Вывод и доказательства</strong>

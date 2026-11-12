@@ -270,8 +270,9 @@ export function LessonView({
               {saving ? 'Сохраняем…' : 'Сохранить заметку'}
             </button>
             <span role="status">{saved}</span>
+            <small>{note.length} / 10 000</small>
           </div>
-          <small>{note.length} / 10 000 символов. Перед уходом из урока сохраните изменения.</small>
+          <small>Перед уходом из урока сохраните изменения.</small>
         </section>
       )}
       <nav className="lesson-pagination" aria-label="Уроки">
