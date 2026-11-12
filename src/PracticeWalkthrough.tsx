@@ -51,7 +51,7 @@ export function PracticeWalkthrough({ task }: { task: string }) {
           id === 'poison-quarantine'
             ? ['Карантин', s.quarantine]
             : [
-                'Ожидают восстановления',
+                'Ожидают',
                 s.fault ? ['E0', 'E1', 'E2'].filter((x) => !s.recovered.includes(x)) : [],
               ],
         ];
@@ -71,7 +71,7 @@ export function PracticeWalkthrough({ task }: { task: string }) {
           producer: id === 'isr-write-gate' && s.isr < s.minIsr ? 'blocked' : 'healthy',
           broker: s.isr < 3 ? 'degraded' : 'healthy',
           consumer: blocked && id !== 'isr-write-gate' && s.position < 3 ? 'blocked' : 'healthy',
-          external: s.repaired ? 'healthy' : 'degraded',
+          external: !s.fault || s.repaired ? 'healthy' : 'degraded',
         }}
         partitions={[
           { count: s.source.length, position: s.position, committed: s.committed, owner: 0 },

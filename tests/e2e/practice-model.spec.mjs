@@ -10,6 +10,7 @@ test('three causal models reject shortcuts, preserve effects and require explici
       page.getByRole('button', { name: '3. Прочитать группой', exact: true }),
     ).toHaveCount(0);
     const model = page.getByRole('region', { name: 'Разбор причины и решения' });
+    await expect(model.locator('.sf-external')).toContainText('работает');
     await model.getByRole('button', { name: 'Проверить модель', exact: true }).click();
     await expect(model.getByRole('status')).not.toContainText('Модель проверена');
     await model.getByRole('button', { name: 'Воспроизвести', exact: true }).click();

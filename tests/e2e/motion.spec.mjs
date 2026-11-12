@@ -177,6 +177,7 @@ test('incident history stops offscreen, resumes without a catch-up jump, and pau
   page,
   request,
 }) => {
+  await page.setViewportSize({ width: 1440, height: 400 });
   await seedHistory(request);
   await page.goto('/#incidents');
   const flow = scene(page, 'incident');
@@ -195,7 +196,13 @@ test('incident history stops offscreen, resumes without a catch-up jump, and pau
     .first()
     .evaluate((element) => Number.parseFloat(getComputedStyle(element).animationDuration));
   expect(outputDuration).toBeGreaterThan(inputDuration);
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  // The working panels now sit side by side. Page bottom no longer guarantees
+  // an offscreen scene. A short window and the real page header do, without
+  // injecting spacer elements or changing the application's observer.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  expect(await flow.evaluate((element) => element.getBoundingClientRect().top >= innerHeight)).toBe(
+    true,
+  );
   await expect(flow).toHaveAttribute('data-motion-state', 'offscreen');
   await expectFrozen(packets(flow));
   await new Promise((resolve) => setTimeout(resolve, 2900));
