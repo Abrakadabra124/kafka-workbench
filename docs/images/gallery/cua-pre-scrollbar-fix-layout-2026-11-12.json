@@ -1,0 +1,170 @@
+[
+  {
+    "route": "#curriculum",
+    "scrollWidth": 1425,
+    "title": "Учебный маршрут",
+    "width": 1440
+  },
+  {
+    "route": "#lesson/event-log",
+    "scrollWidth": 1425,
+    "title": "Событие и журнал",
+    "width": 1440
+  },
+  {
+    "route": "#sandbox",
+    "scrollWidth": 1425,
+    "title": "Песочница событий",
+    "width": 1440
+  },
+  {
+    "route": "#incidents",
+    "scrollWidth": 1425,
+    "title": "Реальные проблемы Kafka",
+    "width": 1440
+  },
+  {
+    "route": "#lab/retention-gap",
+    "scrollWidth": 1425,
+    "title": "Рабочее место лаборатории",
+    "width": 1440
+  },
+  {
+    "route": "#progress",
+    "scrollWidth": 1425,
+    "title": "Мой прогресс",
+    "width": 1440
+  },
+  {
+    "route": "#sources",
+    "scrollWidth": 1425,
+    "title": "Источники и границы модели",
+    "width": 1440
+  },
+  {
+    "route": "#curriculum",
+    "scrollWidth": 753,
+    "title": "Учебный маршрут",
+    "width": 768
+  },
+  {
+    "route": "#lesson/event-log",
+    "scrollWidth": 753,
+    "title": "Событие и журнал",
+    "width": 768
+  },
+  {
+    "route": "#sandbox",
+    "scrollWidth": 753,
+    "title": "Песочница событий",
+    "width": 768
+  },
+  {
+    "route": "#incidents",
+    "scrollWidth": 753,
+    "title": "Реальные проблемы Kafka",
+    "width": 768
+  },
+  {
+    "route": "#lab/retention-gap",
+    "scrollWidth": 753,
+    "title": "Рабочее место лаборатории",
+    "width": 768
+  },
+  {
+    "route": "#progress",
+    "scrollWidth": 753,
+    "title": "Мой прогресс",
+    "width": 768
+  },
+  {
+    "route": "#sources",
+    "scrollWidth": 753,
+    "title": "Источники и границы модели",
+    "width": 768
+  },
+  {
+    "route": "#curriculum",
+    "scrollWidth": 375,
+    "title": "Учебный маршрут",
+    "width": 390
+  },
+  {
+    "route": "#lesson/event-log",
+    "scrollWidth": 375,
+    "title": "Событие и журнал",
+    "width": 390
+  },
+  {
+    "route": "#sandbox",
+    "scrollWidth": 375,
+    "title": "Песочница событий",
+    "width": 390
+  },
+  {
+    "route": "#incidents",
+    "scrollWidth": 375,
+    "title": "Реальные проблемы Kafka",
+    "width": 390
+  },
+  {
+    "route": "#lab/retention-gap",
+    "scrollWidth": 375,
+    "title": "Рабочее место лаборатории",
+    "width": 390
+  },
+  {
+    "route": "#progress",
+    "scrollWidth": 375,
+    "title": "Мой прогресс",
+    "width": 390
+  },
+  {
+    "route": "#sources",
+    "scrollWidth": 375,
+    "title": "Источники и границы модели",
+    "width": 390
+  },
+  {
+    "route": "#curriculum",
+    "scrollWidth": 320,
+    "title": "Учебный маршрут",
+    "width": 320
+  },
+  {
+    "route": "#lesson/event-log",
+    "scrollWidth": 320,
+    "title": "Событие и журнал",
+    "width": 320
+  },
+  {
+    "route": "#sandbox",
+    "scrollWidth": 320,
+    "title": "Песочница событий",
+    "width": 320
+  },
+  {
+    "route": "#incidents",
+    "scrollWidth": 320,
+    "title": "Реальные проблемы Kafka",
+    "width": 320
+  },
+  {
+    "route": "#lab/retention-gap",
+    "scrollWidth": 320,
+    "title": "Рабочее место лаборатории",
+    "width": 320
+  },
+  {
+    "route": "#progress",
+    "scrollWidth": 320,
+    "title": "Мой прогресс",
+    "width": 320
+  },
+  {
+    "route": "#sources",
+    "scrollWidth": 320,
+    "title": "Источники и границы модели",
+    "width": 320
+  }
+]

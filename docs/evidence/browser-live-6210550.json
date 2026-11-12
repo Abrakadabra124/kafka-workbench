@@ -1,0 +1,4530 @@
+{
+  "testedAt": "2026-11-12T19:11:09.869Z",
+  "viewports": [
+    320,
+    390,
+    768,
+    1440
+  ],
+  "consoleErrors": [],
+  "state": {
+    "draft": "{\n  \"records\": [\n    {\n      \"partition\": 0,\n      \"key\": \"customer-42\",\n      \"value\": \"Изменённый заказ из браузера\"\n    },\n    {\n      \"partition\": 1,\n      \"key\": \"customer-7\",\n      \"value\": \"Заказ ORD-202\"\n    },\n    {\n      \"partition\": 2,\n      \"key\": \"customer-42\",\n      \"value\": \"Заказ ORD-203\"\n    }\n  ],\n  \"consumer\": {\n    \"group\": \"orders\",\n    \"maxRecords\": 3,\n    \"commit\": true\n  }\n}",
+    "attempt": 1,
+    "prepared": true,
+    "snapshot": {
+      "group": "wb-recovery-orders",
+      "topic": "wb-recovery",
+      "partitions": [
+        {
+          "partition": 0,
+          "leader": 1,
+          "replicas": [
+            1,
+            2,
+            3
+          ],
+          "isr": [
+            1,
+            2,
+            3
+          ],
+          "end": 1,
+          "committed": 1,
+          "lag": 0
+        },
+        {
+          "partition": 1,
+          "leader": 2,
+          "replicas": [
+            2,
+            3,
+            1
+          ],
+          "isr": [
+            1,
+            2,
+            3
+          ],
+          "end": 1,
+          "committed": 1,
+          "lag": 0
+        },
+        {
+          "partition": 2,
+          "leader": 1,
+          "replicas": [
+            3,
+            1,
+            2
+          ],
+          "isr": [
+            1,
+            2,
+            3
+          ],
+          "end": 1,
+          "committed": 1,
+          "lag": 0
+        }
+      ],
+      "capturedAt": "2026-11-12T19:08:42.437Z",
+      "brokers": [
+        {
+          "id": 1,
+          "running": true
+        },
+        {
+          "id": 2,
+          "running": true
+        },
+        {
+          "id": 3,
+          "running": true
+        }
+      ]
+    },
+    "history": [
+      {
+        "id": "157a0dbf-b72e-478f-bc66-f4bc55ee46f3",
+        "action": "prepare",
+        "startedAt": "2026-11-12T19:07:01.905Z",
+        "finishedAt": "2026-11-12T19:07:13.990Z",
+        "ok": true,
+        "message": "Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.",
+        "result": {},
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                3,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 3,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                3,
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-12T19:07:13.990Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "63099559-17e4-40c8-9598-a85ed3afec18",
+        "action": "fault",
+        "startedAt": "2026-11-12T19:07:14.073Z",
+        "finishedAt": "2026-11-12T19:07:23.112Z",
+        "ok": true,
+        "message": "Сбой воспроизведён: broker 3 остановлен, ISR уменьшился. Запишите события, затем восстановите брокер.",
+        "result": {},
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 0,
+              "committed": null,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "capturedAt": "2026-11-12T19:07:23.112Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      },
+      {
+        "id": "378c71d5-72e1-4bbb-bff2-ccf034998a6c",
+        "action": "produce",
+        "startedAt": "2026-11-12T19:07:23.250Z",
+        "finishedAt": "2026-11-12T19:07:43.921Z",
+        "ok": true,
+        "message": "Запись подтверждена Kafka: 3 событий. Это ещё не зачёт задания.",
+        "result": {
+          "records": [
+            {
+              "key": "customer-42",
+              "offset": 0,
+              "partition": 0,
+              "value": "Изменённый заказ из браузера"
+            },
+            {
+              "key": "customer-7",
+              "offset": 0,
+              "partition": 1,
+              "value": "Заказ ORD-202"
+            },
+            {
+              "key": "customer-42",
+              "offset": 0,
+              "partition": 2,
+              "value": "Заказ ORD-203"
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-12T19:07:43.921Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      },
+      {
+        "id": "a0400857-22fb-4889-9b15-de94c5ae8860",
+        "action": "consume",
+        "startedAt": "2026-11-12T19:07:44.034Z",
+        "finishedAt": "2026-11-12T19:07:56.873Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: выключен. Группа: orders.",
+        "result": {
+          "records": [
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Изменённый заказ из браузера"
+            }
+          ],
+          "committed": false
+        },
+        "snapshot": {
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "capturedAt": "2026-11-12T19:07:56.873Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      },
+      {
+        "id": "3a13285d-66e9-4b83-82b9-4c109957c3ed",
+        "action": "verify",
+        "startedAt": "2026-11-12T19:07:56.943Z",
+        "finishedAt": "2026-11-12T19:08:11.266Z",
+        "ok": true,
+        "message": "Задание пока не зачтено. Исправьте пункты проверки и повторите.",
+        "result": {
+          "passed": false,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": false
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": false
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                2,
+                1
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "topic": "wb-recovery",
+          "group": "wb-recovery-orders",
+          "capturedAt": "2026-11-12T19:08:03.936Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": false
+            }
+          ]
+        }
+      },
+      {
+        "id": "854570db-eb1f-42e0-9b51-88509c4d0ce3",
+        "action": "recover",
+        "startedAt": "2026-11-12T19:08:11.317Z",
+        "finishedAt": "2026-11-12T19:08:17.507Z",
+        "ok": true,
+        "message": "Восстановление подтверждено: все три реплики снова в ISR.",
+        "result": {},
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": null,
+              "lag": 1
+            }
+          ],
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-12T19:08:17.507Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "8d23a747-631c-4706-9e81-a7b188fc2355",
+        "action": "consume",
+        "startedAt": "2026-11-12T19:08:17.742Z",
+        "finishedAt": "2026-11-12T19:08:20.615Z",
+        "ok": true,
+        "message": "Прочитано 3. Commit: включён. Группа: orders.",
+        "result": {
+          "committed": true,
+          "records": [
+            {
+              "partition": 1,
+              "offset": 0,
+              "key": "customer-7",
+              "value": "Заказ ORD-202"
+            },
+            {
+              "partition": 2,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Заказ ORD-203"
+            },
+            {
+              "partition": 0,
+              "offset": 0,
+              "key": "customer-42",
+              "value": "Изменённый заказ из браузера"
+            }
+          ]
+        },
+        "snapshot": {
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-12T19:08:20.615Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "cf08ec77-e97e-4d51-bd84-baa36d6953e8",
+        "action": "verify",
+        "startedAt": "2026-11-12T19:08:20.666Z",
+        "finishedAt": "2026-11-12T19:08:24.822Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "topic": "wb-recovery",
+          "capturedAt": "2026-11-12T19:08:22.333Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "3f6775d3-cbb3-4bbf-96b2-bf30d2d11b03",
+        "action": "consume",
+        "startedAt": "2026-11-12T19:08:26.503Z",
+        "finishedAt": "2026-11-12T19:08:41.005Z",
+        "ok": true,
+        "message": "Прочитано 0. Commit: включён. Группа: orders.",
+        "result": {
+          "records": [],
+          "committed": true
+        },
+        "snapshot": {
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "group": "wb-recovery-orders",
+          "capturedAt": "2026-11-12T19:08:41.005Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "00491f9a-8145-4828-94e1-ada52c7735d4",
+        "action": "verify",
+        "startedAt": "2026-11-12T19:08:41.101Z",
+        "finishedAt": "2026-11-12T19:08:44.018Z",
+        "ok": true,
+        "message": "Результат независимо проверен. Задание выполнено.",
+        "result": {
+          "passed": true,
+          "checks": [
+            {
+              "label": "Есть подтверждённая серия заказов",
+              "ok": true
+            },
+            {
+              "label": "Независимое чтение совпало с журналом отправки",
+              "ok": true
+            },
+            {
+              "label": "Группа orders прочитала всю серию",
+              "ok": true
+            },
+            {
+              "label": "Сохранённые offsets orders совпадают с концом журнала",
+              "ok": true
+            },
+            {
+              "label": "Три реплики синхронны для каждой партиции",
+              "ok": true
+            },
+            {
+              "label": "Отказ наблюдался и запись при уменьшенном ISR подтверждена",
+              "ok": true
+            }
+          ]
+        },
+        "snapshot": {
+          "group": "wb-recovery-orders",
+          "topic": "wb-recovery",
+          "partitions": [
+            {
+              "partition": 0,
+              "leader": 1,
+              "replicas": [
+                1,
+                2,
+                3
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 1,
+              "leader": 2,
+              "replicas": [
+                2,
+                3,
+                1
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            },
+            {
+              "partition": 2,
+              "leader": 1,
+              "replicas": [
+                3,
+                1,
+                2
+              ],
+              "isr": [
+                1,
+                2,
+                3
+              ],
+              "end": 1,
+              "committed": 1,
+              "lag": 0
+            }
+          ],
+          "capturedAt": "2026-11-12T19:08:42.437Z",
+          "brokers": [
+            {
+              "id": 1,
+              "running": true
+            },
+            {
+              "id": 2,
+              "running": true
+            },
+            {
+              "id": 3,
+              "running": true
+            }
+          ]
+        }
+      }
+    ],
+    "ledger": [
+      {
+        "key": "customer-42",
+        "offset": 0,
+        "partition": 0,
+        "value": "Изменённый заказ из браузера"
+      },
+      {
+        "key": "customer-7",
+        "offset": 0,
+        "partition": 1,
+        "value": "Заказ ORD-202"
+      },
+      {
+        "key": "customer-42",
+        "offset": 0,
+        "partition": 2,
+        "value": "Заказ ORD-203"
+      }
+    ],
+    "reads": [
+      {
+        "records": [
+          {
+            "partition": 2,
+            "offset": 0,
+            "key": "customer-42",
+            "value": "Заказ ORD-203"
+          },
+          {
+            "partition": 1,
+            "offset": 0,
+            "key": "customer-7",
+            "value": "Заказ ORD-202"
+          },
+          {
+            "partition": 0,
+            "offset": 0,
+            "key": "customer-42",
+            "value": "Изменённый заказ из браузера"
+          }
+        ],
+        "committed": false,
+        "group": "orders"
+      },
+      {
+        "committed": true,
+        "records": [
+          {
+            "partition": 1,
+            "offset": 0,
+            "key": "customer-7",
+            "value": "Заказ ORD-202"
+          },
+          {
+            "partition": 2,
+            "offset": 0,
+            "key": "customer-42",
+            "value": "Заказ ORD-203"
+          },
+          {
+            "partition": 0,
+            "offset": 0,
+            "key": "customer-42",
+            "value": "Изменённый заказ из браузера"
+          }
+        ],
+        "group": "orders"
+      },
+      {
+        "records": [],
+        "committed": true,
+        "group": "orders"
+      }
+    ],
+    "faultObserved": true,
+    "wroteDuringFault": true,
+    "verified": true,
+    "readEvidence": [
+      "[2,0,\"customer-42\",\"Заказ ORD-203\"]",
+      "[1,0,\"customer-7\",\"Заказ ORD-202\"]",
+      "[0,0,\"customer-42\",\"Изменённый заказ из браузера\"]"
+    ],
+    "replayObserved": false,
+    "uncommittedEvidence": [
+      "[2,0,\"customer-42\",\"Заказ ORD-203\"]",
+      "[1,0,\"customer-7\",\"Заказ ORD-202\"]",
+      "[0,0,\"customer-42\",\"Изменённый заказ из браузера\"]"
+    ]
+  },
+  "practices": {
+    "poison-quarantine": {
+      "draft": "{\n  \"records\": [\n    {\n      \"partition\": 0,\n      \"key\": \"customer-42\",\n      \"value\": \"Заказ ORD-201\"\n    },\n    {\n      \"partition\": 1,\n      \"key\": \"customer-7\",\n      \"value\": \"Заказ ORD-202\"\n    },\n    {\n      \"partition\": 2,\n      \"key\": \"customer-42\",\n      \"value\": \"Заказ ORD-203\"\n    }\n  ],\n  \"consumer\": {\n    \"group\": \"orders\",\n    \"maxRecords\": 3,\n    \"commit\": false\n  }\n}",
+      "attempt": 1,
+      "prepared": true,
+      "snapshot": {
+        "partitions": [
+          {
+            "partition": 0,
+            "leader": 1,
+            "replicas": [
+              1,
+              2,
+              3
+            ],
+            "isr": [
+              1,
+              2,
+              3
+            ],
+            "end": 3,
+            "committed": 3,
+            "lag": 0
+          },
+          {
+            "partition": 1,
+            "leader": 2,
+            "replicas": [
+              2,
+              3,
+              1
+            ],
+            "isr": [
+              2,
+              3,
+              1
+            ],
+            "end": 0,
+            "committed": 0,
+            "lag": 0
+          },
+          {
+            "partition": 2,
+            "leader": 3,
+            "replicas": [
+              3,
+              1,
+              2
+            ],
+            "isr": [
+              3,
+              1,
+              2
+            ],
+            "end": 0,
+            "committed": 0,
+            "lag": 0
+          }
+        ],
+        "topic": "wb-poison-quarantine",
+        "group": "wb-poison-quarantine-orders",
+        "capturedAt": "2026-11-12T19:09:18.452Z",
+        "brokers": [
+          {
+            "id": 1,
+            "running": true
+          },
+          {
+            "id": 2,
+            "running": true
+          },
+          {
+            "id": 3,
+            "running": true
+          }
+        ]
+      },
+      "history": [
+        {
+          "id": "12d59789-9163-4c59-933a-927c3744eefa",
+          "action": "prepare",
+          "startedAt": "2026-11-12T19:08:44.213Z",
+          "finishedAt": "2026-11-12T19:08:50.016Z",
+          "ok": true,
+          "message": "Новая учебная серия подтверждена Kafka. Архив этой попытки сохранён до любого сбоя.",
+          "result": {
+            "prepared": true,
+            "records": [
+              {
+                "partition": 0,
+                "offset": 0,
+                "key": "E0",
+                "value": "{\"eventId\":\"E0\",\"amount\":100}"
+              },
+              {
+                "partition": 0,
+                "offset": 1,
+                "key": "E1",
+                "value": "{broken"
+              },
+              {
+                "partition": 0,
+                "offset": 2,
+                "key": "E2",
+                "value": "{\"eventId\":\"E2\",\"amount\":100}"
+              }
+            ]
+          },
+          "snapshot": {
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 0,
+                "lag": 3
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-poison-quarantine",
+            "group": "wb-poison-quarantine-orders",
+            "capturedAt": "2026-11-12T19:08:50.016Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "a9c8d7ad-b5fa-42e2-8df2-cdc2842c9e35",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:08:50.139Z",
+          "finishedAt": "2026-11-12T19:08:53.235Z",
+          "ok": true,
+          "message": "Критерии восстановления пока не выполнены.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{broken"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ],
+              "minIsr": 2,
+              "start": 0,
+              "quarantine": [],
+              "processed": []
+            },
+            "passed": false,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": false
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "Ошибка контракта наблюдалась на реальной записи",
+                "ok": false
+              },
+              {
+                "label": "Корректные события обработаны ровно по одному разу",
+                "ok": false
+              },
+              {
+                "label": "Карантин сохранил исходные байты, координаты и причину",
+                "ok": false
+              },
+              {
+                "label": "Commit выполнен после обработки всей исходной серии",
+                "ok": false
+              }
+            ]
+          },
+          "snapshot": {
+            "group": "wb-poison-quarantine-orders",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 0,
+                "lag": 3
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-poison-quarantine",
+            "capturedAt": "2026-11-12T19:08:53.234Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "4e7d1a99-4d58-47a5-9040-79ea27c71a6c",
+          "action": "fault",
+          "startedAt": "2026-11-12T19:08:53.319Z",
+          "finishedAt": "2026-11-12T19:08:55.834Z",
+          "ok": true,
+          "message": "Наблюдение Kafka: SchemaViolation. Обработчик остановлен на нарушении контракта; offset проблемной записи не подтверждён.",
+          "result": {
+            "code": "SchemaViolation",
+            "offset": 1,
+            "payload": "{broken",
+            "partition": 0,
+            "message": "Обработчик остановлен на нарушении контракта; offset проблемной записи не подтверждён."
+          },
+          "snapshot": {
+            "topic": "wb-poison-quarantine",
+            "group": "wb-poison-quarantine-orders",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 1,
+                "lag": 2
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "capturedAt": "2026-11-12T19:08:55.834Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "6a0ccb69-2093-4564-99f3-3d227499778a",
+          "action": "unsafe",
+          "startedAt": "2026-11-12T19:08:55.895Z",
+          "finishedAt": "2026-11-12T19:08:58.382Z",
+          "ok": true,
+          "message": "Offset передвинут в конец. Это не доказательство сохранения и обработки событий.",
+          "result": {
+            "shortcutApplied": true
+          },
+          "snapshot": {
+            "group": "wb-poison-quarantine-orders",
+            "topic": "wb-poison-quarantine",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "capturedAt": "2026-11-12T19:08:58.382Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "e9f2301c-70db-4c89-93a2-244eb2fc6eec",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:08:58.436Z",
+          "finishedAt": "2026-11-12T19:09:02.423Z",
+          "ok": true,
+          "message": "Критерии восстановления пока не выполнены.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{broken"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ],
+              "minIsr": 2,
+              "start": 0,
+              "quarantine": [],
+              "processed": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                }
+              ]
+            },
+            "passed": false,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": false
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "Ошибка контракта наблюдалась на реальной записи",
+                "ok": true
+              },
+              {
+                "label": "Корректные события обработаны ровно по одному разу",
+                "ok": false
+              },
+              {
+                "label": "Карантин сохранил исходные байты, координаты и причину",
+                "ok": false
+              },
+              {
+                "label": "Commit выполнен после обработки всей исходной серии",
+                "ok": true
+              }
+            ]
+          },
+          "snapshot": {
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-poison-quarantine",
+            "group": "wb-poison-quarantine-orders",
+            "capturedAt": "2026-11-12T19:09:02.423Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "063be8e0-56b6-47b4-b965-6f8729417e57",
+          "action": "recover",
+          "startedAt": "2026-11-12T19:09:02.482Z",
+          "finishedAt": "2026-11-12T19:09:06.149Z",
+          "ok": true,
+          "message": "Исправление выполнено. Независимая проверка результата ещё необходима.",
+          "result": {
+            "repaired": true
+          },
+          "snapshot": {
+            "group": "wb-poison-quarantine-orders",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-poison-quarantine",
+            "capturedAt": "2026-11-12T19:09:06.149Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "1912d2c1-7e93-43f4-958f-c8d275805107",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:09:06.238Z",
+          "finishedAt": "2026-11-12T19:09:10.324Z",
+          "ok": true,
+          "message": "Все критерии подтверждены Kafka. Задача выполнена.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{broken"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ],
+              "minIsr": 2,
+              "start": 0,
+              "quarantine": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "wb-poison-quarantine:0:1",
+                  "value": "{\"sourceTopic\":\"wb-poison-quarantine\",\"partition\":0,\"offset\":1,\"payload\":\"{broken\",\"reason\":\"SCHEMA_VIOLATION\"}"
+                }
+              ],
+              "processed": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ]
+            },
+            "passed": true,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": true
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "Ошибка контракта наблюдалась на реальной записи",
+                "ok": true
+              },
+              {
+                "label": "Корректные события обработаны ровно по одному разу",
+                "ok": true
+              },
+              {
+                "label": "Карантин сохранил исходные байты, координаты и причину",
+                "ok": true
+              },
+              {
+                "label": "Commit выполнен после обработки всей исходной серии",
+                "ok": true
+              }
+            ]
+          },
+          "snapshot": {
+            "group": "wb-poison-quarantine-orders",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-poison-quarantine",
+            "capturedAt": "2026-11-12T19:09:10.324Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "cdac73eb-1135-496f-84fc-c518c9b16eb7",
+          "action": "recover",
+          "startedAt": "2026-11-12T19:09:10.380Z",
+          "finishedAt": "2026-11-12T19:09:14.470Z",
+          "ok": true,
+          "message": "Исправление выполнено. Независимая проверка результата ещё необходима.",
+          "result": {
+            "repaired": true
+          },
+          "snapshot": {
+            "group": "wb-poison-quarantine-orders",
+            "topic": "wb-poison-quarantine",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "capturedAt": "2026-11-12T19:09:14.470Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "736cdb4d-e1dd-4b1b-abee-ee85bf416ac6",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:09:14.546Z",
+          "finishedAt": "2026-11-12T19:09:18.452Z",
+          "ok": true,
+          "message": "Все критерии подтверждены Kafka. Задача выполнена.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{broken"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ],
+              "minIsr": 2,
+              "start": 0,
+              "quarantine": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "wb-poison-quarantine:0:1",
+                  "value": "{\"sourceTopic\":\"wb-poison-quarantine\",\"partition\":0,\"offset\":1,\"payload\":\"{broken\",\"reason\":\"SCHEMA_VIOLATION\"}"
+                }
+              ],
+              "processed": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ]
+            },
+            "passed": true,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": true
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "Ошибка контракта наблюдалась на реальной записи",
+                "ok": true
+              },
+              {
+                "label": "Корректные события обработаны ровно по одному разу",
+                "ok": true
+              },
+              {
+                "label": "Карантин сохранил исходные байты, координаты и причину",
+                "ok": true
+              },
+              {
+                "label": "Commit выполнен после обработки всей исходной серии",
+                "ok": true
+              }
+            ]
+          },
+          "snapshot": {
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-poison-quarantine",
+            "group": "wb-poison-quarantine-orders",
+            "capturedAt": "2026-11-12T19:09:18.452Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        }
+      ],
+      "ledger": [
+        {
+          "partition": 0,
+          "offset": 0,
+          "key": "E0",
+          "value": "{\"eventId\":\"E0\",\"amount\":100}"
+        },
+        {
+          "partition": 0,
+          "offset": 1,
+          "key": "E1",
+          "value": "{broken"
+        },
+        {
+          "partition": 0,
+          "offset": 2,
+          "key": "E2",
+          "value": "{\"eventId\":\"E2\",\"amount\":100}"
+        }
+      ],
+      "reads": [],
+      "faultObserved": true,
+      "wroteDuringFault": false,
+      "verified": true,
+      "archive": [
+        {
+          "partition": 0,
+          "offset": 0,
+          "key": "E0",
+          "value": "{\"eventId\":\"E0\",\"amount\":100}"
+        },
+        {
+          "partition": 0,
+          "offset": 1,
+          "key": "E1",
+          "value": "{broken"
+        },
+        {
+          "partition": 0,
+          "offset": 2,
+          "key": "E2",
+          "value": "{\"eventId\":\"E2\",\"amount\":100}"
+        }
+      ],
+      "faultCode": "SchemaViolation",
+      "recoveryAcknowledged": true,
+      "proof": null
+    },
+    "isr-write-gate": {
+      "draft": "{\n  \"records\": [\n    {\n      \"partition\": 0,\n      \"key\": \"customer-42\",\n      \"value\": \"Заказ ORD-201\"\n    },\n    {\n      \"partition\": 1,\n      \"key\": \"customer-7\",\n      \"value\": \"Заказ ORD-202\"\n    },\n    {\n      \"partition\": 2,\n      \"key\": \"customer-42\",\n      \"value\": \"Заказ ORD-203\"\n    }\n  ],\n  \"consumer\": {\n    \"group\": \"orders\",\n    \"maxRecords\": 3,\n    \"commit\": false\n  }\n}",
+      "attempt": 1,
+      "prepared": true,
+      "snapshot": {
+        "topic": "wb-isr-write-gate",
+        "partitions": [
+          {
+            "partition": 0,
+            "leader": 1,
+            "replicas": [
+              1,
+              2,
+              3
+            ],
+            "isr": [
+              1,
+              2,
+              3
+            ],
+            "end": 4,
+            "committed": 0,
+            "lag": 4
+          },
+          {
+            "partition": 1,
+            "leader": 2,
+            "replicas": [
+              2,
+              3,
+              1
+            ],
+            "isr": [
+              1,
+              2,
+              3
+            ],
+            "end": 0,
+            "committed": 0,
+            "lag": 0
+          },
+          {
+            "partition": 2,
+            "leader": 1,
+            "replicas": [
+              3,
+              1,
+              2
+            ],
+            "isr": [
+              1,
+              2,
+              3
+            ],
+            "end": 0,
+            "committed": 0,
+            "lag": 0
+          }
+        ],
+        "group": "wb-isr-write-gate-orders",
+        "capturedAt": "2026-11-12T19:10:37.382Z",
+        "brokers": [
+          {
+            "id": 1,
+            "running": true
+          },
+          {
+            "id": 2,
+            "running": true
+          },
+          {
+            "id": 3,
+            "running": true
+          }
+        ]
+      },
+      "history": [
+        {
+          "id": "d85974d7-e3d9-4598-a553-31cb97952f79",
+          "action": "prepare",
+          "startedAt": "2026-11-12T19:09:19.398Z",
+          "finishedAt": "2026-11-12T19:09:24.897Z",
+          "ok": true,
+          "message": "Новая учебная серия подтверждена Kafka. Архив этой попытки сохранён до любого сбоя.",
+          "result": {
+            "records": [
+              {
+                "offset": 0,
+                "key": "E0",
+                "value": "{\"eventId\":\"E0\",\"amount\":100}",
+                "partition": 0
+              },
+              {
+                "offset": 1,
+                "key": "E1",
+                "value": "{\"eventId\":\"E1\",\"amount\":100}",
+                "partition": 0
+              },
+              {
+                "offset": 2,
+                "key": "E2",
+                "value": "{\"eventId\":\"E2\",\"amount\":100}",
+                "partition": 0
+              }
+            ],
+            "prepared": true
+          },
+          "snapshot": {
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 0,
+                "lag": 3
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "group": "wb-isr-write-gate-orders",
+            "topic": "wb-isr-write-gate",
+            "capturedAt": "2026-11-12T19:09:24.897Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "12853288-a79e-4eaa-9b80-fbd574fe3ff1",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:09:25.048Z",
+          "finishedAt": "2026-11-12T19:09:28.132Z",
+          "ok": true,
+          "message": "Критерии восстановления пока не выполнены.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{\"eventId\":\"E1\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ],
+              "minIsr": 3,
+              "start": 0
+            },
+            "passed": false,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": false
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "Kafka действительно отклонила запись из-за недостаточного ISR",
+                "ok": false
+              },
+              {
+                "label": "Исходная гарантия minISR=3 сохранена",
+                "ok": true
+              },
+              {
+                "label": "Контрольная запись после восстановления подтверждена и прочитана",
+                "ok": false
+              },
+              {
+                "label": "Исходные события не потеряны",
+                "ok": true
+              }
+            ]
+          },
+          "snapshot": {
+            "group": "wb-isr-write-gate-orders",
+            "topic": "wb-isr-write-gate",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 0,
+                "lag": 3
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "capturedAt": "2026-11-12T19:09:28.132Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "e2c15c88-f495-42d8-aecc-bd8da4b06832",
+          "action": "fault",
+          "startedAt": "2026-11-12T19:09:28.220Z",
+          "finishedAt": "2026-11-12T19:09:49.718Z",
+          "ok": true,
+          "message": "Наблюдение Kafka: NotEnoughReplicasException. Messages are rejected since there are fewer in-sync replicas than required.",
+          "result": {
+            "code": "NotEnoughReplicasException",
+            "message": "Messages are rejected since there are fewer in-sync replicas than required."
+          },
+          "snapshot": {
+            "topic": "wb-isr-write-gate",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2
+                ],
+                "end": 3,
+                "committed": 0,
+                "lag": 3
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 1,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "group": "wb-isr-write-gate-orders",
+            "capturedAt": "2026-11-12T19:09:49.718Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "a2f63778-bc1f-46d7-874a-7402a50b4589",
+          "action": "unsafe",
+          "startedAt": "2026-11-12T19:09:49.801Z",
+          "finishedAt": "2026-11-12T19:10:02.252Z",
+          "ok": true,
+          "message": "minISR снижен до 2. Доступность может вернуться, но исходная гарантия нарушена.",
+          "result": {
+            "shortcutApplied": true
+          },
+          "snapshot": {
+            "group": "wb-isr-write-gate-orders",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2
+                ],
+                "end": 3,
+                "committed": 0,
+                "lag": 3
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 1,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-isr-write-gate",
+            "capturedAt": "2026-11-12T19:10:02.252Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "5ce63fb6-e9b8-4bd8-9e0c-5ba1736227c1",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:10:02.328Z",
+          "finishedAt": "2026-11-12T19:10:15.192Z",
+          "ok": true,
+          "message": "Критерии восстановления пока не выполнены.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{\"eventId\":\"E1\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ],
+              "minIsr": 2,
+              "start": 0
+            },
+            "passed": false,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": false
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": false
+              },
+              {
+                "label": "Kafka действительно отклонила запись из-за недостаточного ISR",
+                "ok": true
+              },
+              {
+                "label": "Исходная гарантия minISR=3 сохранена",
+                "ok": false
+              },
+              {
+                "label": "Контрольная запись после восстановления подтверждена и прочитана",
+                "ok": false
+              },
+              {
+                "label": "Исходные события не потеряны",
+                "ok": true
+              }
+            ]
+          },
+          "snapshot": {
+            "group": "wb-isr-write-gate-orders",
+            "topic": "wb-isr-write-gate",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2
+                ],
+                "end": 3,
+                "committed": 0,
+                "lag": 3
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 1,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "capturedAt": "2026-11-12T19:10:15.192Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "9bbd8fcb-b658-4643-9fd0-93e8c91371f1",
+          "action": "recover",
+          "startedAt": "2026-11-12T19:10:15.249Z",
+          "finishedAt": "2026-11-12T19:10:26.133Z",
+          "ok": true,
+          "message": "Исправление выполнено. Независимая проверка результата ещё необходима.",
+          "result": {
+            "repaired": true,
+            "proof": {
+              "key": "recovery-proof",
+              "value": "acks=all;minISR=3",
+              "partition": 0,
+              "offset": 3
+            }
+          },
+          "snapshot": {
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 4,
+                "committed": 0,
+                "lag": 4
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 1,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-isr-write-gate",
+            "group": "wb-isr-write-gate-orders",
+            "capturedAt": "2026-11-12T19:10:26.133Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "cad204ae-be10-42ec-94fe-0bf2ec672033",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:10:26.190Z",
+          "finishedAt": "2026-11-12T19:10:28.896Z",
+          "ok": true,
+          "message": "Все критерии подтверждены Kafka. Задача выполнена.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{\"eventId\":\"E1\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 3,
+                  "key": "recovery-proof",
+                  "value": "acks=all;minISR=3"
+                }
+              ],
+              "minIsr": 3,
+              "start": 0
+            },
+            "passed": true,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": true
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "Kafka действительно отклонила запись из-за недостаточного ISR",
+                "ok": true
+              },
+              {
+                "label": "Исходная гарантия minISR=3 сохранена",
+                "ok": true
+              },
+              {
+                "label": "Контрольная запись после восстановления подтверждена и прочитана",
+                "ok": true
+              },
+              {
+                "label": "Исходные события не потеряны",
+                "ok": true
+              }
+            ]
+          },
+          "snapshot": {
+            "group": "wb-isr-write-gate-orders",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 4,
+                "committed": 0,
+                "lag": 4
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 1,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-isr-write-gate",
+            "capturedAt": "2026-11-12T19:10:28.896Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "196b7be5-f50d-4360-af5c-8186438c579f",
+          "action": "recover",
+          "startedAt": "2026-11-12T19:10:28.984Z",
+          "finishedAt": "2026-11-12T19:10:33.135Z",
+          "ok": true,
+          "message": "Исправление выполнено. Независимая проверка результата ещё необходима.",
+          "result": {
+            "repaired": true,
+            "proof": {
+              "partition": 0,
+              "offset": 3,
+              "key": "recovery-proof",
+              "value": "acks=all;minISR=3"
+            }
+          },
+          "snapshot": {
+            "topic": "wb-isr-write-gate",
+            "group": "wb-isr-write-gate-orders",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 4,
+                "committed": 0,
+                "lag": 4
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 1,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "capturedAt": "2026-11-12T19:10:33.135Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "efa9c1ba-2061-480e-857e-c228e9ce4781",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:10:33.227Z",
+          "finishedAt": "2026-11-12T19:10:37.382Z",
+          "ok": true,
+          "message": "Все критерии подтверждены Kafka. Задача выполнена.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{\"eventId\":\"E1\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 3,
+                  "key": "recovery-proof",
+                  "value": "acks=all;minISR=3"
+                }
+              ],
+              "minIsr": 3,
+              "start": 0
+            },
+            "passed": true,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": true
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "Kafka действительно отклонила запись из-за недостаточного ISR",
+                "ok": true
+              },
+              {
+                "label": "Исходная гарантия minISR=3 сохранена",
+                "ok": true
+              },
+              {
+                "label": "Контрольная запись после восстановления подтверждена и прочитана",
+                "ok": true
+              },
+              {
+                "label": "Исходные события не потеряны",
+                "ok": true
+              }
+            ]
+          },
+          "snapshot": {
+            "topic": "wb-isr-write-gate",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 4,
+                "committed": 0,
+                "lag": 4
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 1,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "group": "wb-isr-write-gate-orders",
+            "capturedAt": "2026-11-12T19:10:37.382Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        }
+      ],
+      "ledger": [
+        {
+          "offset": 0,
+          "key": "E0",
+          "value": "{\"eventId\":\"E0\",\"amount\":100}",
+          "partition": 0
+        },
+        {
+          "offset": 1,
+          "key": "E1",
+          "value": "{\"eventId\":\"E1\",\"amount\":100}",
+          "partition": 0
+        },
+        {
+          "offset": 2,
+          "key": "E2",
+          "value": "{\"eventId\":\"E2\",\"amount\":100}",
+          "partition": 0
+        }
+      ],
+      "reads": [],
+      "faultObserved": true,
+      "wroteDuringFault": false,
+      "verified": true,
+      "archive": [
+        {
+          "offset": 0,
+          "key": "E0",
+          "value": "{\"eventId\":\"E0\",\"amount\":100}",
+          "partition": 0
+        },
+        {
+          "offset": 1,
+          "key": "E1",
+          "value": "{\"eventId\":\"E1\",\"amount\":100}",
+          "partition": 0
+        },
+        {
+          "offset": 2,
+          "key": "E2",
+          "value": "{\"eventId\":\"E2\",\"amount\":100}",
+          "partition": 0
+        }
+      ],
+      "faultCode": "NotEnoughReplicasException",
+      "recoveryAcknowledged": true,
+      "proof": {
+        "partition": 0,
+        "offset": 3,
+        "key": "recovery-proof",
+        "value": "acks=all;minISR=3"
+      }
+    },
+    "retention-gap": {
+      "draft": "{\n  \"records\": [\n    {\n      \"partition\": 0,\n      \"key\": \"customer-42\",\n      \"value\": \"Заказ ORD-201\"\n    },\n    {\n      \"partition\": 1,\n      \"key\": \"customer-7\",\n      \"value\": \"Заказ ORD-202\"\n    },\n    {\n      \"partition\": 2,\n      \"key\": \"customer-42\",\n      \"value\": \"Заказ ORD-203\"\n    }\n  ],\n  \"consumer\": {\n    \"group\": \"orders\",\n    \"maxRecords\": 3,\n    \"commit\": false\n  }\n}",
+      "attempt": 1,
+      "prepared": true,
+      "snapshot": {
+        "partitions": [
+          {
+            "partition": 0,
+            "leader": 1,
+            "replicas": [
+              1,
+              2,
+              3
+            ],
+            "isr": [
+              1,
+              2,
+              3
+            ],
+            "end": 3,
+            "committed": 3,
+            "lag": 0
+          },
+          {
+            "partition": 1,
+            "leader": 2,
+            "replicas": [
+              2,
+              3,
+              1
+            ],
+            "isr": [
+              2,
+              3,
+              1
+            ],
+            "end": 0,
+            "committed": 0,
+            "lag": 0
+          },
+          {
+            "partition": 2,
+            "leader": 3,
+            "replicas": [
+              3,
+              1,
+              2
+            ],
+            "isr": [
+              3,
+              1,
+              2
+            ],
+            "end": 0,
+            "committed": 0,
+            "lag": 0
+          }
+        ],
+        "group": "wb-retention-gap-orders",
+        "topic": "wb-retention-gap",
+        "capturedAt": "2026-11-12T19:11:09.000Z",
+        "brokers": [
+          {
+            "id": 1,
+            "running": true
+          },
+          {
+            "id": 2,
+            "running": true
+          },
+          {
+            "id": 3,
+            "running": true
+          }
+        ]
+      },
+      "history": [
+        {
+          "id": "5739f0d6-88bd-4fbb-9c68-4281fb94b77b",
+          "action": "prepare",
+          "startedAt": "2026-11-12T19:10:38.247Z",
+          "finishedAt": "2026-11-12T19:10:42.857Z",
+          "ok": true,
+          "message": "Новая учебная серия подтверждена Kafka. Архив этой попытки сохранён до любого сбоя.",
+          "result": {
+            "records": [
+              {
+                "offset": 0,
+                "partition": 0,
+                "value": "{\"eventId\":\"E0\",\"amount\":100}",
+                "key": "E0"
+              },
+              {
+                "offset": 1,
+                "partition": 0,
+                "value": "{\"eventId\":\"E1\",\"amount\":100}",
+                "key": "E1"
+              },
+              {
+                "offset": 2,
+                "partition": 0,
+                "value": "{\"eventId\":\"E2\",\"amount\":100}",
+                "key": "E2"
+              }
+            ],
+            "prepared": true
+          },
+          "snapshot": {
+            "group": "wb-retention-gap-orders",
+            "topic": "wb-retention-gap",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 0,
+                "lag": 3
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "capturedAt": "2026-11-12T19:10:42.857Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "290f753c-ca4c-4139-b0dc-edfd345ea504",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:10:42.965Z",
+          "finishedAt": "2026-11-12T19:10:46.582Z",
+          "ok": true,
+          "message": "Критерии восстановления пока не выполнены.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{\"eventId\":\"E1\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ],
+              "minIsr": 2,
+              "start": 0,
+              "recovered": []
+            },
+            "passed": false,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": false
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "OffsetOutOfRange и исчезновение начала журнала действительно наблюдались",
+                "ok": false
+              },
+              {
+                "label": "Архив восстановлен полностью без лишних бизнес-событий",
+                "ok": false
+              }
+            ]
+          },
+          "snapshot": {
+            "topic": "wb-retention-gap",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 0,
+                "lag": 3
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "group": "wb-retention-gap-orders",
+            "capturedAt": "2026-11-12T19:10:46.582Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "53814e37-18f6-4b7d-b220-2f56948ff3f1",
+          "action": "fault",
+          "startedAt": "2026-11-12T19:10:46.657Z",
+          "finishedAt": "2026-11-12T19:10:50.278Z",
+          "ok": true,
+          "message": "Наблюдение Kafka: OffsetOutOfRangeException. Позиция 0 ниже реального log start после ограниченной инъекции удаления.",
+          "result": {
+            "code": "OffsetOutOfRangeException",
+            "message": "Позиция 0 ниже реального log start после ограниченной инъекции удаления."
+          },
+          "snapshot": {
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 0,
+                "lag": 3
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "group": "wb-retention-gap-orders",
+            "topic": "wb-retention-gap",
+            "capturedAt": "2026-11-12T19:10:50.278Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "2d441798-2d34-4851-9afd-49cc3cb03d81",
+          "action": "unsafe",
+          "startedAt": "2026-11-12T19:10:50.352Z",
+          "finishedAt": "2026-11-12T19:10:52.470Z",
+          "ok": true,
+          "message": "Offset передвинут в конец. Это не доказательство сохранения и обработки событий.",
+          "result": {
+            "shortcutApplied": true
+          },
+          "snapshot": {
+            "group": "wb-retention-gap-orders",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-retention-gap",
+            "capturedAt": "2026-11-12T19:10:52.470Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "ba2d1ee4-59b9-4c9d-af28-80e7c05fcc0c",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:10:52.525Z",
+          "finishedAt": "2026-11-12T19:10:55.598Z",
+          "ok": true,
+          "message": "Критерии восстановления пока не выполнены.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{\"eventId\":\"E1\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ],
+              "minIsr": 2,
+              "start": 1,
+              "recovered": []
+            },
+            "passed": false,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": false
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "OffsetOutOfRange и исчезновение начала журнала действительно наблюдались",
+                "ok": true
+              },
+              {
+                "label": "Архив восстановлен полностью без лишних бизнес-событий",
+                "ok": false
+              }
+            ]
+          },
+          "snapshot": {
+            "topic": "wb-retention-gap",
+            "group": "wb-retention-gap-orders",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "capturedAt": "2026-11-12T19:10:55.598Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "fa32da11-e3b8-4dbd-b913-c68a676de3bd",
+          "action": "recover",
+          "startedAt": "2026-11-12T19:10:55.651Z",
+          "finishedAt": "2026-11-12T19:10:58.514Z",
+          "ok": true,
+          "message": "Исправление выполнено. Независимая проверка результата ещё необходима.",
+          "result": {
+            "repaired": true
+          },
+          "snapshot": {
+            "group": "wb-retention-gap-orders",
+            "topic": "wb-retention-gap",
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "capturedAt": "2026-11-12T19:10:58.514Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "ac3a46bd-0ebe-42eb-9138-5a2cd418f124",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:10:58.566Z",
+          "finishedAt": "2026-11-12T19:11:02.633Z",
+          "ok": true,
+          "message": "Все критерии подтверждены Kafka. Задача выполнена.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{\"eventId\":\"E1\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ],
+              "minIsr": 2,
+              "start": 1,
+              "recovered": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{\"eventId\":\"E1\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ]
+            },
+            "passed": true,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": true
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "OffsetOutOfRange и исчезновение начала журнала действительно наблюдались",
+                "ok": true
+              },
+              {
+                "label": "Архив восстановлен полностью без лишних бизнес-событий",
+                "ok": true
+              }
+            ]
+          },
+          "snapshot": {
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-retention-gap",
+            "group": "wb-retention-gap-orders",
+            "capturedAt": "2026-11-12T19:11:02.633Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "237794c6-94e3-4cd6-a868-73992fcfa2f9",
+          "action": "recover",
+          "startedAt": "2026-11-12T19:11:02.708Z",
+          "finishedAt": "2026-11-12T19:11:05.482Z",
+          "ok": true,
+          "message": "Исправление выполнено. Независимая проверка результата ещё необходима.",
+          "result": {
+            "repaired": true
+          },
+          "snapshot": {
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "topic": "wb-retention-gap",
+            "group": "wb-retention-gap-orders",
+            "capturedAt": "2026-11-12T19:11:05.482Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "7e1596da-b615-4aca-ad3e-4f2e4c5bc154",
+          "action": "verify",
+          "startedAt": "2026-11-12T19:11:05.555Z",
+          "finishedAt": "2026-11-12T19:11:09.000Z",
+          "ok": true,
+          "message": "Все критерии подтверждены Kafka. Задача выполнена.",
+          "result": {
+            "evidence": {
+              "source": [
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{\"eventId\":\"E1\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ],
+              "minIsr": 2,
+              "start": 1,
+              "recovered": [
+                {
+                  "partition": 0,
+                  "offset": 0,
+                  "key": "E0",
+                  "value": "{\"eventId\":\"E0\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 1,
+                  "key": "E1",
+                  "value": "{\"eventId\":\"E1\",\"amount\":100}"
+                },
+                {
+                  "partition": 0,
+                  "offset": 2,
+                  "key": "E2",
+                  "value": "{\"eventId\":\"E2\",\"amount\":100}"
+                }
+              ]
+            },
+            "passed": true,
+            "checks": [
+              {
+                "label": "Сбой этой попытки наблюдался до восстановления",
+                "ok": true
+              },
+              {
+                "label": "Исходная подтверждённая серия сохранена",
+                "ok": true
+              },
+              {
+                "label": "Все три реплики синхронны",
+                "ok": true
+              },
+              {
+                "label": "OffsetOutOfRange и исчезновение начала журнала действительно наблюдались",
+                "ok": true
+              },
+              {
+                "label": "Архив восстановлен полностью без лишних бизнес-событий",
+                "ok": true
+              }
+            ]
+          },
+          "snapshot": {
+            "partitions": [
+              {
+                "partition": 0,
+                "leader": 1,
+                "replicas": [
+                  1,
+                  2,
+                  3
+                ],
+                "isr": [
+                  1,
+                  2,
+                  3
+                ],
+                "end": 3,
+                "committed": 3,
+                "lag": 0
+              },
+              {
+                "partition": 1,
+                "leader": 2,
+                "replicas": [
+                  2,
+                  3,
+                  1
+                ],
+                "isr": [
+                  2,
+                  3,
+                  1
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              },
+              {
+                "partition": 2,
+                "leader": 3,
+                "replicas": [
+                  3,
+                  1,
+                  2
+                ],
+                "isr": [
+                  3,
+                  1,
+                  2
+                ],
+                "end": 0,
+                "committed": 0,
+                "lag": 0
+              }
+            ],
+            "group": "wb-retention-gap-orders",
+            "topic": "wb-retention-gap",
+            "capturedAt": "2026-11-12T19:11:09.000Z",
+            "brokers": [
+              {
+                "id": 1,
+                "running": true
+              },
+              {
+                "id": 2,
+                "running": true
+              },
+              {
+                "id": 3,
+                "running": true
+              }
+            ]
+          }
+        }
+      ],
+      "ledger": [
+        {
+          "offset": 0,
+          "partition": 0,
+          "value": "{\"eventId\":\"E0\",\"amount\":100}",
+          "key": "E0"
+        },
+        {
+          "offset": 1,
+          "partition": 0,
+          "value": "{\"eventId\":\"E1\",\"amount\":100}",
+          "key": "E1"
+        },
+        {
+          "offset": 2,
+          "partition": 0,
+          "value": "{\"eventId\":\"E2\",\"amount\":100}",
+          "key": "E2"
+        }
+      ],
+      "reads": [],
+      "faultObserved": true,
+      "wroteDuringFault": false,
+      "verified": true,
+      "archive": [
+        {
+          "offset": 0,
+          "partition": 0,
+          "value": "{\"eventId\":\"E0\",\"amount\":100}",
+          "key": "E0"
+        },
+        {
+          "offset": 1,
+          "partition": 0,
+          "value": "{\"eventId\":\"E1\",\"amount\":100}",
+          "key": "E1"
+        },
+        {
+          "offset": 2,
+          "partition": 0,
+          "value": "{\"eventId\":\"E2\",\"amount\":100}",
+          "key": "E2"
+        }
+      ],
+      "faultCode": "OffsetOutOfRangeException",
+      "recoveryAcknowledged": true,
+      "proof": null
+    }
+  }
+}

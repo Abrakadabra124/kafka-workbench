@@ -1,0 +1,100 @@
+[
+  {
+    "route": "curriculum",
+    "width": 768,
+    "innerWidth": 768,
+    "scrollWidth": 753,
+    "title": "Учебный маршрут"
+  },
+  {
+    "route": "lesson/event-log",
+    "width": 768,
+    "innerWidth": 768,
+    "scrollWidth": 753,
+    "title": "Событие и журнал"
+  },
+  {
+    "route": "sandbox",
+    "width": 768,
+    "innerWidth": 768,
+    "scrollWidth": 753,
+    "title": "Песочница событий"
+  },
+  {
+    "route": "incidents",
+    "width": 768,
+    "innerWidth": 768,
+    "scrollWidth": 753,
+    "title": "Реальные проблемы Kafka"
+  },
+  {
+    "route": "lab/retention-gap",
+    "width": 768,
+    "innerWidth": 768,
+    "scrollWidth": 753,
+    "title": "Рабочее место лаборатории"
+  },
+  {
+    "route": "progress",
+    "width": 768,
+    "innerWidth": 768,
+    "scrollWidth": 753,
+    "title": "Мой прогресс"
+  },
+  {
+    "route": "sources",
+    "width": 768,
+    "innerWidth": 768,
+    "scrollWidth": 753,
+    "title": "Источники и границы модели"
+  },
+  {
+    "route": "curriculum",
+    "width": 320,
+    "innerWidth": 320,
+    "scrollWidth": 320,
+    "title": "Учебный маршрут"
+  },
+  {
+    "route": "lesson/event-log",
+    "width": 320,
+    "innerWidth": 320,
+    "scrollWidth": 320,
+    "title": "Событие и журнал"
+  },
+  {
+    "route": "sandbox",
+    "width": 320,
+    "innerWidth": 320,
+    "scrollWidth": 320,
+    "title": "Песочница событий"
+  },
+  {
+    "route": "incidents",
+    "width": 320,
+    "innerWidth": 320,
+    "scrollWidth": 320,
+    "title": "Реальные проблемы Kafka"
+  },
+  {
+    "route": "lab/retention-gap",
+    "width": 320,
+    "innerWidth": 320,
+    "scrollWidth": 320,
+    "title": "Рабочее место лаборатории"
+  },
+  {
+    "route": "progress",
+    "width": 320,
+    "innerWidth": 320,
+    "scrollWidth": 320,
+    "title": "Мой прогресс"
+  },
+  {
+    "route": "sources",
+    "width": 320,
+    "innerWidth": 320,
+    "scrollWidth": 320,
+    "title": "Источники и границы модели"
+  }
+]

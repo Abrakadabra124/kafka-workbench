@@ -1,0 +1,65 @@
+[
+  {
+    "bodyWidth": 305,
+    "clientWidth": 305,
+    "innerWidth": 320,
+    "route": "#curriculum",
+    "scrollWidth": 305
+  },
+  {
+    "bodyWidth": 305,
+    "clientWidth": 305,
+    "innerWidth": 320,
+    "route": "#lesson/event-log",
+    "scrollWidth": 305
+  },
+  {
+    "bodyWidth": 305,
+    "clientWidth": 305,
+    "innerWidth": 320,
+    "route": "#sandbox",
+    "scrollWidth": 305
+  },
+  {
+    "bodyWidth": 305,
+    "clientWidth": 305,
+    "innerWidth": 320,
+    "route": "#incidents",
+    "scrollWidth": 305
+  },
+  {
+    "bodyWidth": 305,
+    "clientWidth": 305,
+    "innerWidth": 320,
+    "route": "#lab/retention-gap",
+    "scrollWidth": 305
+  },
+  {
+    "bodyWidth": 305,
+    "clientWidth": 305,
+    "innerWidth": 320,
+    "route": "#progress",
+    "scrollWidth": 305
+  },
+  {
+    "bodyWidth": 305,
+    "clientWidth": 305,
+    "innerWidth": 320,
+    "route": "#sources",
+    "scrollWidth": 305
+  },
+  {
+    "bodyWidth": 305,
+    "clientWidth": 305,
+    "innerWidth": 320,
+    "route": "#overview",
+    "scrollWidth": 305
+  },
+  {
+    "clientWidth": 305,
+    "focus": "Подтверждение сброса",
+    "innerWidth": 320,
+    "route": "#lab/retention-gap/confirm",
+    "scrollWidth": 305
+  }
+]
