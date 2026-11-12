@@ -22,7 +22,16 @@ export type RunEvent = {
   ok: boolean;
   message: string;
   snapshot: ClusterSnapshot | null;
-  result: { records?: RecordRow[]; passed?: boolean; checks?: { label: string; ok: boolean }[] };
+  result: {
+    records?: RecordRow[];
+    passed?: boolean;
+    checks?: { label: string; ok: boolean }[];
+    evidence?: unknown;
+    code?: string;
+    message?: string;
+    payload?: string;
+    offset?: number;
+  };
 };
 export type WorkspaceState = {
   draft: string;
@@ -39,6 +48,7 @@ export type WorkspaceTask = {
   description: string;
   hint: string;
   consequence: string;
+  practice?: boolean;
 };
 export type WorkspaceData = {
   available: boolean;

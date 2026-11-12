@@ -25,7 +25,7 @@ test('learn, make a mistake, retry, finish both assessments, persist notes and e
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Понимать потоки');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Каждое событие');
   await screenshot(page, 'overview');
   await page.getByRole('link', { name: 'Начать обучение', exact: true }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Событие и журнал');
@@ -110,7 +110,7 @@ test('course search, empty result, keyboard navigation and unavailable Docker st
   await expect(page.getByRole('button', { name: 'Запустить брокер', exact: true })).toBeDisabled();
   await page.goto('/');
   await page.reload();
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Понимать потоки');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Каждое событие');
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Перейти к содержимому' })).toBeFocused();
   await page.keyboard.press('Enter');
@@ -268,7 +268,7 @@ test('network failure is explicit and retry recovers the course', async ({ page 
   await expect(page.getByRole('alert')).toHaveText('Учебный сервер временно недоступен.');
   await page.unroute('**/api/course');
   await page.getByRole('button', { name: 'Повторить подключение' }).click();
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Понимать потоки');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Каждое событие');
 });
 
 test('reset waits for a pending answer and cannot resurrect cleared progress', async ({

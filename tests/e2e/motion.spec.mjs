@@ -60,39 +60,43 @@ async function capture(page, name, fullPage = true) {
   await page.screenshot({ path: join(process.env.E2E_SCREENSHOT_DIR, `${name}.png`), fullPage });
 }
 
-test('overview has live spatial motion, a real pause, and a keyboard-operated flat projection', async ({
+test('gallery follows log, position and commit, supports pause, reduced motion and keyboard actions', async ({
   page,
   request,
 }) => {
-  const errors = [];
-  page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  const flow = scene(page, 'overview');
-  await expect(flow).toHaveAttribute('data-motion-state', 'running');
-  await expect
-    .poll(async () =>
-      (await animationClock(packets(flow))).some(
-        (animation) => animation.time > 50 && animation.state === 'running',
-      ),
-    )
-    .toBeTruthy();
+  const gallery = page.locator('.stream-gallery');
   const before = await (await request.get('/api/progress')).json();
-  await flow.getByRole('button', { name: 'Приостановить движение', exact: true }).click();
-  await expect(flow).toHaveAttribute('data-motion-state', 'paused');
-  await expectFrozen(packets(flow));
-  const camera = flow.getByRole('button', { name: 'Показать плоскую схему', exact: true });
-  await camera.focus();
-  await camera.press('Enter');
-  await expect(flow).toHaveAttribute('data-view', 'flat');
-  await flow.getByRole('button', { name: 'Показать объёмную сцену', exact: true }).press('Enter');
-  await expect(flow).toHaveAttribute('data-view', 'spatial');
+  await expect(gallery).toHaveAttribute('data-motion', 'running');
+  await expect(gallery.locator('.gallery-record')).toHaveCount(9);
+  await gallery.getByRole('button', { name: 'Прочитать', exact: true }).click();
+  await expect(gallery.locator('.is-read')).toHaveCount(3);
+  await gallery.getByRole('button', { name: 'Рестарт', exact: true }).click();
+  await expect(gallery.locator('.is-read')).toHaveCount(0);
+  await gallery.getByRole('button', { name: 'Прочитать', exact: true }).click();
+  await gallery.getByRole('button', { name: 'Commit', exact: true }).click();
+  await expect(gallery.locator('.is-committed')).toHaveCount(3);
+  await gallery.getByRole('button', { name: 'Приостановить движение журнала' }).click();
+  await expect(gallery).toHaveAttribute('data-motion', 'paused');
+  await gallery.getByRole('button', { name: 'Записать', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  await expect(gallery.locator('.gallery-record')).toHaveCount(10);
+  expect(
+    await gallery.evaluate(
+      (e) => e.getAnimations({ subtree: true }).filter((a) => a.playState === 'running').length,
+    ),
+  ).toBe(0);
+  await gallery.getByRole('button', { name: 'Включить движение журнала' }).click();
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(gallery).toHaveAttribute('data-motion', 'paused');
+  await gallery.getByRole('button', { name: 'Записать', exact: true }).click();
+  await expect(gallery.locator('.gallery-record')).toHaveCount(11);
+  expect(await gallery.evaluate((e) => e.getAnimations({ subtree: true }).length)).toBe(0);
+  await gallery.getByRole('button', { name: 'Сброс', exact: true }).click();
+  await expect(gallery.locator('.gallery-record')).toHaveCount(9);
   expect(await (await request.get('/api/progress')).json()).toEqual(before);
-  await capture(page, 'motion-overview-desktop', false);
-  await flow.getByRole('button', { name: 'Включить движение', exact: true }).click();
-  await expect(flow).toHaveAttribute('data-motion-state', 'running');
-  expect(errors).toEqual([]);
+  await capture(page, 'gallery-desktop', false);
 });
-
 test('sandbox scene follows actual record counts, read positions, commits, independent groups and reset', async ({
   page,
 }) => {
@@ -316,6 +320,18 @@ test('320px and 375px spatial views retain controls and fit without horizontal s
     await page.setViewportSize({ width, height: 900 });
     for (const mode of ['overview', 'sandbox', 'incidents']) {
       await page.goto(`/#${mode}`);
+      if (mode === 'overview') {
+        const gallery = page.locator('.stream-gallery');
+        await gallery.scrollIntoViewIfNeeded();
+        await expect(gallery).toBeVisible();
+        expect(
+          await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+        ).toBeTruthy();
+        await gallery.getByRole('button', { name: 'Записать', exact: true }).click();
+        await expect(gallery.locator('.gallery-record')).toHaveCount(10);
+        await capture(page, 'gallery-' + width);
+        continue;
+      }
       const flow = scene(page, mode === 'incidents' ? 'incident' : mode);
       await flow.scrollIntoViewIfNeeded();
       await expect(flow).toBeVisible();

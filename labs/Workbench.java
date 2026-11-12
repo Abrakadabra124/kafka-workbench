@@ -43,7 +43,9 @@ class Workbench {
   public static void main(String[] a) throws Exception {
     String action=a[0], topic=a[1], group=a[2]; Object output;
     try(var admin=Admin.create(base())) {
-      if(action.equals("prepare")) {
+      if(action.startsWith("practice-")) {
+        output=Practice.execute(admin,action,topic,group);
+      } else if(action.equals("prepare")) {
         if(admin.listTopics().names().get().contains(topic)) admin.deleteTopics(List.of(topic)).all().get();
         for(String g : List.of(topic+"-orders", topic+"-audit")) {
           try { admin.deleteConsumerGroups(List.of(g)).all().get(); }

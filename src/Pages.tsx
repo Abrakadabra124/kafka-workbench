@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import type { Module, Progress } from './types';
 import { api } from './api';
-import { SpatialFlow } from './SpatialFlow';
+import { StreamGallery } from './StreamGallery';
 
 export function Dashboard({ modules, progress }: { modules: Module[]; progress: Progress }) {
   const lessons = modules.flatMap((m) => m.lessons);
@@ -23,9 +23,9 @@ export function Dashboard({ modules, progress }: { modules: Module[]; progress: 
             <span /> KAFKA / EVENT ENGINEERING
           </div>
           <h1>
-            Понимать потоки.
+            Каждое событие.
             <br />
-            Управлять событиями.
+            На своём месте.
           </h1>
           <p>
             Разберитесь в Kafka на практике: от первого события до надёжной обработки и разбора
@@ -53,13 +53,7 @@ export function Dashboard({ modules, progress }: { modules: Module[]; progress: 
             </span>
           </div>
         </div>
-        <div className="hero-observatory">
-          <div className="observatory-heading">
-            <span>АРХИТЕКТУРА ПОТОКА</span>
-            <span>Интерактивная модель</span>
-          </div>
-          <SpatialFlow mode="overview" />
-        </div>
+        <StreamGallery />
       </section>
       <div className="facts">
         <div>
@@ -110,6 +104,34 @@ export function Dashboard({ modules, progress }: { modules: Module[]; progress: 
           <ArrowRight size={18} />
         </a>
       </div>
+      <section className="field-notes" aria-label="От механизма к восстановлению">
+        <a href="#lab">
+          <span className="eyebrow">01 / ДАННЫЕ</span>
+          <h2>
+            Одно плохое событие.
+            <br />
+            Весь поток ждёт.
+          </h2>
+          <p>Сохраните payload в карантине и продолжите обработку без потери доказательств.</p>
+          <span>
+            Разобрать poison pill <ArrowUpRight size={20} />
+          </span>
+        </a>
+        <div>
+          <a href="#lab">
+            <span className="eyebrow">02 / НАДЁЖНОСТЬ</span>
+            <h3>Когда Kafka отказывает в записи</h3>
+            <p>Восстановите ISR, сохранив исходную гарантию.</p>
+            <ArrowUpRight size={22} />
+          </a>
+          <a href="#lab">
+            <span className="eyebrow">03 / ВОССТАНОВЛЕНИЕ</span>
+            <h3>Offset есть. Истории уже нет.</h3>
+            <p>Верните события из архива и докажите полноту.</p>
+            <ArrowUpRight size={22} />
+          </a>
+        </div>
+      </section>
     </>
   );
 }

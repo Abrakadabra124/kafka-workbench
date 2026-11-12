@@ -17,6 +17,7 @@
     "test:e2e": "playwright test",
     "test:labs": "node scripts/test-labs.mjs",
     "test:workspace": "node scripts/test-workspace.mjs",
+    "test:practice": "node scripts/test-practice.mjs",
     "test:workspace:browser": "node scripts/test-workspace.mjs --browser",
     "check": "npm run typecheck && npm test && npm run build",
     "format": "prettier --write .",

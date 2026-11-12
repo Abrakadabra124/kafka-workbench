@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { api } from './api';
 import { WorkspaceScene } from './WorkspaceScene';
+import { PracticeWalkthrough } from './PracticeWalkthrough';
 import type { RunEvent, WorkspaceData, WorkspaceState } from './workspace-types';
 import './workspace.css';
 const labels: Record<string, string> = {
@@ -23,6 +24,9 @@ const labels: Record<string, string> = {
   fault: 'Сбой',
   recover: 'Восстановление',
   stop: 'Удаление',
+  unsafe: 'Проверка опасного решения',
+  retry: 'Повтор без устранения причины',
+  interrupt: 'Остановка перед commit',
 };
 export function Workspace() {
   const [data, setData] = useState<WorkspaceData | null>(null);
@@ -255,40 +259,47 @@ export function Workspace() {
               </div>
               <div className="workspace-body">
                 <section className="workspace-editor">
-                  <div className="workspace-panel-title">
-                    <h2>Ваше решение</h2>
-                    <span>recipe.json</span>
-                  </div>
-                  <p>
-                    Измените записи, partition и настройки consumer. Это конфигурация реального
-                    запуска. Произвольный код не исполняется.
-                  </p>
-                  <label htmlFor="workspace-recipe">JSON-рецепт</label>
-                  <textarea
-                    id="workspace-recipe"
-                    spellCheck={false}
-                    value={state.draft}
-                    disabled={disabled || historical}
-                    onChange={(e) => update({ ...state, draft: e.target.value })}
-                  />
-                  <div className="button-row">
-                    <button
-                      className="outline"
-                      disabled={disabled || historical}
-                      onClick={() => run('save')}
-                    >
-                      <Save size={16} />
-                      Сохранить рецепт
-                    </button>
-                    <details>
-                      <summary>Формат и подсказка</summary>
-                      <p>{task.hint}</p>
+                  {task.practice ? (
+                    <PracticeWalkthrough task={selected} key={selected} />
+                  ) : (
+                    <>
+                      <div className="workspace-panel-title">
+                        <h2>Ваше решение</h2>
+                        <span>recipe.json</span>
+                      </div>
                       <p>
-                        records: 1..12, partition: 0..2. group: orders или audit. maxRecords: 1..36.
-                        commit: true или false. Изменение рецепта не отправляет данные до запуска.
+                        Измените записи, partition и настройки consumer. Это конфигурация реального
+                        запуска. Произвольный код не исполняется.
                       </p>
-                    </details>
-                  </div>
+                      <label htmlFor="workspace-recipe">JSON-рецепт</label>
+                      <textarea
+                        id="workspace-recipe"
+                        spellCheck={false}
+                        value={state.draft}
+                        disabled={disabled || historical}
+                        onChange={(e) => update({ ...state, draft: e.target.value })}
+                      />
+                      <div className="button-row">
+                        <button
+                          className="outline"
+                          disabled={disabled || historical}
+                          onClick={() => run('save')}
+                        >
+                          <Save size={16} />
+                          Сохранить рецепт
+                        </button>
+                        <details>
+                          <summary>Формат и подсказка</summary>
+                          <p>{task.hint}</p>
+                          <p>
+                            records: 1..12, partition: 0..2. group: orders или audit. maxRecords:
+                            1..36. commit: true или false. Изменение рецепта не отправляет данные до
+                            запуска.
+                          </p>
+                        </details>
+                      </div>
+                    </>
+                  )}
                 </section>
                 <section className="workspace-runner">
                   <div className="workspace-panel-title">
@@ -303,9 +314,13 @@ export function Workspace() {
                     >
                       1. Подготовить новую попытку
                     </button>
-                    <button disabled={!canOperate} onClick={() => run('produce')}>
-                      2. Записать из рецепта
-                    </button>
+                    {!task.practice && (
+                      <>
+                        <button disabled={!canOperate} onClick={() => run('produce')}>
+                          2. Записать из рецепта
+                        </button>
+                      </>
+                    )}
                     <button disabled={!canOperate} onClick={() => run('consume')}>
                       3. Прочитать группой
                     </button>
@@ -316,22 +331,57 @@ export function Workspace() {
                     >
                       Наблюдать состояние
                     </button>
-                    {selected === 'recovery' && (
+                    {(selected === 'recovery' || task.practice) && (
                       <>
                         <button
                           className="outline danger"
                           disabled={!canOperate}
                           onClick={() => run('fault')}
                         >
-                          Отключить broker 3
+                          {task.practice
+                            ? '2. Воспроизвести и диагностировать сбой'
+                            : 'Отключить broker 3'}
                         </button>
                         <button
                           className="outline"
                           disabled={!canOperate}
                           onClick={() => run('recover')}
                         >
-                          Восстановить broker 3
+                          {task.practice
+                            ? '3. Применить обоснованное исправление'
+                            : 'Восстановить broker 3'}
                         </button>
+                      </>
+                    )}
+                    {task.practice && (
+                      <>
+                        <button
+                          className="outline danger"
+                          disabled={!canOperate}
+                          onClick={() => run('unsafe')}
+                        >
+                          {selected === 'isr-write-gate'
+                            ? 'Попробовать minISR=2'
+                            : 'Попробовать commit в конец'}
+                        </button>
+                        <button
+                          className="outline"
+                          disabled={!canOperate}
+                          onClick={() => run('retry')}
+                        >
+                          {selected === 'retention-gap'
+                            ? 'Прочитать только доступный хвост'
+                            : 'Повторить без ремонта'}
+                        </button>
+                        {selected === 'poison-quarantine' && (
+                          <button
+                            className="outline"
+                            disabled={!canOperate}
+                            onClick={() => run('interrupt')}
+                          >
+                            Прервать после карантина, до commit
+                          </button>
+                        )}
                       </>
                     )}
                     <button
@@ -355,6 +405,16 @@ export function Workspace() {
                     </p>
                   )}
                   <div className="workspace-evidence">
+                    {task.practice &&
+                      event?.result &&
+                      (event.result.evidence !== undefined || event.result.code) && (
+                        <pre
+                          className="practice-evidence"
+                          aria-label="Фактическое доказательство Kafka"
+                        >
+                          {JSON.stringify(event.result.evidence ?? event.result, null, 2)}
+                        </pre>
+                      )}
                     <h3>
                       <Terminal size={16} />
                       Наблюдения и доказательства

@@ -39,7 +39,7 @@ jobs:
   browser-and-kafka:
     name: Browser and real Kafka lab
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -73,6 +73,8 @@ jobs:
         env:
           RUN_WORKSPACE_BROWSER: '1'
           KAFKA_QA_DIR: test-results/workspace-real
+      - name: Run real failure and recovery practice
+        run: npm run test:practice
       - name: Preserve real workspace evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -81,6 +83,7 @@ jobs:
           path: |
             data/workspace-live-evidence.json
             data/workspace-browser-evidence.json
+            data/practice-live-evidence.json
             test-results/workspace-real/
           if-no-files-found: ignore
           retention-days: 14

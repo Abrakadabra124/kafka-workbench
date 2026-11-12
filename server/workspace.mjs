@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { runDockerCommand } from './lab.mjs';
 import { acquireHardwareLock } from './hardware-lock.mjs';
+import { practiceTasks, isPractice, executePractice } from './practice-workspace.mjs';
 
 const composeFile = fileURLToPath(new URL('../labs/workspace.yaml', import.meta.url));
 export const workspaceTasks = [
@@ -32,6 +33,7 @@ export const workspaceTasks = [
     consequence:
       'Второй отказ может остановить запись. Уменьшение min.insync.replicas ослабляет гарантию сохранности и не восстанавливает реплики.',
   },
+  ...practiceTasks,
 ];
 export const workspaceActions = [
   'save',
@@ -43,6 +45,9 @@ export const workspaceActions = [
   'fault',
   'recover',
   'stop',
+  'unsafe',
+  'retry',
+  'interrupt',
 ];
 export function defaultRecipe() {
   return JSON.stringify(
@@ -368,11 +373,25 @@ export function createWorkspaceRunner({
             timeoutMs: 240000,
           }),
         );
-        await adapter('prepare', id);
+        if (isPractice(id)) {
+          const prepared = await executePractice({
+            id,
+            action,
+            state,
+            adapter,
+            snapshot,
+            healthy,
+            compose,
+            checked,
+          });
+          result = prepared.result;
+          message = prepared.message;
+        } else await adapter('prepare', id);
         state.snapshot = await healthy(id);
         state.prepared = true;
-        message =
-          'Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.';
+        if (!isPractice(id))
+          message =
+            'Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.';
       } else if (action === 'stop') {
         await checked(compose(['down', '--volumes', '--timeout', '15'], { timeoutMs: 60000 }));
         if ((await owned()).length) throw new Error('Контейнеры стенда ещё существуют.');
@@ -390,7 +409,20 @@ export function createWorkspaceRunner({
       } else {
         if (!state.prepared) throw new Error('Сначала подготовьте стенд для этого задания.');
         state.verified = false;
-        if (action === 'produce') {
+        if (isPractice(id)) {
+          const executed = await executePractice({
+            id,
+            action,
+            state,
+            adapter,
+            snapshot,
+            healthy,
+            compose,
+            checked,
+          });
+          result = executed.result;
+          message = executed.message;
+        } else if (action === 'produce') {
           if (state.ledger.length + recipe.records.length > 36)
             throw new Error(
               'Лимит попытки: 36 событий. Подготовьте новую попытку для продолжения.',

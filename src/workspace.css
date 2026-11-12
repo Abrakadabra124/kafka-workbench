@@ -85,6 +85,55 @@
   padding: 12px 16px;
   background: #f0f7f2;
 }
+.practice-walkthrough {
+  min-width: 0;
+}
+.practice-frame {
+  padding: 18px 0;
+}
+.practice-frame > span {
+  font-size: 11px;
+  color: #53677d;
+}
+.practice-frame h4 {
+  margin: 8px 0;
+  font-size: 17px;
+}
+.practice-decision {
+  border: 1px solid #ccdce3;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 22px 0;
+  min-width: 0;
+}
+.practice-decision legend {
+  padding: 0 6px;
+  font-weight: 600;
+  font-size: 13px;
+}
+.practice-decision label {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 12px 0;
+  font-size: 13px;
+}
+.practice-decision input {
+  flex: 0 0 auto;
+  width: auto;
+  margin-top: 4px;
+}
+.practice-evidence {
+  max-height: 370px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 16px;
+  border-radius: 10px;
+  background: #102b3c;
+  color: #d4e7ec;
+  font-size: 11px;
+}
 .cluster-scene {
   border: 1px solid #dbe1e9;
   border-radius: 10px;
