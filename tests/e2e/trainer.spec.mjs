@@ -168,7 +168,9 @@ test('375px navigation traps focus, closes on Escape, and pages have no horizont
     await page.goto(`/#${route}`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     expect(
-      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      ),
       route,
     ).toBeTruthy();
   }
@@ -339,7 +341,9 @@ test('requested 390px and 1440px layouts preserve incident actions and readable 
       page.getByRole('button', { name: 'Сравнить вход, обработку и lag', exact: true }),
     ).toBeVisible();
     expect(
-      await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      ),
       String(width),
     ).toBeTruthy();
   }

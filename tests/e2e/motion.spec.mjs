@@ -332,7 +332,9 @@ test('320px and 375px spatial views retain controls and fit without horizontal s
         await gallery.scrollIntoViewIfNeeded();
         await expect(gallery).toBeVisible();
         expect(
-          await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+          await page.evaluate(
+            () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+          ),
         ).toBeTruthy();
         await gallery.getByRole('button', { name: 'Записать', exact: true }).click();
         await expect(gallery.locator('.gallery-record')).toHaveCount(10);
@@ -343,13 +345,17 @@ test('320px and 375px spatial views retain controls and fit without horizontal s
       await flow.scrollIntoViewIfNeeded();
       await expect(flow).toBeVisible();
       expect(
-        await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+        ),
         `${mode} at ${width}px`,
       ).toBeTruthy();
       await flow.getByRole('button', { name: 'Показать плоскую схему', exact: true }).click();
       await expect(flow).toHaveAttribute('data-view', 'flat');
       expect(
-        await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+        ),
         `${mode} flat at ${width}px`,
       ).toBeTruthy();
       await flow.getByRole('button', { name: 'Показать объёмную сцену', exact: true }).click();

@@ -65,6 +65,11 @@ test('task selection survives reload and reset confirmation stays beside its act
   const triggerBox = await trigger.boundingBox();
   const confirmBox = await confirmation.boundingBox();
   expect(confirmBox.y - (triggerBox.y + triggerBox.height)).toBeLessThan(40);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+    ),
+  ).toBe(true);
   await confirmation.getByRole('button', { name: 'Отмена', exact: true }).click();
   await expect(trigger).toBeFocused();
   await expect(confirmation).toHaveCount(0);
@@ -129,7 +134,11 @@ test('workspace keyboard, layouts, accessibility and static state at 320/390/768
     await page.setViewportSize({ width, height: 1000 });
     await page.locator('.cluster-scene').scrollIntoViewIfNeeded();
     await expect
-      .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+      .poll(() =>
+        page.evaluate(
+          () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+        ),
+      )
       .toBe(true);
     await expect
       .poll(() =>

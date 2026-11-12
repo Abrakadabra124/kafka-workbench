@@ -15,7 +15,9 @@ test('working interiors fit desktop, tablet and narrow phones including lesson t
   test.setTimeout(90000);
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  for (const width of [1440, 768, 390, 320]) {
+  // A 320px window with a classic 15px scrollbar leaves 305px for content.
+  // Cover that available width even on CI browsers with overlay scrollbars.
+  for (const width of [1440, 768, 390, 320, 305]) {
     await page.setViewportSize({ width, height: 1000 });
     for (const route of [
       'curriculum',
@@ -32,14 +34,18 @@ test('working interiors fit desktop, tablet and narrow phones including lesson t
       if (route.startsWith('lab')) await expect(page.locator('.workspace-brief')).toBeVisible();
       if (route === 'incidents') await expect(page.locator('.inc-case-heading')).toBeVisible();
       expect(
-        await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+        ),
         `${route} at ${width}`,
       ).toBe(true);
     }
     for (const name of ['Проверить себя', 'Мои заметки', 'Разобраться']) {
       await page.getByRole('button', { name, exact: true }).click();
       expect(
-        await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+        ),
         `${name} at ${width}`,
       ).toBe(true);
     }

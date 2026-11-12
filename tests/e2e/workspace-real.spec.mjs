@@ -84,7 +84,11 @@ test('real browser to API to Kafka: edit, failed verification, commit, recovery 
       await page.setViewportSize({ width, height: 1050 });
       await page.locator('.cluster-scene').scrollIntoViewIfNeeded();
       await expect
-        .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+        .poll(() =>
+          page.evaluate(
+            () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+          ),
+        )
         .toBe(true);
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.screenshot({
