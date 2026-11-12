@@ -118,6 +118,7 @@ test('course search, empty result, keyboard navigation and unavailable Docker st
 });
 
 test('desktop pages pass axe WCAG 2.2 AA automated checks', async ({ page }) => {
+  const failures = [];
   for (const route of [
     'overview',
     'curriculum',
@@ -133,11 +134,16 @@ test('desktop pages pass axe WCAG 2.2 AA automated checks', async ({ page }) => 
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
       .analyze();
-    expect(
-      results.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) })),
-      route,
-    ).toEqual([]);
+    if (results.violations.length)
+      failures.push({
+        route,
+        violations: results.violations.map((v) => ({
+          id: v.id,
+          nodes: v.nodes.map((n) => ({ target: n.target, summary: n.failureSummary })),
+        })),
+      });
   }
+  expect(failures).toEqual([]);
 });
 
 test('375px navigation traps focus, closes on Escape, and pages have no horizontal overflow', async ({

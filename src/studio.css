@@ -1673,3 +1673,10 @@ footer {
     overflow: visible;
   }
 }
+label,
+.empty-log {
+  color: var(--muted);
+}
+.log-legend > strong {
+  color: #e9bf82;
+}
