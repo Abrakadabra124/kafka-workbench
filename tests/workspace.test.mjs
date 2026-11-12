@@ -227,3 +227,27 @@ test('cooperative hardware mutex is atomic and releases only its own directory',
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('ownership inspection timeout fails closed before mutations and a fresh request can recover', async () => {
+  const states = new Map();
+  const fake = workspaceDocker();
+  let timedOut = true;
+  const runner = createWorkspaceRunner({
+    hardwareLock: false,
+    store: { workspace: (id) => states.get(id), saveWorkspace: (id, s) => states.set(id, s) },
+    runCommand: async (args, options) => {
+      if (timedOut) {
+        fake.calls.push({ args, options });
+        return { code: -1, timedOut: true, stdout: '', stderr: '' };
+      }
+      return fake.runCommand(args, options);
+    },
+  });
+  const rejected = await runner.execute('delivery', 'prepare');
+  assert.equal(rejected.ok, false);
+  assert.match(rejected.error, /принадлежность/);
+  assert.equal(rejected.state.prepared, false);
+  assert.ok(fake.calls.every((c) => c.args.includes('ps')));
+  timedOut = false;
+  assert.equal((await runner.execute('delivery', 'prepare')).ok, true);
+});
