@@ -164,6 +164,7 @@ test('workspace keyboard, layouts, accessibility and static state at 320/390/768
 test('workspace playback freezes on pause, offscreen and document hidden, reduced motion stops its timer', async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 1440, height: 400 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await fixture(page);
   await prepare(page);
@@ -186,7 +187,14 @@ test('workspace playback freezes on pause, offscreen and document hidden, reduce
   await page.waitForTimeout(2000);
   expect(await selected()).toBe(paused);
   await play.click();
-  await page.locator('.workspace-cleanup').scrollIntoViewIfNeeded();
+  // The monitor now spans the workbench below the editor. The cleanup panel
+  // can share its viewport, so prove that the scene is outside the real window.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  expect(
+    await page
+      .locator('.cluster-scene')
+      .evaluate((node) => node.getBoundingClientRect().top >= innerHeight),
+  ).toBe(true);
   await expect(page.locator('.cluster-scene')).toHaveAttribute('data-motion', 'offscreen');
   const off = await selected();
   await page.waitForTimeout(2000);

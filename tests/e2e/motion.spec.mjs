@@ -379,5 +379,12 @@ test('arrivals belong to new records and never replay on viewport return', async
   await gallery.getByRole('button', { name: 'Записать', exact: true }).click();
   await gallery.getByRole('button', { name: /^P0 ·/ }).click();
   await gallery.getByRole('button', { name: /^P1 ·/ }).click();
-  expect(await gallery.evaluate((e) => e.getAnimations({ subtree: true }).length)).toBe(0);
+  await expect(gallery.locator('.gallery-record.is-arriving')).toHaveCount(0);
+  // Button focus/pressed transitions are intentional. Inspect the records,
+  // whose arrival animations must not restart when their partition reappears.
+  expect(
+    await gallery
+      .locator('.partition-gallery')
+      .evaluate((e) => e.getAnimations({ subtree: true }).length),
+  ).toBe(0);
 });
