@@ -401,6 +401,16 @@ export function createWorkspaceRunner({
           message =
             'Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.';
       } else if (action === 'stop') {
+        // Remove anonymous image volumes while their owning containers still
+        // exist. Some Compose down executions have left these volumes behind.
+        // Container removal keeps named/shared-volume handling inside Docker;
+        // never infer ownership from an orphaned volume name or use prune.
+        await checked(
+          compose(['rm', '--stop', '--force', '--volumes', 'broker1', 'broker2', 'broker3'], {
+            timeoutMs: 60000,
+          }),
+        );
+        await owned();
         await checked(compose(['down', '--volumes', '--timeout', '15'], { timeoutMs: 60000 }));
         if ((await owned()).length) throw new Error('Контейнеры стенда ещё существуют.');
         for (const task of workspaceTasks) {

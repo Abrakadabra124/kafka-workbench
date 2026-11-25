@@ -98,8 +98,6 @@ test(
         '--format',
         '{{.ID}}',
       ]);
-      assert.equal(stopped.ok, true, stopped.error);
-      assert.equal(remaining.stdout.trim(), '');
       const networks = await runDockerCommand([
         'network',
         'ls',
@@ -108,9 +106,37 @@ test(
         '--format',
         '{{.ID}}',
       ]);
-      assert.equal(networks.stdout.trim(), '');
       const volumeList = await runDockerCommand(['volume', 'ls', '--format', '{{.Name}}']);
       const retained = new Set(volumeList.stdout.trim().split(/\r?\n/u));
+      const retainedVolumes = volumeIds.filter((id) => retained.has(id));
+      evidence.push({
+        action: 'resource-cleanup-observation',
+        capturedVolumes: volumeIds,
+        retainedVolumes,
+        remainingContainers: remaining.stdout.trim(),
+        remainingNetworks: networks.stdout.trim(),
+        commandCodes: {
+          containers: remaining.code,
+          networks: networks.code,
+          volumes: volumeList.code,
+        },
+      });
+      // Preserve successful scenarios and cleanup diagnostics even if a final assertion fails.
+      mkdirSync('data', { recursive: true });
+      writeFileSync(
+        'data/practice-live-evidence.json',
+        JSON.stringify({ finishedAt: new Date().toISOString(), evidence }, null, 2),
+      );
+      assert.equal(stopped.ok, true, stopped.error);
+      for (const result of [remaining, networks, volumeList]) {
+        assert.equal(result.code, 0, result.stderr);
+        assert.ok(
+          !result.timedOut && !result.outputLimited,
+          'Cleanup inspection must be complete.',
+        );
+      }
+      assert.equal(remaining.stdout.trim(), '');
+      assert.equal(networks.stdout.trim(), '');
       assert.ok(
         volumeIds.every((id) => !retained.has(id)),
         'All captured anonymous volumes must be removed.',

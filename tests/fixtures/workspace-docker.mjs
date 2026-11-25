@@ -26,7 +26,7 @@ export function workspaceDocker() {
         running = [1, 2, 3];
         return ok('');
       }
-      if (args.includes('down')) {
+      if (args.includes('down') || (args[0] === 'compose' && args[5] === 'rm')) {
         running = [];
         topics.clear();
         groups.clear();
