@@ -4,10 +4,12 @@ import { modules } from '../../content/curriculum.mjs';
 import { incidents } from '../../content/incidents.mjs';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
+import { primeLearningPaths } from './learning-helper.mjs';
 
 test.beforeEach(async ({ request }) => {
   const response = await request.post('/api/progress/reset', { data: { confirm: 'RESET' } });
   expect(response.ok()).toBeTruthy();
+  await primeLearningPaths(request);
 });
 async function screenshot(page, name) {
   if (!process.env.E2E_SCREENSHOT_DIR) return;
@@ -29,7 +31,7 @@ test('learn, make a mistake, retry, finish both assessments, persist notes and e
   await screenshot(page, 'overview');
   await page.getByRole('link', { name: 'Начать обучение', exact: true }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Событие и журнал');
-  await page.getByRole('button', { name: 'Перейти к проверке' }).click();
+  await expect(page.locator('.learning-stage-title')).toContainText('Самостоятельная практика');
   const first = modules[0].lessons[0];
   const question = page.locator('.assessment').nth(0);
   const scenario = page.locator('.assessment').nth(1);
@@ -53,7 +55,7 @@ test('learn, make a mistake, retry, finish both assessments, persist notes and e
     .getByLabel('Ваши наблюдения')
     .fill('Commit хранит следующий offset. Чтение не удаляет событие.');
   await page.getByRole('button', { name: 'Сохранить заметку' }).click();
-  await expect(page.getByRole('status')).toHaveText('Заметка сохранена.');
+  await expect(page.locator('.notes').getByRole('status')).toHaveText('Заметка сохранена.');
   await page.reload();
   await expect(page.locator('.sidebar-progress')).toContainText('1 / 18');
   await page.getByRole('button', { name: 'Мои заметки' }).click();
@@ -297,7 +299,7 @@ test('reset waits for a pending answer and cannot resurrect cleared progress', a
     await route.continue();
   });
   await page.goto('/#lesson/event-log');
-  await page.getByRole('button', { name: 'Перейти к проверке' }).click();
+  await expect(page.locator('.learning-stage-title')).toContainText('Самостоятельная практика');
   await page
     .locator('.assessment')
     .first()

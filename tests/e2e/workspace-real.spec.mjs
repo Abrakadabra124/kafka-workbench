@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { createApp } from '../../server/app.mjs';
 import { createStore } from '../../server/store.mjs';
 import { createWorkspaceRunner } from '../../server/workspace.mjs';
+import { primeLearningPaths } from './learning-helper.mjs';
 
 test('real browser to API to Kafka: edit, failed verification, commit, recovery and saved evidence', async ({
   page,
@@ -44,6 +45,7 @@ test('real browser to API to Kafka: edit, failed verification, commit, recovery 
     return result;
   }
   try {
+    await primeLearningPaths(page.request, url);
     await page.goto(`${url}/#lab`);
     await expect(page.getByLabel('JSON-рецепт')).toBeVisible();
     await page.getByRole('button', { name: /Брокер недоступен/ }).click();

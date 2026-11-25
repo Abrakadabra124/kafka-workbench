@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { primeLearningPaths } from './learning-helper.mjs';
+
+test.beforeEach(async ({ request }) => {
+  await primeLearningPaths(request);
+});
 
 test('course search preserves the complete chapter summary', async ({ page }) => {
   await page.goto('/#curriculum');
@@ -40,8 +45,8 @@ test('working interiors fit desktop, tablet and narrow phones including lesson t
         `${route} at ${width}`,
       ).toBe(true);
     }
-    for (const name of ['Проверить себя', 'Мои заметки', 'Разобраться']) {
-      await page.getByRole('button', { name, exact: true }).click();
+    for (const name of ['Самостоятельная практика', 'Мои заметки', 'Урок на русском']) {
+      await page.getByRole('button', { name: new RegExp(name) }).click();
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
@@ -57,8 +62,8 @@ test('assessment, notes and basic lab remain accessible, with an explicit focus 
   page,
 }) => {
   await page.goto('/#lesson/event-log');
-  for (const name of ['Проверить себя', 'Мои заметки']) {
-    await page.getByRole('button', { name, exact: true }).click();
+  for (const name of ['Самостоятельная практика', 'Мои заметки']) {
+    await page.getByRole('button', { name: new RegExp(name) }).click();
     const result = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
       .analyze();

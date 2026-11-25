@@ -2,6 +2,11 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { createWorkspaceRunner } from '../../server/workspace.mjs';
 import { workspaceDocker } from '../fixtures/workspace-docker.mjs';
+import { primeLearningPaths } from './learning-helper.mjs';
+
+test.beforeEach(async ({ request }) => {
+  await primeLearningPaths(request);
+});
 
 async function fixture(page) {
   const states = new Map();

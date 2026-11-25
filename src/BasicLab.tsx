@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, ChevronRight, FlaskConical, LoaderCircle, RefreshCw, Terminal } from 'lucide-react';
 import { api } from './api';
+import { LearningPath } from './LearningPath';
 
 type LabState = { available: boolean; running: boolean; status: string };
 const steps = [
@@ -40,14 +41,45 @@ const steps = [
   },
 ];
 export function BasicLab() {
+  return (
+    <>
+      <h1>Настоящая лаборатория</h1>
+      <LearningPath id="basic-lab">
+        <BasicLabPractice />
+      </LearningPath>
+    </>
+  );
+}
+function BasicLabPractice() {
+  const [savedJournal] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('kafka-basic-lab-journal-v1') ?? 'null');
+      if (
+        saved &&
+        Array.isArray(saved.completed) &&
+        saved.completed.length <= 5 &&
+        saved.completed.every((action: unknown) => steps.some((step) => step.action === action)) &&
+        typeof saved.output === 'string' &&
+        saved.output.length <= 200000 &&
+        typeof saved.updatedAt === 'string' &&
+        !Number.isNaN(Date.parse(saved.updatedAt))
+      )
+        return saved as { completed: string[]; output: string; updatedAt: string };
+    } catch {
+      /* An unavailable or invalid browser journal leaves a fresh usable lab. */
+    }
+    return null;
+  });
   const outputRef = useRef<HTMLElement>(null);
   const [status, setStatus] = useState<LabState | null>(null);
   const [busy, setBusy] = useState('');
   const [output, setOutput] = useState(
-    'Здесь появится фактический вывод Kafka и результат проверки.',
+    savedJournal?.output ?? 'Здесь появится фактический вывод Kafka и результат проверки.',
   );
   const [error, setError] = useState('');
-  const [completed, setCompleted] = useState<string[]>([]);
+  const [completed, setCompleted] = useState<string[]>(savedJournal?.completed ?? []);
+  const [journalDate, setJournalDate] = useState(savedJournal?.updatedAt ?? '');
+  const [storageWarning, setStorageWarning] = useState('');
   const [confirm, setConfirm] = useState(false);
   async function refresh() {
     try {
@@ -82,11 +114,33 @@ export function BasicLab() {
         body: JSON.stringify({ action }),
       });
       const result = await response.json();
-      setOutput(result.output ?? result.error ?? 'Сервер не вернул результат.');
+      const resultOutput = result.output ?? result.error ?? 'Сервер не вернул результат.';
+      setOutput(resultOutput);
+      const nextCompleted =
+        response.ok && result.ok
+          ? action === 'stop'
+            ? []
+            : [...new Set([...completed, action])]
+          : completed;
+      setCompleted(nextCompleted);
+      const updatedAt = new Date().toISOString();
+      setJournalDate(updatedAt);
+      try {
+        localStorage.setItem(
+          'kafka-basic-lab-journal-v1',
+          JSON.stringify({
+            completed: nextCompleted,
+            output: String(resultOutput).slice(-200000),
+            updatedAt,
+          }),
+        );
+      } catch {
+        setStorageWarning(
+          'Браузер не разрешил сохранить журнал. Скопируйте важный вывод перед закрытием страницы.',
+        );
+      }
       if (!response.ok || !result.ok)
         setError('Операция не подтверждена. Подробности в выводе ниже.');
-      else
-        setCompleted((previous) => (action === 'stop' ? [] : [...new Set([...previous, action])]));
       setStatus(await api<LabState>('lab'));
     } catch (e) {
       setError((e as Error).message);
@@ -102,7 +156,7 @@ export function BasicLab() {
     <>
       <div className="page-heading with-action">
         <div>
-          <h1>Настоящая лаборатория</h1>
+          <h2>Практика на одном брокере</h2>
           <p>
             Тот же путь события, теперь на реальном Apache Kafka. Брокер работает в вашем Docker.
           </p>
@@ -112,6 +166,14 @@ export function BasicLab() {
           Обновить
         </button>
       </div>
+      {journalDate && (
+        <p className="note">
+          Журнал последней попытки: {new Date(journalDate).toLocaleString('ru-RU')}. Отметки шагов
+          относятся к сохранённой попытке. Проверяйте текущую доступность кнопкой «Обновить», а
+          данные - действием «Проверить состояние».
+        </p>
+      )}
+      {storageWarning && <p role="status">{storageWarning}</p>}
       <div className="lab-status">
         <FlaskConical size={24} />
         <div>

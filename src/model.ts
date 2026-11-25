@@ -17,8 +17,22 @@ export function initialState(): LogState {
   };
 }
 export function produce(state: LogState, key: string, value: string): LogState {
-  if (!key.trim() || key.length > 64 || !value.trim() || value.length > 500)
-    throw new Error('Нужен ключ до 64 и событие до 500 символов.');
+  if (!key.trim())
+    throw new Error(
+      'Ключ пуст. В этой модели ключ определяет партицию. Укажите, например, order-73 и повторите отправку.',
+    );
+  if (key.length > 64)
+    throw new Error(
+      'Ключ длиннее 64 символов. Сократите идентификатор заказа и повторите отправку. Это ограничение учебной модели.',
+    );
+  if (!value.trim())
+    throw new Error(
+      'Событие пустое. Опишите произошедший факт, например «Заказ оплачен», и повторите отправку.',
+    );
+  if (value.length > 500)
+    throw new Error(
+      'Событие длиннее 500 символов. Оставьте краткое описание факта и повторите отправку. Это ограничение учебной модели.',
+    );
   if (state.partitions.flat().length >= 60)
     throw new Error('В модели максимум 60 событий. Начните эксперимент заново.');
   // Deliberately simple teaching hash, not the Kafka Java partitioner.

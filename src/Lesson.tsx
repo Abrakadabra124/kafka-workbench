@@ -1,31 +1,50 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Clock, Lightbulb, Save } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Clock, Save } from 'lucide-react';
 import { api } from './api';
 import type { Assessment, Lesson, Progress } from './types';
+import { LearningPath } from './LearningPath';
 
 function Question({
   assessment,
   kind,
   lessonId,
+  attempts,
   onProgress,
 }: {
   assessment: Assessment;
   kind: 'question' | 'scenario';
   lessonId: string;
+  attempts: number;
   onProgress: Dispatch<SetStateAction<Progress>>;
 }) {
-  const [choice, setChoice] = useState<number | null>(null);
-  const [result, setResult] = useState<{ correct: boolean; explanation: string } | null>(null);
+  const draftKey = `kafka-answer:${lessonId}:${kind}`;
+  const [choice, setChoice] = useState<number | null>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(draftKey) ?? 'null');
+      return Number.isInteger(saved) && saved >= 0 && saved < assessment.options.length
+        ? saved
+        : null;
+    } catch {
+      return null;
+    }
+  });
+  const [result, setResult] = useState<{
+    correct: boolean;
+    explanation: string;
+    hint: string;
+  } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   async function submit() {
     setBusy(true);
     setError('');
     try {
-      const response = await api<{ correct: boolean; explanation: string; progress: Progress }>(
-        'answer',
-        { lessonId, kind, choice },
-      );
+      const response = await api<{
+        correct: boolean;
+        explanation: string;
+        hint: string;
+        progress: Progress;
+      }>('answer', { lessonId, kind, choice });
       setResult(response);
       onProgress((previous) => {
         const answers = { ...previous.answers };
@@ -54,6 +73,11 @@ function Question({
         {kind === 'question' ? '01 / Проверка понимания' : '02 / Инженерная ситуация'}
       </div>
       <h2 id={`${kind}-heading`}>{assessment.prompt}</h2>
+      {attempts > 0 && (
+        <p className="muted">
+          Сохранено попыток: {attempts}. Можно пересмотреть ответ и проверить его снова.
+        </p>
+      )}
       <fieldset disabled={busy}>
         <legend className="sr-only">Выберите один ответ</legend>
         {assessment.options.map((option, i) => (
@@ -64,6 +88,11 @@ function Question({
               checked={choice === i}
               onChange={() => {
                 setChoice(i);
+                try {
+                  localStorage.setItem(draftKey, JSON.stringify(i));
+                } catch {
+                  /* Practice remains usable when browser storage is unavailable. */
+                }
                 setResult(null);
               }}
             />
@@ -82,7 +111,12 @@ function Question({
             {result.correct ? 'Верно. Разберём почему.' : 'Пока не совсем. Разберём решение.'}
           </strong>
           <p>{result.explanation}</p>
-          {!result.correct && <span>Выберите другой ответ и попробуйте снова.</span>}
+          {!result.correct && (
+            <p>
+              <strong>Подсказка: </strong>
+              {result.hint} Выберите другой ответ и попробуйте снова.
+            </p>
+          )}
         </div>
       )}
       {error && (
@@ -114,7 +148,7 @@ export function LessonView({
   const onProgress: Dispatch<SetStateAction<Progress>> = (value) => {
     if (mounted.current) updateProgress(value);
   };
-  const [tab, setTab] = useState<'theory' | 'practice' | 'notes'>('theory');
+  const [notesOpen, setNotesOpen] = useState(false);
   const [note, setNote] = useState(progress.notes[lesson.id] ?? '');
   const [saved, setSaved] = useState('');
   const [saving, setSaving] = useState(false);
@@ -155,68 +189,30 @@ export function LessonView({
       </div>
       <h1>{lesson.title}</h1>
       <p className="lesson-objective">{lesson.objective}</p>
-      <div className="tabs" aria-label="Части урока">
-        {(
-          [
-            { id: 'theory', label: 'Разобраться' },
-            { id: 'practice', label: 'Проверить себя' },
-            { id: 'notes', label: 'Мои заметки' },
-          ] as const
-        ).map((t) => (
-          <button
-            key={t.id}
-            className={tab === t.id ? 'selected' : ''}
-            aria-pressed={tab === t.id}
-            onClick={() => setTab(t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-      {tab === 'theory' ? (
-        <div className="lesson-body">
+      <LearningPath
+        id={`lesson/${lesson.id}`}
+        sources={lesson.sources}
+        theory={
           <div className="prose">
-            {lesson.theory.map((section, i) => (
-              <section key={i}>
-                <h2>{section.title}</h2>
-                {section.body.split('\n\n').map((paragraph, j) => (
-                  <p key={j}>{paragraph}</p>
+            {lesson.theory.map((section) => (
+              <section key={section.title}>
+                <h3>{section.title}</h3>
+                {section.body.split('\n\n').map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
                 ))}
               </section>
             ))}
             <div className="takeaways">
-              <h2>
-                <Lightbulb size={21} />
-                Что нужно запомнить
-              </h2>
+              <h3>Что нужно запомнить</h3>
               <ul>
                 {lesson.takeaways.map((point) => (
                   <li key={point}>{point}</li>
                 ))}
               </ul>
             </div>
-            <button className="primary" onClick={() => setTab('practice')}>
-              Перейти к проверке
-              <ArrowRight size={18} />
-            </button>
           </div>
-          <aside className="lesson-aside">
-            <h3>Изучите на практике</h3>
-            <p>Отправьте событие, прочитайте его и сравните позицию чтения с сохранённым offset.</p>
-            <a className="button outline" href="#sandbox">
-              Открыть песочницу
-              <ArrowUpRight size={17} />
-            </a>
-            <h3>Первоисточники</h3>
-            {lesson.sources.map((s) => (
-              <a className="source-link" key={s.url} href={s.url} target="_blank" rel="noreferrer">
-                {s.title}
-                <ArrowUpRight size={15} />
-              </a>
-            ))}
-          </aside>
-        </div>
-      ) : tab === 'practice' ? (
+        }
+      >
         <div className="practice-body">
           <p className="muted">
             Для завершения урока решите обе задачи. После ответа появится объяснение. Повторные
@@ -224,12 +220,14 @@ export function LessonView({
           </p>
           <Question
             lessonId={lesson.id}
+            attempts={progress.answers[lesson.id]?.question?.attempts ?? 0}
             kind="question"
             assessment={lesson.question}
             onProgress={onProgress}
           />
           <Question
             lessonId={lesson.id}
+            attempts={progress.answers[lesson.id]?.scenario?.attempts ?? 0}
             kind="scenario"
             assessment={lesson.scenario}
             onProgress={onProgress}
@@ -244,7 +242,16 @@ export function LessonView({
             </div>
           )}
         </div>
-      ) : (
+      </LearningPath>
+      <button
+        className="outline"
+        aria-expanded={notesOpen}
+        aria-controls="lesson-notes"
+        onClick={() => setNotesOpen(!notesOpen)}
+      >
+        Мои заметки
+      </button>
+      <div id="lesson-notes" hidden={!notesOpen} className="learning-content">
         <section className="notes">
           <h2>Рабочая тетрадь</h2>
           <p>
@@ -274,7 +281,7 @@ export function LessonView({
           </div>
           <small>Перед уходом из урока сохраните изменения.</small>
         </section>
-      )}
+      </div>
       <nav className="lesson-pagination" aria-label="Уроки">
         {index > 0 ? (
           <a className="button outline" href={`#lesson/${lessons[index - 1].id}`}>

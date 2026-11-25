@@ -9,6 +9,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { createApp } from '../server/app.mjs';
 import { createStore } from '../server/store.mjs';
 import { modules } from '../content/curriculum.mjs';
+import { lessonGuides } from '../content/lesson-guides.mjs';
 import { incidents } from '../content/incidents.mjs';
 import { defaultRecipe } from '../server/workspace.mjs';
 
@@ -141,7 +142,11 @@ test('answers require two independent correct assessments, retain best completio
   const wrongChoice = (lesson.question.correctIndex + 1) % lesson.question.options.length;
   const wrong = await answer('question', wrongChoice);
   assert.equal(wrong.body.correct, false);
-  assert.equal(wrong.body.explanation, lesson.question.explanation);
+  assert.equal(
+    wrong.body.explanation,
+    lessonGuides[lesson.id].feedback.question[wrongChoice].explanation,
+  );
+  assert.equal(wrong.body.hint, lessonGuides[lesson.id].feedback.question[wrongChoice].hint);
   assert.deepEqual(wrong.body.progress.completed, []);
   const quiz = await answer('question', lesson.question.correctIndex);
   assert.deepEqual(quiz.body.progress.completed, []);

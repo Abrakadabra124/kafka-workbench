@@ -1,4 +1,6 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { LearningPath } from './LearningPath';
+import { parseSandboxDraft, sandboxDraftKey } from './sandbox-draft';
 import { SpatialFlow, type FlowActivity } from './SpatialFlow';
 import { ArrowRight, Check, Info, Play, RotateCcw, Send } from 'lucide-react';
 import {
@@ -13,16 +15,57 @@ import {
 } from './model';
 
 export function Sandbox() {
-  const [state, setState] = useState(initialState);
-  const [group, setGroup] = useState<GroupId>('billing');
-  const [consumers, setConsumers] = useState(2);
-  const [key, setKey] = useState('order-42');
-  const [value, setValue] = useState('Заказ создан');
-  const [message, setMessage] = useState('Отправьте первое событие.');
-  const [journal, setJournal] = useState<string[]>([]);
-  const [restarted, setRestarted] = useState(false);
-  const [redelivered, setRedelivered] = useState(false);
-  const [seen, setSeen] = useState<string[]>([]);
+  return (
+    <>
+      <h1>Песочница событий</h1>
+      <LearningPath id="sandbox">
+        <SandboxPractice />
+      </LearningPath>
+    </>
+  );
+}
+function SandboxPractice() {
+  const [savedDraft] = useState(() => {
+    try {
+      return parseSandboxDraft(localStorage.getItem(sandboxDraftKey));
+    } catch {
+      return parseSandboxDraft(null);
+    }
+  });
+  const [state, setState] = useState(savedDraft.state);
+  const [group, setGroup] = useState<GroupId>(savedDraft.group);
+  const [consumers, setConsumers] = useState(savedDraft.consumers);
+  const [key, setKey] = useState(savedDraft.key);
+  const [value, setValue] = useState(savedDraft.value);
+  const [message, setMessage] = useState(savedDraft.message);
+  const [journal, setJournal] = useState<string[]>(savedDraft.journal);
+  const [restarted, setRestarted] = useState(savedDraft.restarted);
+  const [redelivered, setRedelivered] = useState(savedDraft.redelivered);
+  const [seen, setSeen] = useState<string[]>(savedDraft.seen);
+  const [storageWarning, setStorageWarning] = useState('');
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        sandboxDraftKey,
+        JSON.stringify({
+          state,
+          group,
+          consumers,
+          key,
+          value,
+          message,
+          journal,
+          restarted,
+          redelivered,
+          seen,
+        }),
+      );
+    } catch {
+      setStorageWarning(
+        'Браузер не разрешил сохранить черновик. До закрытия страницы модель продолжает работать.',
+      );
+    }
+  }, [state, group, consumers, key, value, message, journal, restarted, redelivered, seen]);
   const [selected, setSelected] = useState<{ partition: number; offset: number } | null>(null);
   const activityId = useRef(0);
   const [activity, setActivity] = useState<FlowActivity>();
@@ -91,7 +134,12 @@ export function Sandbox() {
     <>
       <div className="page-heading with-action">
         <div>
-          <h1>Песочница событий</h1>
+          <h2>Ваш эксперимент</h2>
+          <p className="muted">
+            Модель и введённые значения сохраняются в этом браузере. Кнопка нового эксперимента
+            очищает учебные события.
+          </p>
+          {storageWarning && <p role="status">{storageWarning}</p>}
           <p>Отправьте событие и проследите его путь. Здесь можно ошибаться и начинать заново.</p>
         </div>
         <button className="outline" onClick={reset}>

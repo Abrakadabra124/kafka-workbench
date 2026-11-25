@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
+import { primeLearningPaths } from './learning-helper.mjs';
 
 test.use({ reducedMotion: 'no-preference' });
 
@@ -8,6 +9,7 @@ test.beforeEach(async ({ request }) => {
   expect(
     (await request.post('/api/progress/reset', { data: { confirm: 'RESET' } })).ok(),
   ).toBeTruthy();
+  await primeLearningPaths(request);
 });
 
 const scene = (page, mode) => page.locator(`.spatial-flow[data-mode="${mode}"]`);

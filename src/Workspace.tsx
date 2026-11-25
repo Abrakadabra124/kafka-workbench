@@ -15,6 +15,7 @@ import { WorkspaceScene } from './WorkspaceScene';
 import { PracticeWalkthrough } from './PracticeWalkthrough';
 import type { RunEvent, WorkspaceData, WorkspaceState } from './workspace-types';
 import './workspace.css';
+import { LearningPath } from './LearningPath';
 const labels: Record<string, string> = {
   prepare: 'Подготовка',
   produce: 'Запись',
@@ -56,6 +57,20 @@ export function Workspace({ initialTask }: { initialTask?: string }) {
   const state = data?.states[selected];
   const task = data?.tasks.find((t) => t.id === selected);
   const history = state?.history ?? [];
+  useEffect(() => {
+    if (
+      initialTask &&
+      [
+        'delivery',
+        'replay',
+        'recovery',
+        'poison-quarantine',
+        'isr-write-gate',
+        'retention-gap',
+      ].includes(initialTask)
+    )
+      setSelected(initialTask);
+  }, [initialTask]);
   const historical = frame !== null;
   const event = historical ? history[frame] : history.at(-1);
   const snapshot = historical ? (event?.snapshot ?? null) : (state?.snapshot ?? null);
@@ -220,7 +235,7 @@ export function Workspace({ initialTask }: { initialTask?: string }) {
             </div>
           )}
           {state && task && (
-            <>
+            <LearningPath key={selected} id={`workspace/${selected}`} title={task.title}>
               <div className="workspace-brief">
                 <div>
                   <h2>{task.title}</h2>
@@ -576,7 +591,7 @@ export function Workspace({ initialTask }: { initialTask?: string }) {
                 </button>
                 {confirm === 'stop' && confirmation('stop')}
               </div>
-            </>
+            </LearningPath>
           )}
         </>
       )}

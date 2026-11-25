@@ -1,0 +1,223 @@
+.learning-path {
+  min-width: 0;
+  margin: 1.5rem 0;
+}
+.learning-path p,
+.learning-path li,
+.learning-path dd {
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+.learning-stages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+.learning-stages button {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: left;
+  white-space: normal;
+  font-size: 0.9rem;
+  padding: 0.85rem;
+  border: 1px solid #414449;
+  background: #202328;
+  color: #e7e8eb;
+}
+.learning-stages button span {
+  font-variant-numeric: tabular-nums;
+  color: #efb566;
+}
+.learning-stages button[aria-current] {
+  background: #443624;
+  border-color: #efb566;
+}
+.learning-stages button:disabled {
+  opacity: 0.6;
+}
+.learning-save {
+  font-size: 0.88rem;
+  color: #b5bac3;
+}
+.learning-stage-title {
+  scroll-margin-top: 6rem;
+}
+.learning-content {
+  min-width: 0;
+}
+.learning-content[hidden] {
+  display: none !important;
+}
+.learning-content > p,
+.learning-content > ol {
+  max-width: 90ch;
+}
+.learning-terms {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.learning-terms > div {
+  background: #1d2025;
+  border: 1px solid #353a43;
+  border-radius: 12px;
+  padding: 1rem;
+}
+.learning-terms dt {
+  font-weight: 650;
+  color: #efb566;
+}
+.learning-terms dd {
+  margin: 0.5rem 0 0;
+}
+.learning-reference {
+  margin: 1.25rem 0;
+  border-bottom: 1px solid #414449;
+  padding-bottom: 1rem;
+}
+.learning-reference pre {
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 1.2rem;
+  border-radius: 12px;
+  border: 1px solid #4b5360;
+  background: #171a20;
+  color: #e3d1ad;
+  line-height: 1.65;
+}
+.learning-example {
+  border: 1px solid #444a55;
+  background: linear-gradient(145deg, #242b35, #181b21);
+  border-radius: 18px;
+  padding: 1.5rem;
+}
+.learning-example-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.learning-example-controls button {
+  white-space: normal;
+  text-align: left;
+  max-width: 100%;
+}
+.learning-example-controls button[aria-pressed='true'] {
+  border-color: #efb566;
+  background: #443624;
+}
+.learning-diagram {
+  perspective: 1000px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.3rem;
+  padding: 2rem 0.5rem;
+}
+.learning-node {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.8rem;
+  min-height: 120px;
+  padding: 1.2rem;
+  border: 1px solid #5b6a80;
+  border-bottom: 5px solid #3b4657;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #364557, #202936);
+  box-shadow:
+    0 14px 25px #0004,
+    inset 0 1px #adc4e435;
+  transform: rotateX(5deg);
+  overflow-wrap: anywhere;
+  transition:
+    transform 0.5s,
+    background 0.5s;
+}
+.learning-node span {
+  color: #c0cddd;
+  font-size: 0.9rem;
+}
+.learning-node strong {
+  color: #ffce89;
+  font-size: 1.05rem;
+}
+.learning-diagram[data-motion='playing'] .learning-node {
+  animation: learning-float 3s ease-in-out infinite alternate;
+}
+.learning-diagram[data-motion='paused'] .learning-node {
+  animation-play-state: paused;
+}
+.learning-frame {
+  border-top: 1px solid #4b5360;
+}
+.learning-evidence {
+  border-left: 3px solid #83c6ad;
+  padding-left: 1rem;
+}
+.learning-mission,
+.learning-transfer {
+  padding: 1.3rem;
+  background: #232b2b;
+  border: 1px solid #435d53;
+  border-radius: 12px;
+  margin: 1rem 0 1.5rem;
+}
+.learning-transfer {
+  margin-top: 2rem;
+}
+.learning-next {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 1.8rem 0;
+}
+.learning-next p {
+  flex-basis: 100%;
+}
+.learning-path button {
+  min-height: 44px;
+}
+.learning-path .button-row {
+  flex-wrap: wrap;
+}
+@keyframes learning-float {
+  to {
+    transform: translateY(-5px) rotateX(0deg);
+  }
+}
+@media (max-width: 800px) {
+  .learning-stages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .learning-terms {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .learning-stages {
+    grid-template-columns: 1fr;
+  }
+  .learning-example {
+    padding: 1rem;
+  }
+  .learning-diagram {
+    grid-template-columns: 1fr;
+    padding: 1rem 0;
+    gap: 0.75rem;
+  }
+  .learning-node {
+    min-height: auto;
+  }
+  .learning-next button {
+    width: 100%;
+    white-space: normal;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .learning-node {
+    animation: none !important;
+    transition: none;
+    transform: none;
+  }
+}

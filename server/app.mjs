@@ -4,6 +4,8 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { existsSync } from 'node:fs';
 import { modules } from '../content/curriculum.mjs';
+import { lessonGuides } from '../content/lesson-guides.mjs';
+import { practiceGuides } from '../content/practice-guides.mjs';
 import { createStore } from './store.mjs';
 import { createLabRunner } from './lab.mjs';
 import { createWorkspaceRunner, workspaceActions, workspaceTasks } from './workspace.mjs';
@@ -98,6 +100,47 @@ export function createApp({
   app.get('/api/health', (_req, res) => res.json({ ok: true }));
   app.get('/api/course', (_req, res) => res.json({ modules: publicCourse(modules) }));
   app.get('/api/progress', (_req, res) => res.json(store.progress()));
+  const guides = new Map([
+    ...Object.entries(lessonGuides).map(([id, guide]) => [`lesson/${id}`, guide]),
+    ...Object.entries(practiceGuides),
+  ]);
+  function learningProgress(id) {
+    const saved = store.learning(id);
+    if (saved) return saved;
+    const [kind, subject] = id.split('/');
+    const started =
+      kind === 'lesson'
+        ? Boolean(store.progress().answers[subject])
+        : kind === 'incident'
+          ? Boolean(store.incident(subject)?.attempts || store.incident(subject)?.observed?.length)
+          : kind === 'workspace'
+            ? Boolean(store.workspace(subject)?.history?.length || store.workspace(subject)?.draft)
+            : false;
+    return { stage: 0, unlocked: started ? 3 : 0 };
+  }
+  app.get('/api/learning/:id', (req, res) => {
+    const guide = guides.get(req.params.id);
+    if (!guide) return res.status(404).json({ error: 'Такого учебного маршрута нет.' });
+    const { feedback: _feedback, ...publicGuide } = guide;
+    res.json({ guide: publicGuide, progress: learningProgress(req.params.id) });
+  });
+  app.post('/api/learning/:id', (req, res) => {
+    const id = req.params.id;
+    if (
+      !guides.has(id) ||
+      !validBody(req.body, ['stage']) ||
+      !Number.isInteger(req.body?.stage) ||
+      req.body.stage < 0 ||
+      req.body.stage > 3
+    )
+      return res.status(400).json({ error: 'Укажите учебный маршрут и этап от 0 до 3.' });
+    const previous = learningProgress(id);
+    if (req.body.stage > previous.unlocked + 1)
+      return res.status(409).json({ error: 'Сначала пройдите предыдущую часть занятия.' });
+    res.json({
+      progress: store.saveLearning(id, req.body.stage, Math.max(previous.unlocked, req.body.stage)),
+    });
+  });
   app.post('/api/answer', (req, res) => {
     const { lessonId, kind, choice } = req.body ?? {};
     const assessment = kinds.has(kind) ? lessons.get(lessonId)?.[kind] : undefined;
@@ -116,7 +159,8 @@ export function createApp({
     const correct = choice === assessment.correctIndex;
     res.json({
       correct,
-      explanation: assessment.explanation,
+      explanation: lessonGuides[lessonId].feedback[kind][choice].explanation,
+      hint: lessonGuides[lessonId].feedback[kind][choice].hint,
       progress: store.answer(lessonId, kind, correct),
     });
   });
@@ -145,6 +189,7 @@ export function createApp({
       mastery: store.mastery(),
       incidents: store.incidents(),
       workspaces: store.workspaces(),
+      learningPaths: store.learningPaths(),
     });
   });
   app.post('/api/progress/reset', (req, res) => {

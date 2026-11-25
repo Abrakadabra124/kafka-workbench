@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { primeLearningPaths } from './learning-helper.mjs';
+
+test.beforeEach(async ({ request }) => {
+  await primeLearningPaths(request);
+});
 test('three causal models reject shortcuts, preserve effects and require explicit verification', async ({
   page,
 }) => {

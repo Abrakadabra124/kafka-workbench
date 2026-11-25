@@ -19,6 +19,7 @@ export function createStore(dataDir) {
     CREATE TABLE IF NOT EXISTS notes (lesson_id TEXT PRIMARY KEY, text TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS incident_states (incident_id TEXT PRIMARY KEY, state TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS workspace_states (task_id TEXT PRIMARY KEY, state TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS learning_paths (path_id TEXT PRIMARY KEY, stage INTEGER NOT NULL, unlocked INTEGER NOT NULL);
     PRAGMA user_version = 3;
   `);
   const saveAnswer = db.prepare(`
@@ -30,6 +31,26 @@ export function createStore(dataDir) {
   `);
   let closed = false;
   return {
+    learning(id) {
+      const row = db
+        .prepare('SELECT stage, unlocked FROM learning_paths WHERE path_id = ?')
+        .get(id);
+      return row ? { stage: row.stage, unlocked: row.unlocked } : null;
+    },
+    saveLearning(id, stage, unlocked) {
+      db.prepare(
+        'INSERT INTO learning_paths (path_id, stage, unlocked) VALUES (?, ?, ?) ON CONFLICT(path_id) DO UPDATE SET stage = excluded.stage, unlocked = MAX(learning_paths.unlocked, excluded.unlocked)',
+      ).run(id, stage, unlocked);
+      return this.learning(id);
+    },
+    learningPaths() {
+      return Object.fromEntries(
+        db
+          .prepare('SELECT * FROM learning_paths ORDER BY path_id')
+          .all()
+          .map((row) => [row.path_id, { stage: row.stage, unlocked: row.unlocked }]),
+      );
+    },
     progress() {
       const answers = {};
       const mastery = new Map();
@@ -91,7 +112,7 @@ export function createStore(dataDir) {
     },
     reset() {
       db.exec(
-        'BEGIN IMMEDIATE; DELETE FROM answers; DELETE FROM notes; DELETE FROM incident_states; COMMIT;',
+        'BEGIN IMMEDIATE; DELETE FROM answers; DELETE FROM notes; DELETE FROM incident_states; DELETE FROM learning_paths; COMMIT;',
       );
     },
     workspace(id) {

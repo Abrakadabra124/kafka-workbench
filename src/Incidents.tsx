@@ -21,6 +21,7 @@ import {
 import { api } from './api';
 import './incidents.css';
 import { SpatialFlow } from './SpatialFlow';
+import { LearningPath } from './LearningPath';
 
 type NodeStatus = 'healthy' | 'degraded' | 'blocked';
 type Nodes = Record<'producer' | 'broker' | 'consumer' | 'external', NodeStatus>;
@@ -471,10 +472,10 @@ function Investigation({
   );
 }
 
-export function Incidents() {
+export function Incidents({ initialIncident }: { initialIncident?: string }) {
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [saved, setSaved] = useState<Record<string, IncidentState>>({});
-  const [selected, setSelected] = useState('');
+  const [selected, setSelected] = useState(initialIncident ?? '');
   const [detail, setDetail] = useState<Detail | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -581,7 +582,10 @@ export function Incidents() {
             <button
               key={incident.id}
               className={`inc-case ${selected === incident.id ? 'inc-case-selected' : ''}`}
-              onClick={() => setSelected(incident.id)}
+              onClick={() => {
+                setSelected(incident.id);
+                window.history.replaceState(null, '', `#incidents/${incident.id}`);
+              }}
               disabled={busy}
               aria-current={selected === incident.id ? 'true' : undefined}
             >
@@ -634,7 +638,12 @@ export function Incidents() {
             </div>
           )}
           {!loading && detail && (
-            <>
+            <LearningPath
+              key={detail.incident.id}
+              id={`incident/${detail.incident.id}`}
+              title={detail.incident.title}
+              sources={detail.incident.sources}
+            >
               <header className="inc-case-heading">
                 <span className="inc-eyebrow">{phaseLabels[detail.state.phase]}</span>
                 <h2>{detail.incident.title}</h2>
@@ -652,12 +661,12 @@ export function Incidents() {
                 <summary>Документация для этого случая</summary>
                 {detail.incident.sources.map((source) => (
                   <a key={source.url} href={source.url} target="_blank" rel="noreferrer">
-                    {source.title}
+                    {source.title} (на английском языке)
                     <ArrowUpRight size={15} />
                   </a>
                 ))}
               </details>
-            </>
+            </LearningPath>
           )}
           {!loading && !incidents.length && !error && (
             <p className="empty">Сценарии пока недоступны.</p>
