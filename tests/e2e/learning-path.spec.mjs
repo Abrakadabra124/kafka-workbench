@@ -181,6 +181,9 @@ test('new learning stages support keyboard, reduced motion, Russian labels and n
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/#lesson/event-log');
+    // Resetting the API does not remount a page when goto only repeats its hash.
+    // Start each viewport with fresh client state as well as a fresh database.
+    await page.reload();
     await firstEntry(page);
     for (const stage of [0, 1, 2]) {
       expect(
