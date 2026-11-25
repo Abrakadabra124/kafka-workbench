@@ -4,6 +4,7 @@ export function workspaceDocker() {
     groups = new Map(),
     calls = [];
   let running = [];
+  let composePath, composeProject;
   const ok = (value) => ({
     code: 0,
     stdout: typeof value === 'string' ? value : JSON.stringify(value),
@@ -13,6 +14,26 @@ export function workspaceDocker() {
     calls,
     runCommand: async (args, options = {}) => {
       calls.push({ args, options });
+      if (args[0] === 'compose') {
+        composeProject = args[2];
+        composePath = args[4];
+      }
+      if (args[0] === 'inspect')
+        return ok(
+          args.slice(3).map((id) => ({
+            Id: id,
+            Image: `sha256:${'f'.repeat(64)}`,
+            Config: {
+              Labels: {
+                'com.docker.compose.project': composeProject,
+                'com.docker.compose.project.config_files': composePath,
+                'com.docker.compose.service': `broker${Number(id.at(-1))}`,
+              },
+            },
+            HostConfig: { Binds: null, Mounts: [], VolumesFrom: null },
+            Mounts: [],
+          })),
+        );
       if (args[0] === 'version') return ok('test-double');
       if (args.includes('up')) {
         running = [1, 2, 3];
@@ -37,6 +58,7 @@ export function workspaceDocker() {
           [1, 2, 3]
             .filter((n) => running.length)
             .map((n) => ({
+              ID: `${'0'.repeat(63)}${n}`,
               Service: `broker${n}`,
               State: running.includes(n) ? 'running' : 'exited',
               Labels: { 'com.docker.compose.project.config_files': args[4] },

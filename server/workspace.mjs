@@ -228,6 +228,12 @@ export function createWorkspaceRunner({
       },
     });
   let busy = null;
+  // Kept only for retries in this process. After a restart we never adopt
+  // unknown orphan volumes merely because their names look anonymous.
+  const pendingVolumes = new Map();
+  const normalizePath = (path) =>
+    process.platform === 'win32' ? resolve(path).toLowerCase() : resolve(path);
+  const dockerId = /^[a-f0-9]{64}$/u;
   const load = (id) => store.workspace(id) ?? emptyWorkspaceState();
   const checked = async (promise) => {
     const r = await promise;
@@ -252,11 +258,9 @@ export function createWorkspaceRunner({
     const list = containers(inspection.stdout);
     for (const c of list) {
       const path = labelsOf(c)['com.docker.compose.project.config_files'];
-      const normalize = (p) =>
-        process.platform === 'win32' ? resolve(p).toLowerCase() : resolve(p);
       if (
         !path ||
-        normalize(path) !== normalize(composeFile) ||
+        normalizePath(path) !== normalizePath(composeFile) ||
         !['broker1', 'broker2', 'broker3'].includes(c.Service)
       )
         throw new Error(
@@ -264,6 +268,230 @@ export function createWorkspaceRunner({
         );
     }
     return list;
+  }
+  async function inspectJson(args) {
+    const output = await checked(runCommand(args, { timeoutMs: 15000, maxOutputBytes: 262144 }));
+    let rows;
+    try {
+      rows = JSON.parse(output.stdout);
+    } catch {
+      throw new Error('Docker вернул неполную проверку принадлежности ресурсов.');
+    }
+    if (!Array.isArray(rows)) throw new Error('Docker не вернул список проверяемых ресурсов.');
+    return rows;
+  }
+  function volumeSignature(volume, name) {
+    const labels = volume?.Labels ?? {};
+    if (
+      volume?.Name !== name ||
+      !dockerId.test(name) ||
+      volume.Driver !== 'local' ||
+      volume.Scope !== 'local' ||
+      typeof volume.CreatedAt !== 'string' ||
+      Number.isNaN(Date.parse(volume.CreatedAt)) ||
+      typeof volume.Mountpoint !== 'string' ||
+      !volume.Mountpoint ||
+      typeof labels !== 'object' ||
+      Array.isArray(labels) ||
+      (volume.Options != null &&
+        (typeof volume.Options !== 'object' ||
+          Array.isArray(volume.Options) ||
+          Object.keys(volume.Options).length)) ||
+      Object.hasOwn(labels, 'com.docker.compose.volume') ||
+      (labels['com.docker.compose.project'] && labels['com.docker.compose.project'] !== project)
+    )
+      throw new Error(`Не подтверждён анонимный локальный том стенда: ${name}.`);
+    return JSON.stringify([
+      volume.Name,
+      volume.Driver,
+      volume.Scope,
+      volume.CreatedAt,
+      volume.Mountpoint,
+      Object.entries(labels).sort(),
+    ]);
+  }
+  async function volumeMetadata(name) {
+    const rows = await inspectJson(['volume', 'inspect', name]);
+    if (rows.length !== 1) throw new Error(`Неполная проверка тома ${name}.`);
+    return { metadata: rows[0], signature: volumeSignature(rows[0], name) };
+  }
+  async function volumeExists(name) {
+    const result = await checked(
+      runCommand(['volume', 'ls', '--filter', `name=${name}`, '--format', '{{.Name}}'], {
+        timeoutMs: 15000,
+      }),
+    );
+    const names = result.stdout.trim().split(/\r?\n/u).filter(Boolean);
+    if (names.some((value) => value !== name) || names.length > 1)
+      throw new Error(`Неоднозначный результат поиска тома ${name}.`);
+    return names.length === 1;
+  }
+  async function volumeReferences(name, allowed, required = []) {
+    const result = await checked(
+      runCommand(
+        ['ps', '--all', '--no-trunc', '--filter', `volume=${name}`, '--format', '{{.ID}}'],
+        { timeoutMs: 15000 },
+      ),
+    );
+    const ids = result.stdout.trim().split(/\r?\n/u).filter(Boolean);
+    if (
+      ids.some((id) => !dockerId.test(id) || !allowed.has(id)) ||
+      required.some((id) => !ids.includes(id))
+    )
+      throw new Error(
+        `Том ${name} использует чужой контейнер или его принадлежность изменилась. Ресурсы не удалены.`,
+      );
+  }
+  async function captureVolumes(list) {
+    const ids = list.map((container) => container.ID);
+    if (
+      list.length > 3 ||
+      ids.some((id) => typeof id !== 'string' || !dockerId.test(id)) ||
+      new Set(ids).size !== ids.length
+    )
+      throw new Error('Не удалось подтвердить полный список ID контейнеров стенда.');
+    if (!ids.length) return new Map();
+    const details = await inspectJson(['inspect', '--type', 'container', ...ids]);
+    if (
+      details.length !== ids.length ||
+      new Set(details.map((c) => c.Id)).size !== ids.length ||
+      details.some((c) => !ids.includes(c.Id))
+    )
+      throw new Error('Docker вернул неполный или повторяющийся список контейнеров.');
+    const volumes = new Map();
+    const images = new Map();
+    for (const container of details) {
+      const labels = container.Config?.Labels;
+      const service = list.find((c) => c.ID === container.Id).Service;
+      const host = container.HostConfig;
+      if (
+        !labels ||
+        labels['com.docker.compose.project'] !== project ||
+        labels['com.docker.compose.service'] !== service ||
+        typeof labels['com.docker.compose.project.config_files'] !== 'string' ||
+        normalizePath(labels['com.docker.compose.project.config_files']) !==
+          normalizePath(composeFile)
+      )
+        throw new Error('Проверка inspect обнаружила контейнер другого checkout или проекта.');
+      if (
+        !host ||
+        [host.Binds, host.VolumesFrom].some(
+          (value) => value != null && (!Array.isArray(value) || value.length),
+        ) ||
+        (host.Mounts != null && !Array.isArray(host.Mounts)) ||
+        !Array.isArray(container.Mounts) ||
+        container.Mounts.length > 12
+      )
+        throw new Error(
+          'У стенда обнаружены неподдерживаемые пользовательские подключения данных.',
+        );
+      if (!container.Mounts.length) {
+        if (host.Mounts?.length)
+          throw new Error('Список подключений контейнера не совпал с inspect.');
+        continue;
+      }
+      if (typeof container.Image !== 'string' || !/^sha256:[a-f0-9]{64}$/u.test(container.Image))
+        throw new Error('Не удалось подтвердить ID образа контейнера.');
+      if (!images.has(container.Image)) {
+        const rows = await inspectJson(['image', 'inspect', container.Image]);
+        if (
+          rows.length !== 1 ||
+          rows[0].Id !== container.Image ||
+          !rows[0].Config?.Volumes ||
+          typeof rows[0].Config.Volumes !== 'object' ||
+          Array.isArray(rows[0].Config.Volumes)
+        )
+          throw new Error('Не удалось подтвердить VOLUME, объявленные образом Kafka.');
+        images.set(container.Image, rows[0].Config.Volumes);
+      }
+      const declared = images.get(container.Image);
+      for (const mount of container.Mounts) {
+        if (
+          mount.Type !== 'volume' ||
+          typeof mount.Name !== 'string' ||
+          !dockerId.test(mount.Name) ||
+          !Object.hasOwn(declared, mount.Destination)
+        )
+          throw new Error('Том не является разрешённым анонимным VOLUME образа Kafka.');
+        const explicit = (host.Mounts ?? []).filter((m) => m.Target === mount.Destination);
+        if (explicit.length > 1) throw new Error('Неоднозначные подключения тома контейнера.');
+        if (!volumes.has(mount.Name))
+          volumes.set(mount.Name, { ...(await volumeMetadata(mount.Name)), owners: [] });
+        const volume = volumes.get(mount.Name);
+        if (explicit.length) {
+          const entry = explicit[0];
+          // Compose may inherit an image's anonymous volume on recreation.
+          // An explicit source is accepted only with Docker's anonymous label.
+          if (
+            entry.Type !== 'volume' ||
+            entry.Source !== mount.Name ||
+            entry.ReadOnly === true ||
+            Object.keys(entry).some(
+              (key) =>
+                !['Type', 'Source', 'Target', 'ReadOnly', 'Consistency', 'VolumeOptions'].includes(
+                  key,
+                ),
+            ) ||
+            (entry.Consistency && entry.Consistency !== 'default') ||
+            (entry.VolumeOptions != null &&
+              (typeof entry.VolumeOptions !== 'object' ||
+                Array.isArray(entry.VolumeOptions) ||
+                Object.keys(entry.VolumeOptions).some((key) => key !== 'NoCopy') ||
+                entry.VolumeOptions.NoCopy === true)) ||
+            !Object.hasOwn(volume.metadata.Labels ?? {}, 'com.docker.volume.anonymous')
+          )
+            throw new Error('Явное подключение не подтверждено как унаследованный анонимный том.');
+        }
+        volume.owners.push(container.Id);
+      }
+      if (
+        (host.Mounts ?? []).some(
+          (entry) => !container.Mounts.some((mount) => mount.Destination === entry.Target),
+        )
+      )
+        throw new Error('Пользовательское подключение не совпадает с томами образа.');
+    }
+    return volumes;
+  }
+  async function stopWorkspace() {
+    const list = await owned();
+    const ids = new Set(list.map((container) => container.ID));
+    const captured = await captureVolumes(list);
+    for (const [name, volume] of captured) {
+      if (pendingVolumes.has(name) && pendingVolumes.get(name).signature !== volume.signature)
+        throw new Error(`Захваченный ранее том ${name} был заменён.`);
+    }
+    const candidates = new Map([...pendingVolumes, ...captured]);
+    // Check every candidate before the first mutation, including stopped users
+    // outside this project. Do not trust the hash-like name by itself.
+    for (const [name, volume] of candidates) {
+      if (!(await volumeExists(name))) {
+        candidates.delete(name);
+        pendingVolumes.delete(name);
+        continue;
+      }
+      if ((await volumeMetadata(name)).signature !== volume.signature)
+        throw new Error(`Метаданные тома ${name} изменились.`);
+      await volumeReferences(name, ids, captured.get(name)?.owners ?? []);
+    }
+    const current = await owned();
+    if (current.length !== ids.size || current.some((container) => !ids.has(container.ID)))
+      throw new Error('Список контейнеров изменился во время проверки очистки.');
+    for (const [name, volume] of candidates) pendingVolumes.set(name, volume);
+    await checked(compose(['down', '--volumes', '--timeout', '15'], { timeoutMs: 60000 }));
+    if ((await owned()).length) throw new Error('Контейнеры стенда ещё существуют.');
+    for (const [name, volume] of pendingVolumes) {
+      if (await volumeExists(name)) {
+        if ((await volumeMetadata(name)).signature !== volume.signature)
+          throw new Error(`Том ${name} был заменён после остановки.`);
+        await volumeReferences(name, new Set());
+        // No --force: Docker itself must also reject a new attachment racing
+        // this check. Never select orphaned or unrelated volumes for cleanup.
+        await checked(runCommand(['volume', 'rm', name], { timeoutMs: 15000 }));
+        if (await volumeExists(name)) throw new Error(`Удаление тома ${name} не подтверждено.`);
+      }
+      pendingVolumes.delete(name);
+    }
   }
   async function adapter(
     action,
@@ -401,18 +629,7 @@ export function createWorkspaceRunner({
           message =
             'Выделенный topic подготовлен: 3 партиции, RF=3, min ISR=2. Предыдущая попытка этого задания очищена, история сохранена.';
       } else if (action === 'stop') {
-        // Remove anonymous image volumes while their owning containers still
-        // exist. Some Compose down executions have left these volumes behind.
-        // Container removal keeps named/shared-volume handling inside Docker;
-        // never infer ownership from an orphaned volume name or use prune.
-        await checked(
-          compose(['rm', '--stop', '--force', '--volumes', 'broker1', 'broker2', 'broker3'], {
-            timeoutMs: 60000,
-          }),
-        );
-        await owned();
-        await checked(compose(['down', '--volumes', '--timeout', '15'], { timeoutMs: 60000 }));
-        if ((await owned()).length) throw new Error('Контейнеры стенда ещё существуют.');
+        await stopWorkspace();
         for (const task of workspaceTasks) {
           const old = load(task.id);
           store.saveWorkspace(task.id, {

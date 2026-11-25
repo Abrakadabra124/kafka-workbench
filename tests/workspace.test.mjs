@@ -252,18 +252,30 @@ test('ownership inspection timeout fails closed before mutations and a fresh req
   assert.equal((await runner.execute('delivery', 'prepare')).ok, true);
 });
 
-// Model the observed cleanup failure at the Docker boundary: down succeeds and
-// removes containers/network but leaves the image's anonymous data volume.
-function cleanupFixture({
-  foreign = false,
-  removalFails = false,
-  foreignAfterRemoval = false,
-} = {}) {
+// Docker is the external boundary. Both Compose cleanup paths deliberately leave
+// the captured volume behind, matching the second observed CI failure.
+const cleanupContainer = '1'.repeat(64);
+const cleanupVolume = 'a'.repeat(64);
+const unrelatedVolume = 'b'.repeat(64);
+const cleanupImage = `sha256:${'c'.repeat(64)}`;
+function cleanupFixture(settings = {}) {
   const calls = [];
-  const volumes = new Set(['owned-anonymous', 'named-data', 'shared-anonymous']);
+  const volumes = new Set([cleanupVolume, unrelatedVolume, 'named-data']);
   const resources = { containers: true, network: true };
   const states = new Map();
-  let removalAttempted = false;
+  const metadata = {
+    Name: cleanupVolume,
+    Driver: 'local',
+    Scope: 'local',
+    CreatedAt: '2026-11-25T06:00:00Z',
+    Mountpoint: '/var/lib/docker/volumes/owned/_data',
+    Labels: settings.legacy ? null : { 'com.docker.volume.anonymous': '' },
+    Options: null,
+  };
+  let composePath;
+  const mutate = (args) =>
+    (args[0] === 'compose' && ['rm', 'down'].includes(args[5])) ||
+    (args[0] === 'volume' && args[1] === 'rm');
   const runner = createWorkspaceRunner({
     hardwareLock: false,
     store: {
@@ -272,105 +284,206 @@ function cleanupFixture({
     },
     runCommand: async (args) => {
       calls.push(args);
-      const ok = (stdout = '') => ({ code: 0, stdout, stderr: '' });
-      assert.equal(args[0], 'compose', 'cleanup must stay scoped to this Compose project');
-      assert.equal(args[2], 'kafka-workbench-workspace');
-      const action = args[5];
-      if (action === 'ps') {
-        const otherCheckout = foreign || (foreignAfterRemoval && removalAttempted);
-        return ok(
-          JSON.stringify(
-            resources.containers || otherCheckout
+      const ok = (data = '') => ({
+        code: 0,
+        stdout: typeof data === 'string' ? data : JSON.stringify(data),
+        stderr: '',
+      });
+      if (args[0] === 'compose') {
+        assert.equal(args[2], 'kafka-workbench-workspace');
+        composePath = args[4];
+        if (args[5] === 'ps')
+          return ok(
+            resources.containers
               ? [
                   {
+                    ID: settings.badId ? '--all' : cleanupContainer,
                     Service: 'broker1',
                     State: 'running',
                     Labels: {
-                      'com.docker.compose.project.config_files': otherCheckout
+                      'com.docker.compose.project.config_files': settings.foreign
                         ? '/foreign/compose.yaml'
-                        : args[4],
+                        : composePath,
                     },
                   },
                 ]
               : [],
-          ),
+          );
+        if (['rm', 'down'].includes(args[5])) {
+          resources.containers = false;
+          if (args[5] === 'down') resources.network = false;
+          return ok();
+        }
+      }
+      if (args[0] === 'inspect') {
+        assert.deepEqual(args.slice(1), ['--type', 'container', cleanupContainer]);
+        if (settings.inspectFails) return { code: 1, stdout: '', stderr: 'inspection unavailable' };
+        const detail = {
+          Id: cleanupContainer,
+          Image: cleanupImage,
+          Config: {
+            Labels: {
+              'com.docker.compose.project': settings.foreignInspect
+                ? 'foreign-project'
+                : 'kafka-workbench-workspace',
+              'com.docker.compose.project.config_files': composePath,
+              'com.docker.compose.service': 'broker1',
+            },
+          },
+          HostConfig: {
+            Binds: settings.bind ? ['/host:/data'] : null,
+            VolumesFrom: null,
+            Mounts: settings.inherited
+              ? [{ Type: 'volume', Source: cleanupVolume, Target: '/data' }]
+              : [],
+          },
+          Mounts: [
+            {
+              Type: 'volume',
+              Name: settings.named ? 'named-data' : cleanupVolume,
+              Destination: settings.wrongDestination ? '/unexpected' : '/data',
+            },
+          ],
+        };
+        return ok(
+          settings.partialInspect ? [] : settings.duplicateInspect ? [detail, detail] : [detail],
         );
       }
-      if (action === 'rm') {
-        removalAttempted = true;
-        assert.deepEqual(args.slice(6), [
-          '--stop',
-          '--force',
-          '--volumes',
-          'broker1',
-          'broker2',
-          'broker3',
-        ]);
-        if (removalFails) return { code: 1, stdout: '', stderr: 'container removal failed' };
-        // Docker's container removal handles anonymous-volume ownership and
-        // leaves named volumes and volumes still referenced by another container.
-        volumes.delete('owned-anonymous');
-        resources.containers = false;
-        return ok();
+      if (args[0] === 'image' && args[1] === 'inspect') {
+        assert.deepEqual(args.slice(2), [cleanupImage]);
+        return ok([{ Id: cleanupImage, Config: { Volumes: { '/data': {} } } }]);
       }
-      if (action === 'down') {
-        resources.containers = false;
-        resources.network = false;
-        return ok();
+      if (args[0] === 'volume' && args[1] === 'inspect') {
+        assert.deepEqual(args.slice(2), [cleanupVolume]);
+        if (settings.volumeInspectFails)
+          return { code: 1, stdout: '', stderr: 'volume inspection unavailable' };
+        return ok([
+          {
+            ...metadata,
+            ...(settings.replaced && !resources.containers
+              ? { CreatedAt: '2026-11-25T07:00:00Z' }
+              : {}),
+          },
+        ]);
+      }
+      if (args[0] === 'ps') {
+        assert.deepEqual(args.slice(1), [
+          '--all',
+          '--no-trunc',
+          '--filter',
+          `volume=${cleanupVolume}`,
+          '--format',
+          '{{.ID}}',
+        ]);
+        if (settings.refsFail)
+          return { code: 1, stdout: '', stderr: 'reference inspection unavailable' };
+        if (settings.shared || (settings.lateShared && !resources.containers))
+          return ok(`${cleanupContainer}\n${'d'.repeat(64)}\n`);
+        return ok(resources.containers ? `${cleanupContainer}\n` : '');
+      }
+      if (args[0] === 'volume' && args[1] === 'ls') {
+        assert.deepEqual(args.slice(2), [
+          '--filter',
+          `name=${cleanupVolume}`,
+          '--format',
+          '{{.Name}}',
+        ]);
+        return ok(volumes.has(cleanupVolume) ? `${cleanupVolume}\n` : '');
+      }
+      if (args[0] === 'volume' && args[1] === 'rm') {
+        assert.deepEqual(
+          args.slice(2),
+          [cleanupVolume],
+          'only captured names, never force or prune',
+        );
+        if (settings.removeFails)
+          return { code: 1, stdout: '', stderr: 'volume removal unavailable' };
+        if (!settings.removeLies) volumes.delete(cleanupVolume);
+        return ok(cleanupVolume);
       }
       throw new Error(`Unexpected cleanup command: ${args}`);
     },
   });
-  return { runner, calls, volumes, resources };
+  return { runner, calls, volumes, resources, mutate };
 }
 
-test('stop removes owned anonymous volumes before down and remains idempotent without deleting shared or named data', async () => {
-  const { runner, volumes, resources } = cleanupFixture();
+test('stop verifies and removes only captured anonymous image volumes left by Compose, then repeats safely', async () => {
+  const { runner, volumes, resources } = cleanupFixture({ inherited: true });
   const stopped = await runner.execute('delivery', 'stop');
   assert.equal(stopped.ok, true, stopped.error);
   assert.equal(
-    volumes.has('owned-anonymous'),
+    volumes.has(cleanupVolume),
     false,
-    'down alone leaves the anonymous volume behind',
+    'successful Compose cleanup can retain inherited anonymous volumes',
   );
-  assert.deepEqual([...volumes].sort(), ['named-data', 'shared-anonymous']);
+  assert.deepEqual([...volumes].sort(), [unrelatedVolume, 'named-data'].sort());
   assert.deepEqual(resources, { containers: false, network: false });
   const repeated = await runner.execute('delivery', 'stop');
   assert.equal(repeated.ok, true, repeated.error);
-  assert.deepEqual([...volumes].sort(), ['named-data', 'shared-anonymous']);
+  assert.deepEqual([...volumes].sort(), [unrelatedVolume, 'named-data'].sort());
 });
 
-test('stop rejects foreign ownership before requesting container or volume removal', async () => {
-  const { runner, calls, volumes, resources } = cleanupFixture({ foreign: true });
-  const stopped = await runner.execute('delivery', 'stop');
-  assert.equal(stopped.ok, false);
-  assert.match(stopped.error, /другому checkout/u);
-  assert.ok(calls.every((args) => args[5] === 'ps'));
-  assert.equal(volumes.has('owned-anonymous'), true);
-  assert.deepEqual(resources, { containers: true, network: true });
+test('old Docker image-created volumes without an anonymous label are accepted only without explicit mounts', async () => {
+  const direct = cleanupFixture({ legacy: true });
+  assert.equal((await direct.runner.execute('delivery', 'stop')).ok, true);
+  assert.equal(direct.volumes.has(cleanupVolume), false);
+  const ambiguous = cleanupFixture({ legacy: true, inherited: true });
+  assert.equal((await ambiguous.runner.execute('delivery', 'stop')).ok, false);
+  assert.equal(ambiguous.calls.some(ambiguous.mutate), false);
 });
 
-test('stop fails closed if container removal fails and does not discard cleanup ownership information', async () => {
-  const { runner, calls, volumes, resources } = cleanupFixture({ removalFails: true });
-  const stopped = await runner.execute('delivery', 'stop');
+for (const invalid of [
+  'foreign',
+  'foreignInspect',
+  'badId',
+  'inspectFails',
+  'partialInspect',
+  'duplicateInspect',
+  'bind',
+  'named',
+  'wrongDestination',
+  'volumeInspectFails',
+  'shared',
+  'refsFail',
+]) {
+  test(`stop refuses ${invalid} before deleting containers or volumes`, async () => {
+    const fixture = cleanupFixture({ [invalid]: true });
+    const stopped = await fixture.runner.execute('delivery', 'stop');
+    assert.equal(stopped.ok, false);
+    assert.equal(fixture.calls.some(fixture.mutate), false, stopped.error);
+    assert.equal(fixture.volumes.has(cleanupVolume), true);
+    assert.deepEqual(fixture.resources, { containers: true, network: true });
+  });
+}
+
+for (const invalid of ['lateShared', 'replaced']) {
+  test(`stop refuses ${invalid} after down and does not explicitly delete the captured volume`, async () => {
+    const fixture = cleanupFixture({ [invalid]: true });
+    const stopped = await fixture.runner.execute('delivery', 'stop');
+    assert.equal(stopped.ok, false);
+    assert.equal(
+      fixture.calls.some((args) => args[0] === 'volume' && args[1] === 'rm'),
+      false,
+    );
+    assert.equal(fixture.volumes.has(cleanupVolume), true);
+  });
+}
+
+test('stop verifies actual volume absence even when volume rm returns success', async () => {
+  const fixture = cleanupFixture({ removeLies: true });
+  const stopped = await fixture.runner.execute('delivery', 'stop');
   assert.equal(stopped.ok, false);
-  assert.match(stopped.error, /container removal failed/u);
-  assert.equal(
-    calls.some((args) => args[5] === 'down'),
-    false,
-  );
-  assert.equal(volumes.has('owned-anonymous'), true);
-  assert.deepEqual(resources, { containers: true, network: true });
+  assert.equal(fixture.volumes.has(cleanupVolume), true);
 });
 
-test('stop rechecks ownership before removing the remaining Compose network', async () => {
-  const { runner, calls, resources } = cleanupFixture({ foreignAfterRemoval: true });
-  const stopped = await runner.execute('delivery', 'stop');
-  assert.equal(stopped.ok, false);
-  assert.match(stopped.error, /другому checkout/u);
-  assert.equal(
-    calls.some((args) => args[5] === 'down'),
-    false,
-  );
-  assert.equal(resources.network, true);
+test('a failed volume removal retains its captured manifest for a safe retry in the same runner', async () => {
+  const settings = { removeFails: true };
+  const fixture = cleanupFixture(settings);
+  assert.equal((await fixture.runner.execute('delivery', 'stop')).ok, false);
+  assert.equal(fixture.volumes.has(cleanupVolume), true);
+  assert.equal(fixture.resources.containers, false);
+  settings.removeFails = false;
+  const retried = await fixture.runner.execute('delivery', 'stop');
+  assert.equal(retried.ok, true, retried.error);
+  assert.equal(fixture.volumes.has(cleanupVolume), false);
 });

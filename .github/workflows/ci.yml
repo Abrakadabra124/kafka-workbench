@@ -110,12 +110,18 @@ jobs:
           cache: npm
       - run: npm ci
       - run: docker pull apache/kafka:4.2.2
+      - name: Check owned-volume cleanup before long recovery scenarios
+        run: node scripts/with-hardware-lock.mjs --test tests/workspace-cleanup-live.test.mjs
+        env:
+          RUN_WORKSPACE_CLEANUP_LIVE: '1'
       - run: npm run test:practice
       - name: Preserve practice evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: real-practice-evidence
-          path: data/practice-live-evidence.json
+          path: |
+            data/practice-live-evidence.json
+            data/workspace-cleanup-evidence.json
           if-no-files-found: ignore
           retention-days: 14
