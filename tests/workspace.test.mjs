@@ -44,6 +44,28 @@ test('Docker Desktop slash labels preserve checkout identity; save is offline an
   assert.equal((await runner.execute('delivery', 'stop', '{bad json')).ok, true);
 });
 
+test('cleanup requests full Compose IDs before matching container inspection and supports repeat stop', async () => {
+  const states = new Map();
+  const fake = workspaceDocker();
+  const runner = createWorkspaceRunner({
+    hardwareLock: false,
+    store: {
+      workspace: (id) => states.get(id),
+      saveWorkspace: (id, state) => states.set(id, state),
+    },
+    runCommand: fake.runCommand,
+  });
+  assert.equal((await runner.execute('delivery', 'prepare')).ok, true);
+  const stopped = await runner.execute('delivery', 'stop');
+  assert.equal(stopped.ok, true, stopped.error);
+  const inspected = fake.calls.find(({ args }) => args[0] === 'inspect');
+  assert.ok(inspected, 'cleanup must inspect the actual containers before removal');
+  assert.equal(inspected.args.slice(3).length, 3);
+  assert.ok(inspected.args.slice(3).every((id) => /^[a-f0-9]{64}$/u.test(id)));
+  const repeated = await runner.execute('delivery', 'stop');
+  assert.equal(repeated.ok, true, repeated.error);
+});
+
 test('recipe validates allowlists, bounded data and booleans without interpreting code', () => {
   const recipe = JSON.parse(defaultRecipe());
   assert.equal(parseRecipe(defaultRecipe()).records.length, 3);

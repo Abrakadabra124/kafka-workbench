@@ -97,6 +97,21 @@ test(
         'This image declares volumes; cleanup must actually exercise them.',
       );
       evidence.volumes = JSON.parse(await inspect(['volume', 'inspect', ...names]));
+      // Keep the actual Compose rendering alongside inspect IDs: recent versions
+      // abbreviate IDs in JSON unless --no-trunc is explicitly requested.
+      const composePs = [
+        'compose',
+        '--project-name',
+        'kafka-workbench-workspace-test',
+        '--file',
+        fileURLToPath(new URL('../labs/workspace.yaml', import.meta.url)),
+        'ps',
+        '--all',
+        '--format',
+        'json',
+      ];
+      evidence.composePs = await inspect(composePs);
+      evidence.composePsFull = await inspect([...composePs, '--no-trunc']);
       assert.ok(
         evidence.containers.some((container) =>
           container.mountsConfig?.some(

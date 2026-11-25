@@ -58,7 +58,12 @@ export function workspaceDocker() {
           [1, 2, 3]
             .filter((n) => running.length)
             .map((n) => ({
-              ID: `${'0'.repeat(63)}${n}`,
+              // Compose's formatter truncates IDs unless --no-trunc is explicit,
+              // even when consumers ask for JSON output.
+              ID: `${String(n).repeat(12)}${'0'.repeat(51)}${n}`.slice(
+                0,
+                args.includes('--no-trunc') ? 64 : 12,
+              ),
               Service: `broker${n}`,
               State: running.includes(n) ? 'running' : 'exited',
               Labels: { 'com.docker.compose.project.config_files': args[4] },

@@ -250,7 +250,7 @@ export function createWorkspaceRunner({
       // The first Compose plugin invocation can exceed five seconds on a cold CI runner.
       // This read-only probe stays bounded and must succeed before any mutation.
       inspection = await checked(
-        compose(['ps', '--all', '--format', 'json'], { timeoutMs: 15000 }),
+        compose(['ps', '--all', '--no-trunc', '--format', 'json'], { timeoutMs: 15000 }),
       );
     } catch (error) {
       throw new Error(`Не удалось проверить принадлежность стенда: ${error.message}`);
